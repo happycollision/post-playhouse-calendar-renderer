@@ -1,0 +1,330 @@
+=drop-shadow($color)
+  text-shadow: 1px 1px 0px $color, 1px 2px 0px $color
+
+$green: rgb(0,110,43)
+$blue: rgb(28,117,188)
+$red: rgb(198,41,46)
+$pink: rgb(243,136,167)
+$purple: rgb(146,39,143)
+$yellow: rgb(254,189,64)
+$brown: #56402c
+
+$blue-shadow: darken($blue, 20)
+$purple-shadow: darken($purple, 20)
+$red-shadow: darken($red, 20)
+$yellow-shadow: darken($yellow, 35)
+$green-shadow: darken($green, 10)
+
+$show-1-color: $blue
+$show-2-color: $purple
+$show-3-color: $red
+$show-4-color: $yellow
+$show-5-color: $green
+
+$show-1-color-drop-shadow: $blue-shadow
+$show-2-color-drop-shadow: $purple-shadow
+$show-3-color-drop-shadow: $red-shadow
+$show-4-color-drop-shadow: $yellow-shadow
+$show-5-color-drop-shadow: $green-shadow
+
+$proxima: proxima-nova, sans-serif
+$azo: azo-sans-uber, sans
+
+$calendar-day-date-color: black
+$dark-day-bg: rgba(0,0,0,0.4)
+$cal-bg-color: $brown
+$cal-border-width: 5px
+$cal-base-font-size: 16px
+$cal-vert-button-pad: 12px
+
+$alt-bg-color: #d1dcc4
+
+.calendar-filters
+  +clearfix
+
+  +breakpoint($cal-medium)
+    font-size: 24px
+
+  .filter
+    +clearfix
+    background-color: $alt-bg-color
+    margin: 3px
+    border: 1px solid $alt-bg-color
+    color: darken($alt-bg-color, 20)
+    float: left
+    font-family: $proxima
+    padding: 2px 6px
+
+    &.selected
+      color: white
+
+    &.show-1
+      border-color: $show-1-color
+      +drop-shadow($show-1-color-drop-shadow)
+    &.show-2
+      border-color: $show-2-color
+      +drop-shadow($show-2-color-drop-shadow)
+    &.show-3
+      border-color: $show-3-color
+      +drop-shadow($show-3-color-drop-shadow)
+    &.show-4
+      border-color: $show-4-color
+      +drop-shadow($show-4-color-drop-shadow)
+    &.show-5
+      border-color: $show-5-color
+      +drop-shadow($show-5-color-drop-shadow)
+
+    &.show-1.selected
+      background-color: $show-1-color
+    &.show-2.selected
+      background-color: $show-2-color
+    &.show-3.selected
+      background-color: $show-3-color
+    &.show-4.selected
+      background-color: $show-4-color
+    &.show-5.selected
+      background-color: $show-5-color
+
+
+
+.calendar, .calendar tr, .calendar td
+  margin-bottom: 4em
+
+.calendar table
+  border-collapse: collapse
+
+.month-name
+  font-size: $cal-base-font-size * 2
+  color: white
+  -webkit-font-smoothing: antialiased
+  text-align: center
+  margin-top: 40px
+  margin-bottom: 0
+  padding: 20px 0
+
+  +breakpoint($cal-medium)
+    background-color: $cal-bg-color
+
+h3.month-name
+  font-family: $azo
+
+.month
+  width: 100%
+  margin: auto
+
+  +breakpoint($cal-medium)
+    background-color: $cal-bg-color
+    border: $cal-border-width solid $cal-bg-color
+
+.week
+  clear: both
+
+.day
+  width: auto
+  min-width: 14%
+  padding: 0.5%
+  border: 1px solid $cal-bg-color
+  background: white
+  min-height: 14%
+
+  +breakpoint($cal-large)
+    border-width: $cal-border-width
+
+  .month-name
+    display: inline
+    font-size: $cal-base-font-size
+    color: $calendar-day-date-color
+    +breakpoint($cal-medium)
+      display: none
+
+
+
+.calendar
+  a, a:link, a:visited
+    color: blue
+
+
+.day-name
+  display: none
+  color: $calendar-day-date-color
+
+.padding .day-name
+  color: white
+
+.day.dark
+  background: $dark-day-bg
+
+  .mday, .day-name
+    color: white
+
+.day.padding
+  background: transparent
+  border: none
+
+.day.padding .mday
+  display: none
+
+.week:first-child .day .day-name
+  display: inline
+
+  .short
+    display: none
+  .full
+    display: inline
+
+  +breakpoint($cal-medium ($cal-large - 1)) //medium only
+    .short
+      display: inline
+    .full
+      display: none
+
+.mday
+  font-size: $cal-base-font-size * 0.9
+  color: $calendar-day-date-color
+  +breakpoint($cal-medium)
+    float: right
+    margin-bottom: 6px
+    line-height: $cal-base-font-size
+
+.day-content
+  clear: both
+  font-size: $cal-base-font-size * 0.7
+  line-height: $cal-base-font-size * 1.3
+
+.showing
+  margin-bottom: 1em
+
+
++breakpoint(0px ($cal-medium - 1)) //small size only
+  .calendar
+    tbody, table, tr, td
+      display: block
+      margin: 0
+      border: none
+
+    %date-labels
+      font-size: $cal-base-font-size * 1.3
+      display: inline
+
+    .day
+      border: none
+      background: none
+      margin-bottom: 2em
+
+    .padding, .dark
+      display: none
+
+    .mday, .day .month-name
+      @extend %date-labels
+
+    .day-name
+      display: inline
+
+      .short
+        display: none
+      .full
+        @extend %date-labels
+
+        &:after
+          content: ','
+
+    .day-content
+      border-top: 2px solid $light-green
+      font-size: $cal-base-font-size * 1.5
+      padding-top: 12px
+      line-height: $cal-base-font-size * 1.5 * 1.3
+
+    .showing
+      padding-left: 1.5em
+      margin-bottom: 0.8em
+
+    .show-time
+      color: lighten($main-text, 40%)
+
+
+    .past
+      display: none
+
+
+.show-title, .show-time
+  .full
+    display: inline
+  .short
+    display: none
+
+  +breakpoint($cal-medium)
+    display: inline // div.show-title, div.show-time
+
+    .full
+      display: none
+    .short
+      display: inline
+
+
+.calendar .showing
+
+  +breakpoint($cal-medium)
+    background-color: grey
+    color: white
+    +drop-shadow(black) // default (for Bald Mountain Rounders)
+    padding: $cal-vert-button-pad 2px
+    margin-bottom: 0
+    text-align: center
+    line-height: $cal-base-font-size
+
+    +breakpoint($cal-large)
+      font-size: $cal-base-font-size
+
+    &.show-1
+      background-color: $show-1-color
+      +drop-shadow($show-1-color-drop-shadow)
+    &.show-2
+      background-color: $show-2-color
+      +drop-shadow($show-2-color-drop-shadow)
+    &.show-3
+      background-color: $show-3-color
+      +drop-shadow($show-3-color-drop-shadow)
+    &.show-4
+      background-color: $show-4-color
+      +drop-shadow($show-4-color-drop-shadow)
+    &.show-5
+      background-color: $show-5-color
+      +drop-shadow($show-5-color-drop-shadow)
+
+  .show-title
+
+    &:before
+      position: relative
+      display: block
+      float: left
+      margin: ($cal-base-font-size * 0.50) 0.5em 0 -1em
+      content: ''
+      width: 0.5em
+      height: 0.5em
+      background-color: grey
+
+      +breakpoint($cal-medium)
+        display: none
+
+
+.calendar .showing.show-1 .show-title:before
+  background-color: $show-1-color
+.calendar .showing.show-2 .show-title:before
+  background-color: $show-2-color
+.calendar .showing.show-3 .show-title:before
+  background-color: $show-3-color
+.calendar .showing.show-4 .show-title:before
+  background-color: $show-4-color
+.calendar .showing.show-5 .show-title:before
+  background-color: $show-5-color
+
++breakpoint($cal-medium)
+  .day-content.show-count-1,
+  .day-content.show-count-2
+    .showing
+      padding: (($cal-vert-button-pad *2 + ($cal-base-font-size)) / 2 * 3 / 2 - $cal-base-font-size / 2) 2px
+
+  .day-content.show-count-1
+    .spacer
+      display: block
+      height: (($cal-vert-button-pad * 2 + $cal-base-font-size) * 1.5 )
