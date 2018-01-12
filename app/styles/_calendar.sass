@@ -35,7 +35,7 @@ $dark-day-bg: rgba(0,0,0,0.4)
 $cal-bg-color: white
 $cal-border-color: black
 $cal-border-width: 2px
-$cal-base-font-size: 16px
+$cal-base-font-size: 24px
 $cal-vert-button-pad: 12px
 
 $alt-bg-color: #d1dcc4
@@ -93,6 +93,8 @@ body
 
 .calendar, .calendar tr, .calendar td
   margin-bottom: 4em
+  font-family: proxima-nova
+  font-weight: 100
 
 .calendar table
   border-collapse: collapse
@@ -165,6 +167,8 @@ h3.month-name
 
 
 .day-name
+  font-family: "Proxima Nova Extra Condensed"
+  font-size: $cal-base-font-size
   display: none
   color: $calendar-day-date-color
 
@@ -199,7 +203,8 @@ h3.month-name
       display: none
 
 .mday
-  font-size: $cal-base-font-size * 0.9
+  font-size: $cal-base-font-size
+  font-family: proxima-nova-condensed
   color: $calendar-day-date-color
   +breakpoint($cal-medium)
     float: right
