@@ -45,8 +45,6 @@ body
   font-size: $cal-base-font-size
 
 .calendar-filters
-  +clearfix
-
   .filter
     +clearfix
     background-color: $alt-bg-color
@@ -55,6 +53,7 @@ body
     color: darken($alt-bg-color, 20)
     float: left
     font-family: $proxima
+    font-size: $cal-base-font-size * 1.9
     padding: 2px 6px
 
     &.selected
@@ -143,11 +142,6 @@ body
       z-index: 2
       transform: rotate(-15deg)
 
-.calendar
-  a, a:link, a:visited
-    color: blue
-
-
 .day-name
   display: none
 
@@ -222,33 +216,6 @@ body
     &.show-5
       background-color: $show-5-color
       +drop-shadow($show-5-color-drop-shadow)
-
-  .show-title
-
-    &:before
-      position: relative
-      display: block
-      float: left
-      margin: ($cal-base-font-size * 0.50) 0.5em 0 -1em
-      content: ''
-      width: 0.5em
-      height: 0.5em
-      background-color: grey
-
-      +breakpoint($cal-medium)
-        display: none
-
-
-.calendar .showing.show-1 .show-title:before
-  background-color: $show-1-color
-.calendar .showing.show-2 .show-title:before
-  background-color: $show-2-color
-.calendar .showing.show-3 .show-title:before
-  background-color: $show-3-color
-.calendar .showing.show-4 .show-title:before
-  background-color: $show-4-color
-.calendar .showing.show-5 .show-title:before
-  background-color: $show-5-color
 
 +breakpoint($cal-medium)
   .day-content.show-count-1,
