@@ -32,8 +32,9 @@ $azo: "Azo Sans Uber", sans
 
 $calendar-day-date-color: black
 $dark-day-bg: rgba(0,0,0,0.4)
-$cal-bg-color: $brown
-$cal-border-width: 5px
+$cal-bg-color: white
+$cal-border-color: black
+$cal-border-width: 2px
 $cal-base-font-size: 16px
 $cal-vert-button-pad: 12px
 
@@ -128,10 +129,10 @@ h3.month-name
   width: auto
   min-width: 14%
   padding: 0.5%
-  border: 1px solid $cal-bg-color
+  border: 1px solid $cal-border-color
   background: white
   min-height: 14%
-  position: relative
+  // position: relative
 
   +breakpoint($cal-large)
     border-width: $cal-border-width
@@ -144,16 +145,19 @@ h3.month-name
     +breakpoint($cal-medium)
       display: none
 
-  &.day-1 .month-name
-    font-family: $azo
-    display: block
-    position: absolute
-    background: transparent
-    font-size: 3em
-    top: -1.5em;
-    left: -0.4em
-    z-index: 2
-    transform: rotate(-15deg)
+  &.day-1
+    .month-holder
+      position: relative
+    .month-name
+      font-family: $azo
+      display: block
+      position: absolute
+      background: transparent
+      font-size: 3em
+      top: -1.5em;
+      left: -0.4em
+      z-index: 2
+      transform: rotate(-15deg)
 
 .calendar
   a, a:link, a:visited
