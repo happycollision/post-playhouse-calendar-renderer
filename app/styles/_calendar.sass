@@ -110,6 +110,8 @@ body
 
 h3.month-name
   font-family: $azo
+  +breakpoint($cal-medium)
+    display: none
 
 .month
   width: 100%
@@ -129,6 +131,7 @@ h3.month-name
   border: 1px solid $cal-bg-color
   background: white
   min-height: 14%
+  position: relative
 
   +breakpoint($cal-large)
     border-width: $cal-border-width
@@ -137,10 +140,20 @@ h3.month-name
     display: inline
     font-size: $cal-base-font-size
     color: $calendar-day-date-color
+
     +breakpoint($cal-medium)
       display: none
 
-
+  &.day-1 .month-name
+    font-family: $azo
+    display: block
+    position: absolute
+    background: transparent
+    font-size: 3em
+    top: -1.5em;
+    left: -0.4em
+    z-index: 2
+    transform: rotate(-15deg)
 
 .calendar
   a, a:link, a:visited
