@@ -48,13 +48,14 @@ body
   .filter
     +clearfix
     background-color: $alt-bg-color
-    margin: 3px
+    margin: 2px
     border: 1px solid $alt-bg-color
     color: darken($alt-bg-color, 20)
     float: left
     font-family: $proxima
-    font-size: $cal-base-font-size * 1.9
-    padding: 2px 6px
+    font-size: $cal-base-font-size * 1.85
+    padding: 0px 6px 2px
+    line-height: $cal-base-font-size * 2
 
     &.selected
       color: white
@@ -86,8 +87,6 @@ body
     &.show-5.selected
       background-color: $show-5-color
 
-
-
 .calendar
   font-family: proxima-nova
   font-weight: 100
@@ -112,10 +111,15 @@ body
   background-color: $cal-bg-color
   border: $cal-border-width solid $cal-bg-color
 
+.week:first-child .day:first-child
+  padding: 0
+
+.day:nth-child(2)
+  width: 8%
+
 .day
-  width: auto
-  min-width: 14%
-  padding: 0.5%
+  width: 14%
+  padding: 0.75%
   border: 1px solid $cal-border-color
   background: white
   min-height: 14%
@@ -217,13 +221,23 @@ body
       background-color: $show-5-color
       +drop-shadow($show-5-color-drop-shadow)
 
-+breakpoint($cal-medium)
-  .day-content.show-count-1,
-  .day-content.show-count-2
-    .showing
-      padding: (($cal-vert-button-pad *2 + ($cal-base-font-size)) / 2 * 3 / 2 - $cal-base-font-size / 2) 2px
+.day-content.show-count-1,
+.day-content.show-count-2
+  .showing
+    padding: (($cal-vert-button-pad * 2 + ($cal-base-font-size)) / 2 * 3 / 2 - $cal-base-font-size / 2) 2px
 
-  .day-content.show-count-1
+.day-content.show-count-1
+  .spacer
+    display: block
+    height: (($cal-vert-button-pad * 2 + $cal-base-font-size) * 1.5 )
+
+.week
+  &:nth-child(1)
     .spacer
-      display: block
-      height: (($cal-vert-button-pad * 2 + $cal-base-font-size) * 1.5 )
+      height: 0
+  &:nth-child(2),
+  &:nth-child(3),
+  &:nth-child(4),
+  &:nth-child(5)
+    .spacer
+      height: 26px
