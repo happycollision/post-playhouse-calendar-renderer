@@ -32,7 +32,7 @@ $azo: "Azo Sans Uber", sans
 
 $calendar-day-date-color: black
 $dark-day-bg: rgba(0,0,0,0.4)
-$cal-bg-color: white
+$cal-bg-color: #0087aa
 $cal-border-color: black
 $cal-border-width: 2px
 $cal-base-font-size: 24px
@@ -75,19 +75,19 @@ body
       color: white
 
     &.show-1
-      border-color: $show-1-color
+      border-color: lighten($show-1-color, 20)
       +drop-shadow($show-1-color-drop-shadow)
     &.show-2
-      border-color: $show-2-color
+      border-color: lighten($show-2-color, 20)
       +drop-shadow($show-2-color-drop-shadow)
     &.show-3
-      border-color: $show-3-color
+      border-color: lighten($show-3-color, 20)
       +drop-shadow($show-3-color-drop-shadow)
     &.show-4
-      border-color: $show-4-color
+      border-color: lighten($show-4-color, 20)
       +drop-shadow($show-4-color-drop-shadow)
     &.show-5
-      border-color: $show-5-color
+      border-color: lighten($show-5-color, 20)
       +drop-shadow($show-5-color-drop-shadow)
 
     &.show-1.selected
@@ -111,7 +111,7 @@ body
     overflow: hidden
 
   .inner
-    background: white
+    background: $cal-bg-color
     position: absolute
     top: 0
     left: 0
