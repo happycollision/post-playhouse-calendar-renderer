@@ -11,9 +11,11 @@
   <div class="day-content show-count-1">
     <div class="spacer">
     </div>
-    <div class="showing evening show-1">
-      <span class="show-title">Mermaid</span>
-      <span class="show-time">8p</span>
-    </div><!-- showing -->
-  </div><!--day_content-->
+    {{#each shows as |show i|}}
+      <div class="showing evening show-{{add i 1}}">
+        <span class="show-title">{{show.title}}</span>
+        <span class="show-time">{{show.time}}</span>
+      </div>
+    {{/each}}
+  </div>
 </td>
