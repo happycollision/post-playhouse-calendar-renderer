@@ -12,6 +12,11 @@ export default Component.extend({
     return '';
   }),
 
+  sanitizedMonthName: computed('monthName', function() {
+    const monthName = this.get('monthName');
+    return monthName === 'August' ? 'Aug' : monthName;
+  }),
+
   isDark: computed('shows', function() {
     const length = this.get('shows.length');
     return (length === 0 || length === undefined)
