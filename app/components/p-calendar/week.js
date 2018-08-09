@@ -4,6 +4,18 @@ import { computed } from '@ember/object';
 export default Component.extend({
   tagName: '',
 
+  dateInfo: computed('startingDate', function () {
+    return [
+      {dayName: 'Sunday', mDay: 3, monthName: 'June'},
+      {dayName: 'Monday', mDay: 4, monthName: 'June'},
+      {dayName: 'Tuesday', mDay: 5, monthName: 'June'},
+      {dayName: 'Wednesday', mDay: 6, monthName: 'June'},
+      {dayName: 'Thursday', mDay: 7, monthName: 'June'},
+      {dayName: 'Friday', mDay: 8, monthName: 'June'},
+      {dayName: 'Saturday', mDay: 9, monthName: 'June'},
+    ]
+  }),
+
   days: computed( function() {
     const shows = [
       [
@@ -22,22 +34,13 @@ export default Component.extend({
         {title: 'Footloose', time: '8p', id: 2},
       ],
     ]
-    const mdays = [3,4,5,6,7,8,9];
-    const dayNames = [
-      'Sunday',
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday',
-    ];
-    return mdays.map(function(mDay, i) {
+    const dateInfo = this.get('dateInfo');
+    return dateInfo.map(function(day, i) {
       return {
-        mDay,
-        monthName: 'June',
+        mDay: day.mDay,
+        monthName: day.monthName,
         shows: shows[i],
-        dayNameFull: dayNames[i],
+        dayNameFull: day.dayName,
       };
     })
   })
