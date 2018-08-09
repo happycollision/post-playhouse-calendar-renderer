@@ -15,7 +15,7 @@ export default Component.extend({
 
   dateInfo: computed('startingDate', function () {
     const date = DateTime.fromISO(this.get('startingDate'));
-    const times = 7 - (date.weekday === 7 ? 0 : date.weekday - 1);
+    const times = 7 - (date.weekday === 7 ? 0 : date.weekday);
 
     return Array.from(new Array(times)).map(function(_, i) {
       return new DayInfo(date.plus({day: i}))
