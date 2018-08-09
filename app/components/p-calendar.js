@@ -1,5 +1,6 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
+import { DateTime } from 'luxon';
 
 class ShowData {
   constructor(id, time) {
@@ -15,9 +16,21 @@ class ShowData {
   }
 }
 
+function getPaddingFor(startingDate) {
+  const dateTime = DateTime.fromISO(startingDate);
+  return dateTime.weekday === 7 ? undefined : dateTime.weekday;
+}
+
 export default Component.extend({
   shorthandShowData: computed(function() {
     return [
+      {
+        startingDate: '2018-06-01',
+        showData: [
+          {e:1},
+          {e:1},
+        ]
+      },
       {
         startingDate: '2018-06-03',
         showData: [
@@ -162,6 +175,7 @@ export default Component.extend({
   weeksData: computed('shorthandShowData', function() {
     return this.get('shorthandShowData').map(function(data) {
       const {showData, startingDate} = data;
+      const frontPadding = getPaddingFor(startingDate);
       const showsByDay = showData.map(function(shorthand) {
         const output = [];
         const {m, a, e} = shorthand;
@@ -170,7 +184,7 @@ export default Component.extend({
         if (e) { output.push(new ShowData(e, '8p'))}
         return output;
       });
-      return {startingDate, showsByDay};
+      return {startingDate, showsByDay, frontPadding};
     })
   })
 });

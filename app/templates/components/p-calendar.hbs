@@ -6,8 +6,10 @@
 
       <div class="calendar">
         <table class="month" cellpadding="0" cellspacing="0">
-          <tr class="week">
-            <td class="day padding" colspan="5">
+
+          {{#each weeksData as |week|}}
+            {{#p-calendar/week startingDate=week.startingDate showsByDay=week.showsByDay frontPadding=week.frontPadding}}
+            
               <div class="calendar-filters">
                 <div class="filter selected show-1">
                   Disney&rsquo;s The Little Mermaid
@@ -25,31 +27,8 @@
                   42nd Street
                 </div>
               </div>
-            </td>
-            {{p-calendar/day mDay=1 dayNameFull="Friday" monthName="June" shows=(array
-              (hash title="Mermaid" time="8p" id=1)
-            )}}
-            <td class="day day-2" valign="top">
-              <div class="day-identifiers">
-                <span class="day-name">
-                  <span class="full">Saturday</span>
-                </span>
-                <span class="month-name">June</span>
-                <span class="mday">2</span>
-              </div>
-              <div class="day-content show-count-1">
-                <div class="spacer">
-                </div>
-                <div class="showing evening show-1">
-                  <span class="show-title">Mermaid</span>
-                  <span class="show-time">8p</span>
-                </div><!-- showing -->
-              </div><!--day_content-->
-            </td>
-          </tr><!-- week -->
 
-          {{#each weeksData as |week|}}
-            {{p-calendar/week startingDate=week.startingDate showsByDay=week.showsByDay}}
+            {{/p-calendar/week}}
           {{/each}}
 
         </table>

@@ -1,4 +1,10 @@
 <tr class="week">
+  {{#if frontPadding}}
+    <td class="day padding" colspan="{{frontPadding}}">
+      {{yield}}
+    </td>
+  {{/if}}
+  
   {{#each days as |day|}}
     {{p-calendar/day mDay=day.mDay monthName=day.monthName shows=day.shows dayNameFull=day.dayNameFull}}
   {{/each}}
