@@ -3,16 +3,10 @@ import { computed } from '@ember/object';
 import { DateTime } from 'luxon';
 
 class ShowData {
-  constructor(id, time) {
+  constructor(id, time, idLookup = {}) {
     this.id = id;
     this.time = time;
-    switch (id) {
-      case 1: this.title = 'Mermaid'; break;
-      case 2: this.title = 'Footloose'; break;
-      case 3: this.title = 'Chitty'; break;
-      case 4: this.title = 'Urinetown'; break;
-      case 5: this.title = '42nd St'; break;
-    }
+    this.title = idLookup[id] || 'NO TITLE';
   }
 }
 
@@ -132,15 +126,16 @@ export default Controller.extend({
 
   weeksData: computed('xweeksData', function() {
     const xweeksData = this.get('xweeksData');
+    const idLookup = {1: 'Mermaid', 2: 'Footloose', 3: 'Chitty', 4: 'Urinetown', 5: '42nd St'}
     return xweeksData.map(function(data, i) {
       const {showData, startingDate} = data;
       const frontPadding = getPaddingFor(startingDate);
       const showsByDay = showData.map(function(shorthand) {
         const output = [];
         const {m, a, e} = shorthand;
-        if (m) { output.push(new ShowData(m, '10a'))}
-        if (a) { output.push(new ShowData(a, '2p'))}
-        if (e) { output.push(new ShowData(e, '8p'))}
+        if (m) { output.push(new ShowData(m, '10a', idLookup))}
+        if (a) { output.push(new ShowData(a, '2p', idLookup))}
+        if (e) { output.push(new ShowData(e, '8p', idLookup))}
         return output;
       });
       const backPadding = i === xweeksData.length - 1
