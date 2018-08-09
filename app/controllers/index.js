@@ -17,6 +17,9 @@ function getPaddingFor(startingDate) {
 
 
 export default Controller.extend({
+  queryParams: ['titles'],
+  titles: 'Show 1,Show 2,Show 3,Show 4,Show 5',
+
   shorthandShowData: computed(function() {
     return {
         startingDate: '2018-06-01',
@@ -126,7 +129,10 @@ export default Controller.extend({
 
   weeksData: computed('xweeksData', function() {
     const xweeksData = this.get('xweeksData');
-    const idLookup = {1: 'Mermaid', 2: 'Footloose', 3: 'Chitty', 4: 'Urinetown', 5: '42nd St'}
+    const idLookup = this.get('titles').split(',').reduce((a,c, i) => {
+      a[i+1] = c;
+      return a;
+    }, {})
     return xweeksData.map(function(data, i) {
       const {showData, startingDate} = data;
       const frontPadding = getPaddingFor(startingDate);
