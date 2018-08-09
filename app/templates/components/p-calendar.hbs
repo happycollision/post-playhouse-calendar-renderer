@@ -48,7 +48,15 @@
             </td>
           </tr><!-- week -->
 
-          {{p-calendar/week startingDate="2018-06-03"}}
+          {{p-calendar/week startingDate="2018-06-03" showsByDay=(array
+              (array (hash title='Mermaid' time='2p' id=1))
+              (array)
+              (array (hash title='Mermaid' time='8p' id=1))
+              (array)
+              (array)
+              (array (hash title='Footloose' time='8p' id=2))
+              (array (hash title='Footloose' time='8p' id=2))
+          )}}
           
           <tr class="week">
             <td class="day day-10" valign="top">

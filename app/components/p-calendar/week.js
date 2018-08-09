@@ -23,23 +23,7 @@ export default Component.extend({
   }),
 
   days: computed( function() {
-    const shows = [
-      [
-        {title: 'Mermaid', time: '2p', id: 1},
-      ],
-      [ ],
-      [
-        {title: 'Mermaid', time: '8p', id: 1},
-      ],
-      [ ],
-      [ ],
-      [
-        {title: 'Footloose', time: '8p', id: 2},
-      ],
-      [
-        {title: 'Footloose', time: '8p', id: 2},
-      ],
-    ]
+    const shows = this.get('showsByDay');
     const dateInfo = this.get('dateInfo');
     return dateInfo.map(function(day, i) {
       return {
