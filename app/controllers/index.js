@@ -1,6 +1,9 @@
 import Controller from '@ember/controller';
 import { computed } from '@ember/object';
 import { DateTime } from 'luxon';
+import { later } from '@ember/runloop';
+
+const DEFAULT_TITLES = 'Show 1,Show 2,Show 3,Show 4,Show 5';
 
 class ShowData {
   constructor(id, time, idLookup = {}) {
@@ -18,7 +21,7 @@ function getPaddingFor(startingDate) {
 
 export default Controller.extend({
   queryParams: ['titles'],
-  titles: 'Show 1,Show 2,Show 3,Show 4,Show 5',
+  titles: DEFAULT_TITLES,
 
   shorthandShowData: computed(function() {
     return {
@@ -127,12 +130,19 @@ export default Controller.extend({
     })
   }),
 
-  weeksData: computed('xweeksData', function() {
+  weeksData: computed('xweeksData', 'titles', function() {
     const xweeksData = this.get('xweeksData');
-    const idLookup = this.get('titles').split(',').reduce((a,c, i) => {
+    const titlesString = this.get('titles');
+    later(this, () => {
+      if (this.get('titles') === DEFAULT_TITLES) {
+        this.transitionToRoute({queryParams: {titles: 'Mermaid,Footloose,Chitty,Urinetown,42nd St'}})
+      }
+    })
+    const idLookup = titlesString.split(',').reduce((a,c, i) => {
       a[i+1] = c;
       return a;
     }, {})
+
     return xweeksData.map(function(data, i) {
       const {showData, startingDate} = data;
       const frontPadding = getPaddingFor(startingDate);
