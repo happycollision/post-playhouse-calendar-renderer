@@ -1,23 +1,5 @@
 <tr class="week">
-  {{p-calendar/day mDay=3 dayNameFull="Sunday" monthName="June" shows=(array
-    (hash title="Mermaid" time="2p" id=1)
-  )}}
-  
-  {{p-calendar/day mDay=4 dayNameFull="Monday" monthName="June"}}
-  
-  {{p-calendar/day mDay=3 dayNameFull="Sunday" monthName="June" shows=(array
-    (hash title="Mermaid" time="8p" id=1)
-  )}}
-
-  {{p-calendar/day mDay=5 dayNameFull="Wednesday" monthName="June"}}
-  
-  {{p-calendar/day mDay=6 dayNameFull="Thursday" monthName="June"}}
-
-  {{p-calendar/day mDay=8 dayNameFull="Friday" monthName="June" shows=(array
-    (hash title="Footloose" time="8p" id=2)
-  )}}
-
-  {{p-calendar/day mDay=9 dayNameFull="Saturday" monthName="June" shows=(array
-    (hash title="Footloose" time="8p" id=2)
-  )}}
+  {{#each days as |day|}}
+    {{p-calendar/day mDay=day.mDay monthName=day.monthName shows=day.shows dayNameFull=day.dayNameFull}}
+  {{/each}}
 </tr><!-- week -->
