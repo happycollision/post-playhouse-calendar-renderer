@@ -1,18 +1,28 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
+import { DateTime } from 'luxon';
+
+class DayInfo {
+  constructor(dateTime) {
+    const formattedString = dateTime.toFormat('cccc,d,LLLL');
+    const [dayName, mDay, monthName] = formattedString.split(',');
+    Object.assign(this, {dayName, mDay, monthName});
+  }
+}
 
 export default Component.extend({
   tagName: '',
 
   dateInfo: computed('startingDate', function () {
+    const date = DateTime.fromISO(this.get('startingDate'));
     return [
-      {dayName: 'Sunday', mDay: 3, monthName: 'June'},
-      {dayName: 'Monday', mDay: 4, monthName: 'June'},
-      {dayName: 'Tuesday', mDay: 5, monthName: 'June'},
-      {dayName: 'Wednesday', mDay: 6, monthName: 'June'},
-      {dayName: 'Thursday', mDay: 7, monthName: 'June'},
-      {dayName: 'Friday', mDay: 8, monthName: 'June'},
-      {dayName: 'Saturday', mDay: 9, monthName: 'June'},
+      new DayInfo(date),
+      new DayInfo(date.plus({day: 1})),
+      new DayInfo(date.plus({day: 2})),
+      new DayInfo(date.plus({day: 3})),
+      new DayInfo(date.plus({day: 4})),
+      new DayInfo(date.plus({day: 5})),
+      new DayInfo(date.plus({day: 6})),
     ]
   }),
 
