@@ -173,7 +173,8 @@ export default Component.extend({
   }),
 
   weeksData: computed('shorthandShowData', function() {
-    return this.get('shorthandShowData').map(function(data) {
+    const shorthandShowData = this.get('shorthandShowData');
+    return shorthandShowData.map(function(data, i) {
       const {showData, startingDate} = data;
       const frontPadding = getPaddingFor(startingDate);
       const showsByDay = showData.map(function(shorthand) {
@@ -184,7 +185,10 @@ export default Component.extend({
         if (e) { output.push(new ShowData(e, '8p'))}
         return output;
       });
-      return {startingDate, showsByDay, frontPadding};
+      const backPadding = i === shorthandShowData.length - 1
+        ? 7 - showsByDay.length
+          : undefined;
+      return {startingDate, showsByDay, frontPadding, backPadding};
     })
   })
 });

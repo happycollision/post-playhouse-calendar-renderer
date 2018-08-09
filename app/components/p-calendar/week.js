@@ -16,8 +16,9 @@ export default Component.extend({
   dateInfo: computed('startingDate', function () {
     const date = DateTime.fromISO(this.get('startingDate'));
     const times = 7 - (date.weekday === 7 ? 0 : date.weekday);
+    const backPadding = this.get('backPadding') | 0;
 
-    return Array.from(new Array(times)).map(function(_, i) {
+    return Array.from(new Array(times - backPadding)).map(function(_, i) {
       return new DayInfo(date.plus({day: i}))
     })
   }),
