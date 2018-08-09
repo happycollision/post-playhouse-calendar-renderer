@@ -23,17 +23,11 @@ function getPaddingFor(startingDate) {
 
 export default Component.extend({
   shorthandShowData: computed(function() {
-    return [
-      {
+    return {
         startingDate: '2018-06-01',
         showData: [
           {e:1},
           {e:1},
-        ]
-      },
-      {
-        startingDate: '2018-06-03',
-        showData: [
           {a:1},
           {},
           {e:1},
@@ -41,11 +35,6 @@ export default Component.extend({
           {},
           {e:2},
           {e:2},
-        ]
-      },
-      {
-        startingDate: '2018-06-10',
-        showData: [
           {a:2},
           {},
           {e:1},
@@ -53,11 +42,6 @@ export default Component.extend({
           {},
           {e:3},
           {e:3},
-        ]
-      },
-      {
-        startingDate: '2018-06-17',
-        showData: [
           {a:3},
           {},
           {e:2},
@@ -65,11 +49,6 @@ export default Component.extend({
           {e:3},
           {e:1},
           {e:2},
-        ]
-      },
-      {
-        startingDate: '2018-06-24',
-        showData: [
           {a:1},
           {},
           {e:3},
@@ -77,11 +56,6 @@ export default Component.extend({
           {},
           {e:4},
           {e:4},
-        ]
-      },
-      {
-        startingDate: '2018-07-01',
-        showData: [
           {a:4},
           {},
           {e:3},
@@ -89,11 +63,6 @@ export default Component.extend({
           {},
           {e:5},
           {a:2, e:5},
-        ]
-      },
-      {
-        startingDate: '2018-07-08',
-        showData: [
           {a:5},
           {},
           {e:5},
@@ -101,11 +70,6 @@ export default Component.extend({
           {e:2},
           {a:3, e:4},
           {a:5, e:1},
-        ]
-      },
-      {
-        startingDate: '2018-07-15',
-        showData: [
           {a:3},
           {},
           {e:2},
@@ -113,11 +77,6 @@ export default Component.extend({
           {e:4},
           {e:2},
           {m:1, a:3, e:5},
-        ]
-      },
-      {
-        startingDate: '2018-07-22',
-        showData: [
           {a:1},
           {},
           {e:3},
@@ -125,11 +84,6 @@ export default Component.extend({
           {e:2},
           {e:4},
           {m:3, a:1, e:5},
-        ]
-      },
-      {
-        startingDate: '2018-07-29',
-        showData: [
           {a:2},
           {},
           {e:1},
@@ -137,11 +91,6 @@ export default Component.extend({
           {e:2},
           {e:4},
           {m:1, a:3, e:2},
-        ]
-      },
-      {
-        startingDate: '2018-08-05',
-        showData: [
           {a:5},
           {},
           {e:3},
@@ -149,11 +98,6 @@ export default Component.extend({
           {e:3},
           {e:2},
           {m:1, a:4, e:3},
-        ]
-      },
-      {
-        startingDate: '2018-08-12',
-        showData: [
           {a:1},
           {},
           {e:4},
@@ -161,20 +105,33 @@ export default Component.extend({
           {e:1},
           {e:3},
           {a:1, e:4},
-        ]
-      },
-      {
-        startingDate: '2018-08-19',
-        showData: [
           {a:3},
         ]
-      },
-    ]
+      };
   }),
 
-  weeksData: computed('shorthandShowData', function() {
-    const shorthandShowData = this.get('shorthandShowData');
-    return shorthandShowData.map(function(data, i) {
+
+  xweeksData: computed('shorthandShowData', function() {
+    const cd = this.get('shorthandShowData');
+    const oldData = [].concat(cd.showData);
+    const firstWeekLength = 7 - getPaddingFor(cd.startingDate);
+    const showData = [oldData.splice(0, firstWeekLength)];
+    while(oldData.length) {
+      showData.push(oldData.splice(0, 7));
+    }
+
+    return showData.map((showData, i) => {
+      const result = {
+        startingDate: DateTime.fromISO(cd.startingDate).plus({days: i === 0 ? 0 : firstWeekLength + ((i - 1) * 7)}).toFormat('yyyy-MM-dd'),
+        showData,
+      }
+      return result;
+    })
+  }),
+
+  weeksData: computed('xweeksData', function() {
+    const xweeksData = this.get('xweeksData');
+    return xweeksData.map(function(data, i) {
       const {showData, startingDate} = data;
       const frontPadding = getPaddingFor(startingDate);
       const showsByDay = showData.map(function(shorthand) {
@@ -185,7 +142,7 @@ export default Component.extend({
         if (e) { output.push(new ShowData(e, '8p'))}
         return output;
       });
-      const backPadding = i === shorthandShowData.length - 1
+      const backPadding = i === xweeksData.length - 1
         ? 7 - showsByDay.length
           : undefined;
       return {startingDate, showsByDay, frontPadding, backPadding};
