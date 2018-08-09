@@ -15,15 +15,11 @@ export default Component.extend({
 
   dateInfo: computed('startingDate', function () {
     const date = DateTime.fromISO(this.get('startingDate'));
-    return [
-      new DayInfo(date),
-      new DayInfo(date.plus({day: 1})),
-      new DayInfo(date.plus({day: 2})),
-      new DayInfo(date.plus({day: 3})),
-      new DayInfo(date.plus({day: 4})),
-      new DayInfo(date.plus({day: 5})),
-      new DayInfo(date.plus({day: 6})),
-    ]
+    const times = 7 - (date.weekday === 7 ? 0 : date.weekday - 1);
+
+    return Array.from(new Array(times)).map(function(_, i) {
+      return new DayInfo(date.plus({day: i}))
+    })
   }),
 
   days: computed( function() {
