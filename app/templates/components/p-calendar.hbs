@@ -1,0 +1,39 @@
+<link rel="stylesheet" href="https://use.typekit.net/xoa6chh.css">
+
+<div class="proportional-wrapper">
+  <div class="outer">
+    <div class="inner">
+
+      <div class="calendar">
+        <table class="month" cellpadding="0" cellspacing="0">
+
+          {{#each weeksData as |week|}}
+            {{#p-calendar/week startingDate=week.startingDate showsByDay=week.showsByDay frontPadding=week.frontPadding backPadding=week.backPadding}}
+            
+              <div class="calendar-filters">
+                <div class="filter selected show-1">
+                  Disney&rsquo;s The Little Mermaid
+                </div>
+                <div class="filter selected show-2">
+                  Footloose
+                </div>
+                <div class="filter selected show-3">
+                  Chitty Chitty Bang Bang
+                </div>
+                <div class="filter selected show-4">
+                  Urinetown
+                </div>
+                <div class="filter selected show-5">
+                  42nd Street
+                </div>
+              </div>
+
+            {{/p-calendar/week}}
+          {{/each}}
+
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>
