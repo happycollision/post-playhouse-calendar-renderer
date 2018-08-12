@@ -5,97 +5,11 @@ import { DateTime } from 'luxon';
 const DEFAULT_TITLES = 'Mermaid,Footloose,Chitty,Urinetown,42nd St';
 const DEFAULT_LONG_TITLES = 'Disney\'s The Little Mermaid,Footloose,Chitty Chitty Bang Bang,Urinetown,42nd Street';
 const DEFAULT_DATES = '2018-06-01' +
-  '[1]a3b3c1e3f3g30a3' +
-  '[2]h3i3j1l3' +
-  '[3]' +
-  '[4]0a2' +
-  '[5]00a3';
-const goodShorthandReturn = {
-  startingDate: '2018-06-01',
-  showData: [
-    {e:1},
-    {e:1},
-    {a:1},
-    {},
-    {e:1},
-    {},
-    {},
-    {e:2},
-    {e:2},
-    {a:2},
-    {},
-    {e:1},
-    {e:2},
-    {},
-    {e:3},
-    {e:3},
-    {a:3},
-    {},
-    {e:2},
-    {e:1},
-    {e:3},
-    {e:1},
-    {e:2},
-    {a:1},
-    {},
-    {e:3},
-    {e:2},
-    {},
-    {e:4},
-    {e:4},
-    {a:4},
-    {},
-    {e:3},
-    {e:1},
-    {},
-    {e:5},
-    {a:2, e:5},
-    {a:5},
-    {},
-    {e:5},
-    {a:3, e:4},
-    {e:2},
-    {a:3, e:4},
-    {a:5, e:1},
-    {a:3},
-    {},
-    {e:2},
-    {a:5, e:1},
-    {e:4},
-    {e:2},
-    {m:1, a:3, e:5},
-    {a:1},
-    {},
-    {e:3},
-    {a:1, e:5},
-    {e:2},
-    {e:4},
-    {m:3, a:1, e:5},
-    {a:2},
-    {},
-    {e:1},
-    {a:5, e:3},
-    {e:2},
-    {e:4},
-    {m:1, a:3, e:2},
-    {a:5},
-    {},
-    {e:3},
-    {a:1, e:4},
-    {e:3},
-    {e:2},
-    {m:1, a:4, e:3},
-    {a:1},
-    {},
-    {e:4},
-    {a:2, e:5},
-    {e:1},
-    {e:3},
-    {a:1, e:4},
-    {a:3},
-  ]
-};
-
+  '[1]a3b3c2e3l3t3v3x20d3n3r3u1v2y2B2E30d1h2k1l2p3r2' +
+  '[2]h3i3j2m3s3w3A30g2l3q3t3z3C20b3d3j3o2' +
+  '[3]o3p3q2u3z30c3k2m2o2u2x3B10a3d2g3i3k3q3s2' +
+  '[4]C3D30a2k3m3s3A30c3h3k2n3r3' +
+  '[5]0f3g3h2j3n2r2u3y3B30a2e2o3';
 
 class ShowData {
   constructor(id, time, idLookup = {}) {
@@ -112,6 +26,10 @@ function getPaddingFor(startingDate) {
 
 function getDaysFromDateId(dateId) {
   return 'abcdefghijklmnopqrstuvwxyzABCDEF'.indexOf(dateId)
+}
+
+function getDateIdFromDay(day) {
+  return 'abcdefghijklmnopqrstuvwxyzABCDEF'[day]
 }
 
 function getShorthandObj(slotsId, showId) {
@@ -156,6 +74,50 @@ function urlToShorthand(urlCode) {
   return {startingDate: startingDateString, showData}
 }
 
+function notEnoughMonths(value, monthsFromStart) {
+  if (value === undefined) throw new Error('no value given for comparing to months');
+  return (value.match(/0/g) || []).length < monthsFromStart;
+}
+
+function getShowingIdFromGroup(group) {
+  switch(group) {
+    case 'm': return 1;
+    case 'a': return 2;
+    case 'e': return 3;
+    case 'ma': return 4;
+    case 'me': return 5;
+    case 'ae': return 6;
+    case 'mae': return 7;
+    default: throw new Error('unrecognized grouping: ' + group);
+  }
+}
+
+function shorthandToUrl(shorthandObj) {
+  const {startingDate, showData} = shorthandObj;
+  const startingDay = DateTime.fromISO(startingDate).startOf('day');
+  const dataString = showData.reduce((acc,cur,i) => {
+    const today = startingDay.plus({days: i})
+    const monthsFromStart = Math.floor(startingDay.plus({days: i}).diff(startingDay, 'months').toObject().months) || 0;
+    const dateId = getDateIdFromDay(today.day - 1);
+    const {m,a,e} = cur;
+    const showsToday = [];
+    if (m) showsToday[m] = 'm';
+    if (a) showsToday[a] = (showsToday[a] || '') + 'a';
+    if (e) showsToday[e] = (showsToday[e] || '') + 'e';
+
+    showsToday.forEach((showingGroup, i) => {
+      if (!acc[i]) acc[i] = '';
+      while(notEnoughMonths(acc[i], monthsFromStart)) { acc[i] += '0'; }
+      acc[i] += dateId + getShowingIdFromGroup(showingGroup);
+    })
+
+    return acc
+  }, []).reduce((a, c, i) => {
+    return a + `[${i}]` + c
+  }, '')
+  return `${startingDate}${dataString}`;
+}
+
 export default Controller.extend({
   queryParams: {
     shortTitles: { replace: true },
@@ -167,9 +129,7 @@ export default Controller.extend({
   dates: DEFAULT_DATES,
 
   shorthandShowData: computed('dates', function() {
-    const dates = urlToShorthand(this.get('dates'));
-    console.log(dates)
-    return dates;
+    return urlToShorthand(this.get('dates'));
   }),
 
   xweeksData: computed('shorthandShowData', function() {
