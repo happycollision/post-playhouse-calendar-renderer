@@ -1,9 +1,8 @@
 import Controller from '@ember/controller';
 import { computed } from '@ember/object';
 import { DateTime } from 'luxon';
-import { later } from '@ember/runloop';
 
-const DEFAULT_TITLES = 'Show 1,Show 2,Show 3,Show 4,Show 5';
+const DEFAULT_TITLES = 'Mermaid,Footloose,Chitty,Urinetown,42nd St';
 
 class ShowData {
   constructor(id, time, idLookup = {}) {
@@ -133,11 +132,6 @@ export default Controller.extend({
   weeksData: computed('xweeksData', 'titles', function() {
     const xweeksData = this.get('xweeksData');
     const titlesString = this.get('titles');
-    later(this, () => {
-      if (this.get('titles') === DEFAULT_TITLES) {
-        this.transitionToRoute({queryParams: {titles: 'Mermaid,Footloose,Chitty,Urinetown,42nd St'}})
-      }
-    })
     const idLookup = titlesString.split(',').reduce((a,c, i) => {
       a[i+1] = c;
       return a;
