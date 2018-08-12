@@ -25,11 +25,11 @@ function getPaddingFor(startingDate) {
 }
 
 function getDaysFromDateId(dateId) {
-  return 'abcdefghijklmnopqrstuvwxyzABCDEF'.indexOf(dateId)
+  return 'abcdefghijklmnopqrstuvwxyzABCDE'.indexOf(dateId)
 }
 
 function getDateIdFromDay(day) {
-  return 'abcdefghijklmnopqrstuvwxyzABCDEF'[day]
+  return 'abcdefghijklmnopqrstuvwxyzABCDE'[day]
 }
 
 function getShorthandObj(slotsId, showId) {
