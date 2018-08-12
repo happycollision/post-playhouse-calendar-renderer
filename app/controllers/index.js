@@ -164,4 +164,25 @@ export default Controller.extend({
     };
   }),
 
+  _changeTitle(originalTitle, ev, shortOrLong) {
+    ev.preventDefault();
+    const newVal = ev.target.value;
+    const oldTitles = this.get(`titles.${shortOrLong}`);
+    const newTitles = oldTitles.map(t => {
+      if (t !== originalTitle) return t;
+      return newVal;
+    });
+    this.set(`${shortOrLong}Titles`, newTitles.join(','))
+  },
+
+  actions: {
+    changeLongTitle(originalTitle, ev) {
+      this._changeTitle(originalTitle, ev, 'long');
+    },
+
+    changeShortTitle(originalTitle, ev) {
+      this._changeTitle(originalTitle, ev, 'short');
+    }
+  }
+
 });
