@@ -4,6 +4,98 @@ import { DateTime } from 'luxon';
 
 const DEFAULT_TITLES = 'Mermaid,Footloose,Chitty,Urinetown,42nd St';
 const DEFAULT_LONG_TITLES = 'Disney\'s The Little Mermaid,Footloose,Chitty Chitty Bang Bang,Urinetown,42nd Street';
+const DEFAULT_DATES = '2018-06-01' +
+  '[1]a3b3c1e3f3g30a3' +
+  '[2]h3i3j1l3' +
+  '[3]' +
+  '[4]0a2' +
+  '[5]00a3';
+const goodShorthandReturn = {
+  startingDate: '2018-06-01',
+  showData: [
+    {e:1},
+    {e:1},
+    {a:1},
+    {},
+    {e:1},
+    {},
+    {},
+    {e:2},
+    {e:2},
+    {a:2},
+    {},
+    {e:1},
+    {e:2},
+    {},
+    {e:3},
+    {e:3},
+    {a:3},
+    {},
+    {e:2},
+    {e:1},
+    {e:3},
+    {e:1},
+    {e:2},
+    {a:1},
+    {},
+    {e:3},
+    {e:2},
+    {},
+    {e:4},
+    {e:4},
+    {a:4},
+    {},
+    {e:3},
+    {e:1},
+    {},
+    {e:5},
+    {a:2, e:5},
+    {a:5},
+    {},
+    {e:5},
+    {a:3, e:4},
+    {e:2},
+    {a:3, e:4},
+    {a:5, e:1},
+    {a:3},
+    {},
+    {e:2},
+    {a:5, e:1},
+    {e:4},
+    {e:2},
+    {m:1, a:3, e:5},
+    {a:1},
+    {},
+    {e:3},
+    {a:1, e:5},
+    {e:2},
+    {e:4},
+    {m:3, a:1, e:5},
+    {a:2},
+    {},
+    {e:1},
+    {a:5, e:3},
+    {e:2},
+    {e:4},
+    {m:1, a:3, e:2},
+    {a:5},
+    {},
+    {e:3},
+    {a:1, e:4},
+    {e:3},
+    {e:2},
+    {m:1, a:4, e:3},
+    {a:1},
+    {},
+    {e:4},
+    {a:2, e:5},
+    {e:1},
+    {e:3},
+    {a:1, e:4},
+    {a:3},
+  ]
+};
+
 
 class ShowData {
   constructor(id, time, idLookup = {}) {
@@ -18,102 +110,67 @@ function getPaddingFor(startingDate) {
   return dateTime.weekday === 7 ? undefined : dateTime.weekday;
 }
 
+function getDaysFromDateId(dateId) {
+  return 'abcdefghijklmnopqrstuvwxyzABCDEF'.indexOf(dateId)
+}
+
+function getShorthandObj(slotsId, showId) {
+  let props = '';
+  switch (slotsId) {
+    case '1': props = 'm'; break;
+    case '2': props = 'a'; break;
+    case '3': props = 'e'; break;
+    case '4': props = 'ma'; break;
+    case '5': props = 'me'; break;
+    case '6': props = 'ae'; break;
+    case '7': props = 'mae'; break;
+    default: throw new Error('unknown slotId of ' + slotsId);
+  }
+  const output = {};
+  Array.from(props).forEach(letter => output[letter] = showId);
+  return output;
+}
+
+function urlToShorthand(urlCode) {
+  const [startingDateString, ...showsDates] =  urlCode.split(/\[\d*\]/g);
+  const showData = showsDates.reduce((a,c, showIndex) => {
+    const showId = showIndex + 1;
+    const dates = [];
+    let startingDate = DateTime.fromISO(startingDateString);
+    let addedMonths = 0;
+    (c.match(/(0|.{2})/g) || []).forEach((input) => {
+      if (input === '0') {
+        addedMonths++;
+        return;
+      }
+      const [dateId, slotsId] = input.split('');
+      const days = getDaysFromDateId(dateId);
+      const daysFromStart = startingDate.startOf('month').plus({months: addedMonths, days}).diff(startingDate, 'days').toObject().days || 0;
+      dates[daysFromStart] = getShorthandObj(slotsId, showId)
+    })
+    for (let index = 0; index < dates.length; index++) {
+      a[index] = Object.assign(a[index] || {}, dates[index] || {});
+    }
+    return a;
+  }, [])
+  return {startingDate: startingDateString, showData}
+}
+
 export default Controller.extend({
   queryParams: {
     shortTitles: { replace: true },
     longTitles: { replace: true },
+    dates: { replace: true },
   },
   shortTitles: DEFAULT_TITLES,
   longTitles: DEFAULT_LONG_TITLES,
+  dates: DEFAULT_DATES,
 
-  shorthandShowData: computed(function() {
-    return {
-        startingDate: '2018-06-01',
-        showData: [
-          {e:1},
-          {e:1},
-          {a:1},
-          {},
-          {e:1},
-          {},
-          {},
-          {e:2},
-          {e:2},
-          {a:2},
-          {},
-          {e:1},
-          {e:2},
-          {},
-          {e:3},
-          {e:3},
-          {a:3},
-          {},
-          {e:2},
-          {e:1},
-          {e:3},
-          {e:1},
-          {e:2},
-          {a:1},
-          {},
-          {e:3},
-          {e:2},
-          {},
-          {e:4},
-          {e:4},
-          {a:4},
-          {},
-          {e:3},
-          {e:1},
-          {},
-          {e:5},
-          {a:2, e:5},
-          {a:5},
-          {},
-          {e:5},
-          {a:3, e:4},
-          {e:2},
-          {a:3, e:4},
-          {a:5, e:1},
-          {a:3},
-          {},
-          {e:2},
-          {a:5, e:1},
-          {e:4},
-          {e:2},
-          {m:1, a:3, e:5},
-          {a:1},
-          {},
-          {e:3},
-          {a:1, e:5},
-          {e:2},
-          {e:4},
-          {m:3, a:1, e:5},
-          {a:2},
-          {},
-          {e:1},
-          {a:5, e:3},
-          {e:2},
-          {e:4},
-          {m:1, a:3, e:2},
-          {a:5},
-          {},
-          {e:3},
-          {a:1, e:4},
-          {e:3},
-          {e:2},
-          {m:1, a:4, e:3},
-          {a:1},
-          {},
-          {e:4},
-          {a:2, e:5},
-          {e:1},
-          {e:3},
-          {a:1, e:4},
-          {a:3},
-        ]
-      };
+  shorthandShowData: computed('dates', function() {
+    const dates = urlToShorthand(this.get('dates'));
+    console.log(dates)
+    return dates;
   }),
-
 
   xweeksData: computed('shorthandShowData', function() {
     const cd = this.get('shorthandShowData');
