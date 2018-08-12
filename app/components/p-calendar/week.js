@@ -4,7 +4,7 @@ import { DateTime } from 'luxon';
 
 class DayInfo {
   constructor(dateTime) {
-    const formattedString = dateTime.toFormat('cccc,d,LLLL');
+    const formattedString = dateTime.toFormat('cccc,d,LLL');
     const [dayName, mDay, monthName] = formattedString.split(',');
     Object.assign(this, {dayName, mDay, monthName});
   }
