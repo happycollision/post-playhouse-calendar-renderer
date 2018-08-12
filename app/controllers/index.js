@@ -19,7 +19,10 @@ function getPaddingFor(startingDate) {
 }
 
 export default Controller.extend({
-  queryParams: ['shortTitles', 'longTitles'],
+  queryParams: {
+    shortTitles: { replace: true },
+    longTitles: { replace: true },
+  },
   shortTitles: DEFAULT_TITLES,
   longTitles: DEFAULT_LONG_TITLES,
 
