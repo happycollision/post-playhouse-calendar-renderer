@@ -3,6 +3,7 @@ import { computed } from '@ember/object';
 import { DateTime } from 'luxon';
 
 const DEFAULT_TITLES = 'Mermaid,Footloose,Chitty,Urinetown,42nd St';
+const DEFAULT_LONG_TITLES = 'Disney\'s The Little Mermaid,Footloose,Chitty Chitty Bang Bang,Urinetown,42nd Street';
 
 class ShowData {
   constructor(id, time, idLookup = {}) {
@@ -17,10 +18,10 @@ function getPaddingFor(startingDate) {
   return dateTime.weekday === 7 ? undefined : dateTime.weekday;
 }
 
-
 export default Controller.extend({
-  queryParams: ['titles'],
-  titles: DEFAULT_TITLES,
+  queryParams: ['shortTitles', 'longTitles'],
+  shortTitles: DEFAULT_TITLES,
+  longTitles: DEFAULT_LONG_TITLES,
 
   shorthandShowData: computed(function() {
     return {
@@ -131,8 +132,8 @@ export default Controller.extend({
 
   weeksData: computed('xweeksData', 'titles', function() {
     const xweeksData = this.get('xweeksData');
-    const titlesString = this.get('titles');
-    const idLookup = titlesString.split(',').reduce((a,c, i) => {
+    const titles = this.get('titles');
+    const idLookup = titles.short.reduce((a,c, i) => {
       a[i+1] = c;
       return a;
     }, {})
@@ -153,6 +154,14 @@ export default Controller.extend({
           : undefined;
       return {startingDate, showsByDay, frontPadding, backPadding};
     })
-  })
+  }),
+
+  titles: computed('shortTitles', 'longTitles', function() {
+    const {shortTitles, longTitles} = this.getProperties('shortTitles', 'longTitles');
+    return {
+      short: shortTitles.split(','),
+      long: longTitles.split(','),
+    };
+  }),
 
 });

@@ -11,21 +11,11 @@
             {{#p-calendar/week startingDate=week.startingDate showsByDay=week.showsByDay frontPadding=week.frontPadding backPadding=week.backPadding}}
             
               <div class="calendar-filters">
-                <div class="filter selected show-1">
-                  Disney&rsquo;s The Little Mermaid
-                </div>
-                <div class="filter selected show-2">
-                  Footloose
-                </div>
-                <div class="filter selected show-3">
-                  Chitty Chitty Bang Bang
-                </div>
-                <div class="filter selected show-4">
-                  Urinetown
-                </div>
-                <div class="filter selected show-5">
-                  42nd Street
-                </div>
+                {{#each longTitles as |title index|}}
+                  <div class="filter selected show-{{add index 1}}">
+                    {{title}}
+                  </div>
+                {{/each}}
               </div>
 
             {{/p-calendar/week}}
