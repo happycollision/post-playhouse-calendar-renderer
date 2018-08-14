@@ -32,18 +32,47 @@ function getDateIdFromDay(day) {
   return 'abcdefghijklmnopqrstuvwxyzABCDE'[day]
 }
 
-function getShorthandObj(slotsId, showId) {
-  let props = '';
+function fullCodeStringToReadable(str) {
+  const {startingDateString, showsDates} = urlCodeParts(str);
+  const startingDate = DateTime.fromISO(startingDateString);
+  let year = startingDate.toFormat('yyyy');
+
+  return showsDates.map(dateCodes => {
+    let output = year + '\n';
+    let runningMonth = startingDate.startOf('month');
+    output += `${runningMonth.toFormat('LLLL')} `
+    dateCodeStringToTokens(dateCodes).forEach((token) => {
+      if (token === '0') {
+        runningMonth = runningMonth.plus({months: 1});
+        output += `\n${runningMonth.toFormat('LLLL')} `
+        return;
+      }
+      const [dateId, slotId] = token;
+      output += `${getDaysFromDateId(dateId) + 1}${getSlotShorthandFromSlotsId(slotId)}, `
+    })
+    return output;
+  });
+}
+
+function dateCodeStringToTokens(str) {
+  return str.match(/(0|.{2})/g) || []
+}
+
+function getSlotShorthandFromSlotsId(slotsId) {
   switch (slotsId) {
-    case '1': props = 'm'; break;
-    case '2': props = 'a'; break;
-    case '3': props = 'e'; break;
-    case '4': props = 'ma'; break;
-    case '5': props = 'me'; break;
-    case '6': props = 'ae'; break;
-    case '7': props = 'mae'; break;
+    case '1': return 'm';
+    case '2': return 'a';
+    case '3': return 'e';
+    case '4': return 'ma';
+    case '5': return 'me';
+    case '6': return 'ae';
+    case '7': return 'mae';
     default: throw new Error('unknown slotId of ' + slotsId);
   }
+}
+
+function getShorthandObj(slotsId, showId) {
+  let props = getSlotShorthandFromSlotsId(slotsId);
   const output = {};
   Array.from(props).forEach(letter => output[letter] = showId);
   return output;
@@ -61,7 +90,7 @@ function urlToShorthandPerShow(urlCode) {
     const dates = [];
     let startingDate = DateTime.fromISO(startingDateString);
     let addedMonths = 0;
-    (c.match(/(0|.{2})/g) || []).forEach((input) => {
+    dateCodeStringToTokens(c).forEach((input) => {
       if (input === '0') {
         addedMonths++;
         return;
@@ -152,7 +181,7 @@ export default Controller.extend({
   }),
 
   readableDates: computed('dates', function() {
-    return [];
+    return fullCodeStringToReadable(this.get('dates'))
   }),
 
   xweeksData: computed('shorthandShowData', function() {
