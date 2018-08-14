@@ -12,7 +12,7 @@
       </div>
       <div>
         {{#with (object-at index readableDates) as |showDates|}}
-          Dates: {{textarea value=showDates}}
+          Dates: {{textarea value=showDates change=(action 'changeReadableDates' index)}}
         {{/with}}
       </div>
     {{/each}}

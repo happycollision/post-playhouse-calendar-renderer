@@ -29,7 +29,8 @@ function getDaysFromDateId(dateId) {
 }
 
 function getDateIdFromDay(day) {
-  return 'abcdefghijklmnopqrstuvwxyzABCDE'[day]
+  day = typeof day === 'string' ? parseInt(day, 10) : day;
+  return 'abcdefghijklmnopqrstuvwxyzABCDE'[day - 1]
 }
 
 function fullCodeStringToReadable(str) {
@@ -144,7 +145,7 @@ function shorthandToUrl(shorthandObj) {
   const dataString = showData.reduce((acc,cur,i) => {
     const today = startingDay.plus({days: i})
     const monthsFromStart = Math.floor(startingDay.plus({days: i}).diff(startingDay, 'months').toObject().months) || 0;
-    const dateId = getDateIdFromDay(today.day - 1);
+    const dateId = getDateIdFromDay(today.day);
     const {m,a,e} = cur;
     const showsToday = [];
     if (m) showsToday[m] = 'm';
@@ -162,6 +163,70 @@ function shorthandToUrl(shorthandObj) {
     return a + `[${i}]` + c
   }, '')
   return `${startingDate}${dataString}`;
+}
+
+function getUrlTokenFromReadableToken(token) {
+  const [day, showing] = token.match(/(\d{1,2}|[mae]{1,3})/g);
+    return `${getDateIdFromDay(day)}${getShowingIdFromGroup(showing)}`;
+}
+
+function findEarliestStartDate(readables) {
+  let earliestStartingDate = DateTime.local().plus({years: 5});
+  readables.forEach((text) => {
+    const tokens = text.match(/\s*(\d{4}|[A-z]+|\d{1,2}[mae]{1,3}),?\s*/g).map(t => t.replace(/,/g, '').trim())
+    let runningDate = DateTime.local().startOf('year');
+    let confirmedDate = false;
+    tokens.forEach((token) => {
+      if (confirmedDate) return;
+      if (/\d{1,2}[mae]{1,3}/.test(token)) {
+        confirmedDate = true;
+        if (runningDate < earliestStartingDate) earliestStartingDate = runningDate;
+      } else if (/\d{4}/.test(token)) {
+        const newYear = DateTime.fromISO(`${token}-01-01`);
+        runningDate = newYear;
+      } else {
+        const month = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'].indexOf(token.toLowerCase()) + 1
+        let newMonth = runningDate.set({month})
+        if (newMonth < runningDate) {
+          newMonth = newMonth.plus({years: 1});
+        }
+        runningDate = newMonth;
+      }
+    })
+  });
+  return earliestStartingDate;
+}
+
+function readablesToUrl(readables) {
+  let earliestStartingDate = findEarliestStartDate(readables)
+  const showsDates = readables.map((text, i) => {
+    let runningDate = earliestStartingDate
+    let lastConfirmedDate = earliestStartingDate;
+    let output = `[${i+1}]`;
+    const tokens = text.match(/\s*(\d{4}|[A-z]+|\d{1,2}[mae]{1,3}),?\s*/g).map(t => t.replace(/,/g, '').trim())
+    tokens.forEach((token) => {
+      if (/\d{1,2}[mae]{1,3}/.test(token)) {
+        output += getUrlTokenFromReadableToken(token)
+        lastConfirmedDate = runningDate; 
+      } else if (/\d{4}/.test(token)) {
+        const newYear = DateTime.fromISO(`${token}-01-01`);
+        runningDate = newYear;
+      } else {
+        const month = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'].indexOf(token.toLowerCase()) + 1
+        let newMonth = runningDate.set({month})
+        if (newMonth < runningDate) {
+          newMonth = newMonth.plus({years: 1});
+        }
+        runningDate = newMonth;
+        if (lastConfirmedDate) {
+          const monthsDiff = newMonth.diff(lastConfirmedDate, 'months').toObject().months || 0;
+          Array.from(new Array(monthsDiff)).forEach(() => output += '0')
+        }
+      }
+    })
+    return output;
+  });
+  return earliestStartingDate.toFormat('yyyy-MM-dd') + showsDates.join('');
 }
 
 export default Controller.extend({
@@ -254,6 +319,13 @@ export default Controller.extend({
 
     changeShortTitle(originalTitle, ev) {
       this._changeTitle(originalTitle, ev, 'short');
+    },
+
+    changeReadableDates(index, ev) {
+      const newVal = ev.target.value;
+      const newObj = this.get('readableDates').concat([]);
+      newObj[index] = newVal;
+      this.set('dates', readablesToUrl(newObj));
     }
   }
 
