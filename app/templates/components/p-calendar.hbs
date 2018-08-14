@@ -7,17 +7,27 @@
       <div class="calendar">
         <table class="month" cellpadding="0" cellspacing="0">
 
-          {{#each weeksData as |week|}}
-            {{#p-calendar/week startingDate=week.startingDate showsByDay=week.showsByDay frontPadding=week.frontPadding backPadding=week.backPadding}}
-            
-              <div class="calendar-filters">
-                {{#each longTitles as |title index|}}
-                  <div class="filter selected show-{{add index 1}}">
-                    {{title}}
-                  </div>
-                {{/each}}
-              </div>
+          {{#each weeksData as |wd wIndex|}}
+            {{#p-calendar/week startingDate=wd.startingDate showsByDay=wd.showsByDay backPadding=wd.backPadding as |days|}}
+              <tr class="week">
 
+                {{#if (and (gt wd.frontPadding 0) (eq wIndex 0))}}
+                  <td class="day padding" colspan="{{wd.frontPadding}}">
+                    <div class="calendar-filters">
+                      {{#each longTitles as |title index|}}
+                        <div class="filter selected show-{{add index 1}}">
+                          {{title}}
+                        </div>
+                      {{/each}}
+                    </div>
+                  </td>
+                {{/if}}
+
+                {{#each days as |day|}}
+                  {{p-calendar/day mDay=day.mDay monthName=day.monthName shows=day.shows dayNameFull=day.dayNameFull tagName="td"}}
+                {{/each}}
+              
+              </tr><!-- week -->
             {{/p-calendar/week}}
           {{/each}}
 

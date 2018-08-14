@@ -2,7 +2,9 @@ import Component from '@ember/component';
 import { computed } from '@ember/object';
 
 export default Component.extend({
-  tagName: '',
+  classNames: ['day'],
+  classNameBindings: ['isDark:dark', 'whichDay'],
+  whichDay: computed('mDay', function() { return `day-${this.get('mDay')}`}),
 
   displayMonthName: computed('monthName', function() {
     let monthName = this.get('monthName');

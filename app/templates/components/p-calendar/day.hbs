@@ -1,26 +1,24 @@
-<td class="day day-{{mDay}} {{if isDark 'dark'}}" valign="top">
-  <div class="day-identifiers">
-    <span class="day-name">
-      <span class="full">{{dayNameFull}}</span>
-    </span>
-    <div class="month-holder">
-      <span class="month-name {{lowercase monthName}}">{{displayMonthName}}</span>
+<div class="day-identifiers">
+  <span class="day-name">
+    <span class="full">{{dayNameFull}}</span>
+  </span>
+  <div class="month-holder">
+    <span class="month-name {{lowercase monthName}}">{{displayMonthName}}</span>
+  </div>
+  <span class="mday">{{mDay}}</span>
+</div>
+<div class="day-content show-count-{{shows.length}}">
+  {{#each shows as |show i|}}
+    {{#if (and (eq i 0) (eq show.time '8p'))}}
+      <div class="spacer"></div>
+    {{/if}}
+    <div class="showing
+      {{if (eq show.time '10a') 'morning'}}
+      {{if (eq show.time '2p') 'matinee'}}
+      {{if (eq show.time '8p') 'evening'}}
+      show-{{show.id}}">
+      <span class="show-title">{{show.title}}</span>
+      <span class="show-time">{{show.time}}</span>
     </div>
-    <span class="mday">{{mDay}}</span>
-  </div>
-  <div class="day-content show-count-{{shows.length}}">
-    {{#each shows as |show i|}}
-      {{#if (and (eq i 0) (eq show.time '8p'))}}
-        <div class="spacer"></div>
-      {{/if}}
-      <div class="showing
-        {{if (eq show.time '10a') 'morning'}}
-        {{if (eq show.time '2p') 'matinee'}}
-        {{if (eq show.time '8p') 'evening'}}
-        show-{{show.id}}">
-        <span class="show-title">{{show.title}}</span>
-        <span class="show-time">{{show.time}}</span>
-      </div>
-    {{/each}}
-  </div>
-</td>
+  {{/each}}
+</div>
