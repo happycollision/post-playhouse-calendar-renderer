@@ -1,6 +1,6 @@
-{{keyboard-press key="Escape" onDown=(toggle-action 'showForm' this)}}
+{{keyboard-press key="Escape" onDown=(toggle-action 'editing' this)}}
 
-{{#if showForm}}
+{{#if editing}}
   <form onsubmit="">
     {{#each titles.long as |title index|}}
       <div>

@@ -123,10 +123,12 @@ export default Controller.extend({
     shortTitles: { replace: true },
     longTitles: { replace: true },
     dates: { replace: true },
+    editing: { replace: true },
   },
   shortTitles: DEFAULT_TITLES,
   longTitles: DEFAULT_LONG_TITLES,
   dates: DEFAULT_DATES,
+  editing: false,
 
   shorthandShowData: computed('dates', function() {
     return urlToShorthand(this.get('dates'));
