@@ -4,17 +4,13 @@ import { computed } from '@ember/object';
 export default Component.extend({
   tagName: '',
 
-  firstOfMonthIdentifier: computed('monthName', 'mDay', function() {
-    const {monthName, mDay} = this.getProperties('monthName', 'mDay');
-    if (mDay === 1 || mDay === '1') {
-      return monthName.toLowerCase()
+  displayMonthName: computed('monthName', function() {
+    let monthName = this.get('monthName');
+    switch (monthName) {
+      case 'Jun': return 'June';
+      case 'Jul': return 'July';
+      default: return monthName;
     }
-    return '';
-  }),
-
-  sanitizedMonthName: computed('monthName', function() {
-    const monthName = this.get('monthName');
-    return monthName === 'August' ? 'Aug' : monthName;
   }),
 
   isDark: computed('shows', function() {
