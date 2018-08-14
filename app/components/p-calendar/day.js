@@ -4,10 +4,10 @@ import { computed } from '@ember/object';
 export default Component.extend({
   classNames: ['day'],
   classNameBindings: ['isDark:dark', 'whichDay'],
-  whichDay: computed('mDay', function() { return `day-${this.get('mDay')}`}),
+  whichDay: computed('mDay', function() { return `day-${this.mDay}`;}),
 
   displayMonthName: computed('monthName', function() {
-    let monthName = this.get('monthName');
+    let monthName = this.monthName;
     switch (monthName) {
       case 'Jun': return 'June';
       case 'Jul': return 'July';

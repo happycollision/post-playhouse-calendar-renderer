@@ -14,9 +14,9 @@ export default Component.extend({
   tagName: '',
 
   dateInfo: computed('startingDate', function () {
-    const date = DateTime.fromISO(this.get('startingDate'));
+    const date = DateTime.fromISO(this.startingDate);
     const times = 7 - (date.weekday === 7 ? 0 : date.weekday);
-    const backPadding = this.get('backPadding') | 0;
+    const backPadding = this.backPadding | 0;
 
     return Array.from(new Array(times - backPadding)).map(function(_, i) {
       return new DayInfo(date.plus({day: i}))
@@ -24,8 +24,8 @@ export default Component.extend({
   }),
 
   days: computed( function() {
-    const shows = this.get('showsByDay');
-    const dateInfo = this.get('dateInfo');
+    const shows = this.showsByDay;
+    const dateInfo = this.dateInfo;
     return dateInfo.map(function(day, i) {
       return {
         mDay: day.mDay,
