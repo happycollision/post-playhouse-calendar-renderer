@@ -121,11 +121,6 @@ function urlToShorthand(urlCode) {
   return {startingDate, showData}
 }
 
-function notEnoughMonths(value, monthsFromStart) {
-  if (value === undefined) throw new Error('no value given for comparing to months');
-  return (value.match(/0/g) || []).length < monthsFromStart;
-}
-
 function getShowingIdFromGroup(group) {
   switch(group) {
     case 'm': return 1;
