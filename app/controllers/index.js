@@ -49,9 +49,14 @@ function getShorthandObj(slotsId, showId) {
   return output;
 }
 
-function urlToShorthand(urlCode) {
-  const [startingDateString, ...showsDates] =  urlCode.split(/\[\d*\]/g);
-  const showData = showsDates.reduce((a,c, showIndex) => {
+function urlCodeParts(urlCode) {
+  const [startingDateString, ...showsDates] = urlCode.split(/\[\d*\]/g);
+  return {startingDateString, showsDates};
+}
+
+function urlToShorthandPerShow(urlCode) {
+  const {startingDateString, showsDates} =  urlCodeParts(urlCode);
+  return showsDates.map((c, showIndex) => {
     const showId = showIndex + 1;
     const dates = [];
     let startingDate = DateTime.fromISO(startingDateString);
@@ -66,12 +71,24 @@ function urlToShorthand(urlCode) {
       const daysFromStart = startingDate.startOf('month').plus({months: addedMonths, days}).diff(startingDate, 'days').toObject().days || 0;
       dates[daysFromStart] = getShorthandObj(slotsId, showId)
     })
+    const a = [];
     for (let index = 0; index < dates.length; index++) {
-      a[index] = Object.assign(a[index] || {}, dates[index] || {});
+      a[index] = Object.assign({}, dates[index] || {});
     }
     return a;
+  });
+}
+
+function urlToShorthand(urlCode) {
+  const {startingDateString: startingDate} =  urlCodeParts(urlCode);
+  const showData = urlToShorthandPerShow(urlCode).reduce((a, perfsForCurrentShow) => {
+    const longestLength = Math.max(a.length, perfsForCurrentShow.length);
+    for (let index = 0; index < longestLength; index++) {
+      a[index] = Object.assign(a[index] || {}, perfsForCurrentShow[index] || {});
+    }
+    return a
   }, [])
-  return {startingDate: startingDateString, showData}
+  return {startingDate, showData}
 }
 
 function notEnoughMonths(value, monthsFromStart) {
@@ -132,6 +149,10 @@ export default Controller.extend({
 
   shorthandShowData: computed('dates', function() {
     return urlToShorthand(this.get('dates'));
+  }),
+
+  readableDates: computed('dates', function() {
+    return [];
   }),
 
   xweeksData: computed('shorthandShowData', function() {

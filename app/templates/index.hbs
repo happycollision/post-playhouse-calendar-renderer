@@ -10,6 +10,11 @@
           Short: {{input value=shortTitle change=(action 'changeShortTitle' shortTitle)}}
         {{/with}}
       </div>
+      <div>
+        {{#with (object-at index readableDates) as |showDates|}}
+          Dates: {{showDates}}
+        {{/with}}
+      </div>
     {{/each}}
   </form>
 {{/if}}
