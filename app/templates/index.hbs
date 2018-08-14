@@ -1,13 +1,17 @@
-<form onsubmit="">
-  {{#each titles.long as |title index|}}
-    <div>
-      Show {{add index 1}}
-      Full: {{input value=title change=(action 'changeLongTitle' title)}}
-      {{#with (object-at index titles.short) as |shortTitle|}}
-        Short: {{input value=shortTitle change=(action 'changeShortTitle' shortTitle)}}
-      {{/with}}
-    </div>
-  {{/each}}
-</form>
+{{keyboard-press key="Escape" onDown=(toggle-action 'showForm' this)}}
+
+{{#if showForm}}
+  <form onsubmit="">
+    {{#each titles.long as |title index|}}
+      <div>
+        Show {{add index 1}}
+        Full: {{input value=title change=(action 'changeLongTitle' title)}}
+        {{#with (object-at index titles.short) as |shortTitle|}}
+          Short: {{input value=shortTitle change=(action 'changeShortTitle' shortTitle)}}
+        {{/with}}
+      </div>
+    {{/each}}
+  </form>
+{{/if}}
 
 {{p-calendar weeksData=weeksData longTitles=titles.long}}
