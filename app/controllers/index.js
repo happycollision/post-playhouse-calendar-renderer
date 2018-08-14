@@ -139,32 +139,6 @@ function getShowingIdFromGroup(group) {
   }
 }
 
-function shorthandToUrl(shorthandObj) {
-  const {startingDate, showData} = shorthandObj;
-  const startingDay = DateTime.fromISO(startingDate).startOf('day');
-  const dataString = showData.reduce((acc,cur,i) => {
-    const today = startingDay.plus({days: i})
-    const monthsFromStart = Math.floor(startingDay.plus({days: i}).diff(startingDay, 'months').toObject().months) || 0;
-    const dateId = getDateIdFromDay(today.day);
-    const {m,a,e} = cur;
-    const showsToday = [];
-    if (m) showsToday[m] = 'm';
-    if (a) showsToday[a] = (showsToday[a] || '') + 'a';
-    if (e) showsToday[e] = (showsToday[e] || '') + 'e';
-
-    showsToday.forEach((showingGroup, i) => {
-      if (!acc[i]) acc[i] = '';
-      while(notEnoughMonths(acc[i], monthsFromStart)) { acc[i] += '0'; }
-      acc[i] += dateId + getShowingIdFromGroup(showingGroup);
-    })
-
-    return acc
-  }, []).reduce((a, c, i) => {
-    return a + `[${i}]` + c
-  }, '')
-  return `${startingDate}${dataString}`;
-}
-
 function getUrlTokenFromReadableToken(token) {
   const [day, showing] = token.match(/(\d{1,2}|[mae]{1,3})/g);
     return `${getDateIdFromDay(day)}${getShowingIdFromGroup(showing)}`;
