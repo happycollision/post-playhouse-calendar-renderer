@@ -216,15 +216,15 @@ export default Controller.extend({
   editing: false,
 
   shorthandShowData: computed('dates', function() {
-    return urlToShorthand(this.get('dates'));
+    return urlToShorthand(this.dates);
   }),
 
   readableDates: computed('dates', function() {
-    return fullCodeStringToReadable(this.get('dates'))
+    return fullCodeStringToReadable(this.dates);
   }),
 
   xweeksData: computed('shorthandShowData', function() {
-    const cd = this.get('shorthandShowData');
+    const cd = this.shorthandShowData;
     const oldData = [].concat(cd.showData);
     const firstWeekLength = 7 - getPaddingFor(cd.startingDate);
     const showData = [oldData.splice(0, firstWeekLength)];
@@ -242,8 +242,8 @@ export default Controller.extend({
   }),
 
   weeksData: computed('xweeksData', 'titles', function() {
-    const xweeksData = this.get('xweeksData');
-    const titles = this.get('titles');
+    const xweeksData = this.xweeksData;
+    const titles = this.titles;
     const idLookup = titles.short.reduce((a,c, i) => {
       a[i+1] = c;
       return a;
@@ -268,7 +268,7 @@ export default Controller.extend({
   }),
 
   titles: computed('shortTitles', 'longTitles', function() {
-    const {shortTitles, longTitles} = this.getProperties('shortTitles', 'longTitles');
+    const {shortTitles, longTitles} = this;
     return {
       short: shortTitles.split(','),
       long: longTitles.split(','),
@@ -297,7 +297,7 @@ export default Controller.extend({
 
     changeReadableDates(index, ev) {
       const newVal = ev.target.value;
-      const newObj = this.get('readableDates').concat([]);
+      const newObj = this.readableDates.concat([]);
       newObj[index] = newVal;
       this.set('dates', readablesToUrl(newObj));
     }
