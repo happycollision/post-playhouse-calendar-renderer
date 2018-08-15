@@ -33,6 +33,36 @@ function getDateIdFromDay(day) {
   return 'abcdefghijklmnopqrstuvwxyzABCDE'[day - 1]
 }
 
+function notEnoughMonths(value, monthsFromStart) { 
+  if (value === undefined) throw new Error('no value given for comparing to months'); 
+  return (value.match(/0/g) || []).length < monthsFromStart; 
+} 
+
+function shorthandToUrl(shorthandObj) { 
+  const {startingDate, showData} = shorthandObj; 
+  const startingDay = DateTime.fromISO(startingDate).startOf('day'); 
+  const dataString = showData.reduce((acc,cur,i) => { 
+    const today = startingDay.plus({days: i})
+    const yearsFromStart = today.year - startingDay.year;
+    const monthsFromStart = Math.abs(today.month - startingDay.month) + yearsFromStart * 12;
+    const {m,a,e} = cur; 
+    const showsToday = []; 
+    if (m) showsToday[m] = 'm'; 
+    if (a) showsToday[a] = (showsToday[a] || '') + 'a'; 
+    if (e) showsToday[e] = (showsToday[e] || '') + 'e'; 
+    showsToday.forEach((showingGroup, i) => { 
+      if (!acc[i]) acc[i] = ''; 
+      while(notEnoughMonths(acc[i], monthsFromStart)) { acc[i] += '0'; } 
+      acc[i] += getDateIdFromDay(today.day) + getShowingIdFromGroup(showingGroup); 
+    }) 
+ 
+    return acc 
+  }, []).reduce((a, c, i) => { 
+    return a + `[${i}]` + c 
+  }, '') 
+  return `${startingDate}${dataString}`; 
+}
+
 function fullCodeStringToReadable(str) {
   const {startingDateString, showsDates} = urlCodeParts(str);
   const startingDate = DateTime.fromISO(startingDateString);
@@ -281,6 +311,16 @@ export default Controller.extend({
     this.set(`${shortOrLong}Titles`, newTitles.join(','))
   },
 
+  _shiftDates(incrementType, numIncrements) {
+    const data = Object.assign({}, this.shorthandShowData);
+    const {startingDate} = data;
+    const incrementor = {}
+    incrementor[incrementType] = numIncrements;
+    const newStartingDate = DateTime.fromISO(startingDate).plus(incrementor).toFormat('yyyy-MM-dd');
+    data.startingDate = newStartingDate;
+    this.set('dates', shorthandToUrl(data));
+  },
+
   actions: {
     changeLongTitle(originalTitle, ev) {
       this._changeTitle(originalTitle, ev, 'long');
@@ -295,6 +335,11 @@ export default Controller.extend({
       const newObj = this.readableDates.concat([]);
       newObj[index] = newVal;
       this.set('dates', readablesToUrl(newObj));
+    },
+
+    shiftDays(numDays, ev) {
+      ev.preventDefault();
+      this._shiftDates('days', numDays);
     }
   }
 

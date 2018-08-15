@@ -24,6 +24,12 @@
         {{/with}}
       </div>
     {{/each}}
+    <button type="button" onclick={{action 'shiftDays' -1}}>Shift Back 1 day</button>
+    <button type="button" onclick={{action 'shiftDays' 1}}>Shift Forward 1 day</button>
+    <button type="button" onclick={{action 'shiftDays' -7}}>Shift Back 1 week</button>
+    <button type="button" onclick={{action 'shiftDays' 7}}>Shift Forward 1 week</button>
+    <button type="button" onclick={{action 'shiftDays' -365}}>Shift Back 1 year</button>
+    <button type="button" onclick={{action 'shiftDays' 365}}>Shift Forward 1 year</button>
   </form>
 {{/if}}
 
