@@ -1,3 +1,36 @@
 @import "variables";
 @import "mixins";
 @import "calendar";
+
+form {
+  font-size: 0.85em;
+  max-width: 600px;
+  margin: auto;
+
+  p {
+    margin: 20px auto;
+  }
+
+  textarea {
+    vertical-align: text-top;
+  }
+
+  input {
+    font-size: 1rem;
+  }
+
+  label {
+    opacity: 0.5;
+    display: block;
+    margin-top: 20px;
+    font-size: 1.2em;
+  }
+
+  .field {
+    display: flex;
+    > *:nth-child(2) {
+      flex-grow: 1;
+      margin-left: 10px;
+    }
+  }
+}

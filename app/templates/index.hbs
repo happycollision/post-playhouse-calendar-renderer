@@ -2,12 +2,20 @@
 
 {{#if editing}}
   <form onsubmit="">
+    <h2>Press Escape to close and open this form</h2>
+    <p>
+      Full titles go in the legend at the top. <br>
+      Short ones go into the actual calendar. <br>
+      Follow the pattern established in the dates field to modify those. <br>
+      (m = morning, a = afternoon, e = evening)<br><br>
+      Changes are applied when you click outside each field.
+    </p>
     {{#each titles.long as |title index|}}
       <div>
-        Show {{add index 1}}
-        Full: {{input value=title change=(action 'changeLongTitle' title)}}
+        <label>Show {{add index 1}}</label>
+        <div class="field"><span>Full:</span> {{input value=title change=(action 'changeLongTitle' title)}}</div>
         {{#with (object-at index titles.short) as |shortTitle|}}
-          Short: {{input value=shortTitle change=(action 'changeShortTitle' shortTitle)}}
+          <div class="field"><span>Short: </span>{{input value=shortTitle change=(action 'changeShortTitle' shortTitle)}}</div>
         {{/with}}
       </div>
       <div>
