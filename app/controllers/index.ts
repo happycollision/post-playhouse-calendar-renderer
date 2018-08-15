@@ -1,6 +1,8 @@
 import Controller from '@ember/controller';
-import { computed } from '@ember/object';
+import { computed, get } from '@ember/object';
 import { DateTime } from 'luxon';
+
+type InputEvent = Event & {target: HTMLInputElement};
 
 const DEFAULT_TITLES = 'Mermaid,Footloose,Chitty,Urinetown,42nd St';
 const DEFAULT_LONG_TITLES = 'Disney\'s The Little Mermaid,Footloose,Chitty Chitty Bang Bang,Urinetown,42nd Street';
@@ -11,37 +13,53 @@ const DEFAULT_DATES = '2018-06-01' +
   '[4]C3D30a2k3m3s3A30c3h3k2n3r3' +
   '[5]0f3g3h2j3n2r2u3y3B30a2e2o3';
 
+interface IIdLookup {
+  [x: number]: any;
+}
+
+interface IDayShowings {
+  m?: number;
+  a?: number;
+  e?: number;
+}
+
+interface IShorthandObject {
+  startingDate: string;
+  showData: IDayShowings[];
+}
+
+type TShowingCode = 'm' | 'a' | 'e' | 'ma' | 'me' | 'ae' | 'mae';
+
 class ShowData {
-  constructor(id, time, idLookup = {}) {
-    this.id = id;
-    this.time = time;
+  title: string;
+  constructor(public id: number, public time: string, idLookup: IIdLookup = {}) {
     this.title = idLookup[id] || 'NO TITLE';
   }
 }
 
-function getPaddingFor(startingDate) {
+function getPaddingFor(startingDate: string): number {
   const dateTime = DateTime.fromISO(startingDate);
-  return dateTime.weekday === 7 ? undefined : dateTime.weekday;
+  return dateTime.weekday === 7 ? 0 : dateTime.weekday;
 }
 
-function getDaysFromDateId(dateId) {
+function getDaysFromDateId(dateId: string) {
   return 'abcdefghijklmnopqrstuvwxyzABCDE'.indexOf(dateId)
 }
 
-function getDateIdFromDay(day) {
+function getDateIdFromDay(day: string | number) {
   day = typeof day === 'string' ? parseInt(day, 10) : day;
   return 'abcdefghijklmnopqrstuvwxyzABCDE'[day - 1]
 }
 
-function notEnoughMonths(value, monthsFromStart) { 
+function notEnoughMonths(value: string, monthsFromStart: number) { 
   if (value === undefined) throw new Error('no value given for comparing to months'); 
   return (value.match(/0/g) || []).length < monthsFromStart; 
 } 
 
-function shorthandToUrl(shorthandObj) { 
+function shorthandToUrl(shorthandObj: IShorthandObject) { 
   const {startingDate, showData} = shorthandObj; 
   const startingDay = DateTime.fromISO(startingDate).startOf('day'); 
-  const dataString = showData.reduce((acc,cur,i) => { 
+  const dataString = showData.reduce((acc: string[],cur,i) => { 
     const today = startingDay.plus({days: i})
     const yearsFromStart = today.year - startingDay.year;
     const monthsFromStart = Math.abs(today.month - startingDay.month) + yearsFromStart * 12;
@@ -50,7 +68,7 @@ function shorthandToUrl(shorthandObj) {
     if (m) showsToday[m] = 'm'; 
     if (a) showsToday[a] = (showsToday[a] || '') + 'a'; 
     if (e) showsToday[e] = (showsToday[e] || '') + 'e'; 
-    showsToday.forEach((showingGroup, i) => { 
+    showsToday.forEach((showingGroup: TShowingCode, i) => { 
       if (!acc[i]) acc[i] = ''; 
       while(notEnoughMonths(acc[i], monthsFromStart)) { acc[i] += '0'; } 
       acc[i] += getDateIdFromDay(today.day) + getShowingIdFromGroup(showingGroup); 
@@ -63,7 +81,7 @@ function shorthandToUrl(shorthandObj) {
   return `${startingDate}${dataString}`; 
 }
 
-function fullCodeStringToReadable(str) {
+function fullCodeStringToReadable(str: string) {
   const {startingDateString, showsDates} = urlCodeParts(str);
   const startingDate = DateTime.fromISO(startingDateString);
   let year = startingDate.toFormat('yyyy');
@@ -85,11 +103,11 @@ function fullCodeStringToReadable(str) {
   });
 }
 
-function dateCodeStringToTokens(str) {
+function dateCodeStringToTokens(str: string) {
   return str.match(/(0|.{2})/g) || []
 }
 
-function getSlotShorthandFromSlotsId(slotsId) {
+function getSlotShorthandFromSlotsId(slotsId: string) {
   switch (slotsId) {
     case '1': return 'm';
     case '2': return 'a';
@@ -102,23 +120,23 @@ function getSlotShorthandFromSlotsId(slotsId) {
   }
 }
 
-function getShorthandObj(slotsId, showId) {
+function getShorthandObj(slotsId: string, showId: number): IDayShowings {
   let props = getSlotShorthandFromSlotsId(slotsId);
-  const output = {};
+  const output: any = {};
   Array.from(props).forEach(letter => output[letter] = showId);
   return output;
 }
 
-function urlCodeParts(urlCode) {
+function urlCodeParts(urlCode: string) {
   const [startingDateString, ...showsDates] = urlCode.split(/\[\d*\]/g);
   return {startingDateString, showsDates};
 }
 
-function urlToShorthandPerShow(urlCode) {
+function urlToShorthandPerShow(urlCode: string) {
   const {startingDateString, showsDates} =  urlCodeParts(urlCode);
   return showsDates.map((c, showIndex) => {
     const showId = showIndex + 1;
-    const dates = [];
+    const dates: IDayShowings[] = [];
     let startingDate = DateTime.fromISO(startingDateString);
     let addedMonths = 0;
     dateCodeStringToTokens(c).forEach((input) => {
@@ -139,7 +157,7 @@ function urlToShorthandPerShow(urlCode) {
   });
 }
 
-function urlToShorthand(urlCode) {
+function urlToShorthand(urlCode: string): IShorthandObject {
   const {startingDateString: startingDate} =  urlCodeParts(urlCode);
   const showData = urlToShorthandPerShow(urlCode).reduce((a, perfsForCurrentShow) => {
     const longestLength = Math.max(a.length, perfsForCurrentShow.length);
@@ -151,7 +169,7 @@ function urlToShorthand(urlCode) {
   return {startingDate, showData}
 }
 
-function getShowingIdFromGroup(group) {
+function getShowingIdFromGroup(group: TShowingCode) {
   switch(group) {
     case 'm': return 1;
     case 'a': return 2;
@@ -164,15 +182,15 @@ function getShowingIdFromGroup(group) {
   }
 }
 
-function getUrlTokenFromReadableToken(token) {
-  const [day, showing] = token.match(/(\d{1,2}|[mae]{1,3})/g);
-    return `${getDateIdFromDay(day)}${getShowingIdFromGroup(showing)}`;
+function getUrlTokenFromReadableToken(token: string) {
+  const [day, showing] = (token.match(/(\d{1,2}|[mae]{1,3})/g) || []) as [string, TShowingCode];
+  return `${getDateIdFromDay(day)}${getShowingIdFromGroup(showing)}`;
 }
 
-function findEarliestStartDate(readables) {
+function findEarliestStartDate(readables: string[]) {
   let earliestStartingDate = DateTime.local().plus({years: 5});
   readables.forEach((text) => {
-    const tokens = text.match(/\s*(\d{4}|[A-z]+|\d{1,2}[mae]{1,3}),?\s*/g).map(t => t.replace(/,/g, '').trim())
+    const tokens = (text.match(/\s*(\d{4}|[A-z]+|\d{1,2}[mae]{1,3}),?\s*/g)||[]).map(t => t.replace(/,/g, '').trim())
     let runningDate = DateTime.local().startOf('year');
     let confirmedDate = false;
     tokens.forEach((token) => {
@@ -196,13 +214,13 @@ function findEarliestStartDate(readables) {
   return earliestStartingDate;
 }
 
-function readablesToUrl(readables) {
+function readablesToUrl(readables: string[]) {
   let earliestStartingDate = findEarliestStartDate(readables)
   const showsDates = readables.map((text, i) => {
     let runningDate = earliestStartingDate
     let lastConfirmedDate = earliestStartingDate;
     let output = `[${i+1}]`;
-    const tokens = text.match(/\s*(\d{4}|[A-z]+|\d{1,2}[mae]{1,3}),?\s*/g).map(t => t.replace(/,/g, '').trim())
+    const tokens = (text.match(/\s*(\d{4}|[A-z]+|\d{1,2}[mae]{1,3}),?\s*/g) || []).map(t => t.replace(/,/g, '').trim())
     tokens.forEach((token) => {
       if (/\d{1,2}[mae]{1,3}/.test(token)) {
         output += getUrlTokenFromReadableToken(token)
@@ -248,9 +266,9 @@ export default Controller.extend({
     return fullCodeStringToReadable(this.dates);
   }),
 
-  xweeksData: computed('shorthandShowData', function() {
-    const cd = this.shorthandShowData;
-    const oldData = [].concat(cd.showData);
+  xweeksData: computed('shorthandShowData', function(): IShorthandObject[] {
+    const cd: IShorthandObject = this.shorthandShowData;
+    const oldData: IDayShowings[] = [...cd.showData];
     const firstWeekLength = 7 - getPaddingFor(cd.startingDate);
     const showData = [oldData.splice(0, firstWeekLength)];
     while(oldData.length) {
@@ -267,12 +285,12 @@ export default Controller.extend({
   }),
 
   weeksData: computed('xweeksData', 'titles', function() {
-    const xweeksData = this.xweeksData;
-    const titles = this.titles;
+    const xweeksData: IShorthandObject[] = this.xweeksData;
+    const titles: {short: string[], long: string[]} = this.titles;
     const idLookup = titles.short.reduce((a,c, i) => {
       a[i+1] = c;
       return a;
-    }, {})
+    }, {} as IIdLookup)
 
     return xweeksData.map(function(data, i) {
       const {showData, startingDate} = data;
@@ -288,7 +306,7 @@ export default Controller.extend({
       const backPadding = i === xweeksData.length - 1
         ? 7 - showsByDay.length
           : undefined;
-      return {startingDate, showsByDay, frontPadding, backPadding};
+      return {startingDate, showsByDay, frontPadding: frontPadding === 0 ? undefined : frontPadding, backPadding};
     })
   }),
 
@@ -300,21 +318,22 @@ export default Controller.extend({
     };
   }),
 
-  _changeTitle(originalTitle, ev, shortOrLong) {
+  _changeTitle(originalTitle: string, ev: InputEvent, shortOrLong: 'short' | 'long') {
     ev.preventDefault();
     const newVal = ev.target.value;
-    const oldTitles = this.get(`titles.${shortOrLong}`);
+    const oldTitles: string[] = get(get(this, 'titles'), shortOrLong);
     const newTitles = oldTitles.map(t => {
       if (t !== originalTitle) return t;
       return newVal;
     });
-    this.set(`${shortOrLong}Titles`, newTitles.join(','))
+    const theProp = `${shortOrLong}Titles` as 'shortTitles' | 'longTitles';
+    this.set(theProp, newTitles.join(','))
   },
 
-  _shiftDates(incrementType, numIncrements) {
-    const data = Object.assign({}, this.shorthandShowData);
+  _shiftDates(incrementType: string, numIncrements: number) {
+    const data: IShorthandObject = Object.assign({}, this.shorthandShowData as any);
     const {startingDate} = data;
-    const incrementor = {}
+    const incrementor: {[s: string]: any} = {}
     incrementor[incrementType] = numIncrements;
     const newStartingDate = DateTime.fromISO(startingDate).plus(incrementor).toFormat('yyyy-MM-dd');
     data.startingDate = newStartingDate;
@@ -322,22 +341,22 @@ export default Controller.extend({
   },
 
   actions: {
-    changeLongTitle(originalTitle, ev) {
+    changeLongTitle(originalTitle: string, ev: InputEvent) {
       this._changeTitle(originalTitle, ev, 'long');
     },
 
-    changeShortTitle(originalTitle, ev) {
+    changeShortTitle(originalTitle: string, ev: InputEvent) {
       this._changeTitle(originalTitle, ev, 'short');
     },
 
-    changeReadableDates(index, ev) {
+    changeReadableDates(index: number, ev: InputEvent) {
       const newVal = ev.target.value;
-      const newObj = this.readableDates.concat([]);
+      const newObj: string[] = ((this.readableDates as any) as string[]).concat([]);
       newObj[index] = newVal;
       this.set('dates', readablesToUrl(newObj));
     },
 
-    shiftDays(numDays, ev) {
+    shiftDays(numDays: number, ev: InputEvent) {
       ev.preventDefault();
       this._shiftDates('days', numDays);
     }
