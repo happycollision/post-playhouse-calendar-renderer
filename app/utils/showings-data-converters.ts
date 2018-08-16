@@ -250,17 +250,18 @@ export function readablesToUrl(readables: string[]) {
   let earliestStartingDate = findEarliestStartDate(readables)
   const showsDates = readables.map((text, i) => {
     let runningDate = earliestStartingDate;
-    let lastConfirmedDate: DateTime;
+    let lastConfirmedDate = earliestStartingDate;
     let output = `[${i+1}]`;
     const tokens = (text.match(/\s*(\d{4}|[A-z]+|\d{1,2}[mae]{1,3}),?\s*/g) || []).map(t => t.replace(/,/g, '').trim())
     tokens.forEach((token) => {
+      if (i === 2) debugger
       if (/\d{1,2}[mae]{1,3}/.test(token)) {
         output += getUrlTokenFromReadableToken(token)
         runningDate = runningDate.set({day: parseInt(token)})
         lastConfirmedDate = runningDate; 
       } else if (/\d{4}/.test(token)) {
         const newYear = DateTime.fromISO(`${token}-01-01`);
-        runningDate = newYear;
+        if (newYear > runningDate) runningDate = newYear;
       } else {
         const month = MONTHS.indexOf(token.toLowerCase()) + 1
         let newMonth = runningDate.set({month})
