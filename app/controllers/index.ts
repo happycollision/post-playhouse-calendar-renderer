@@ -197,6 +197,7 @@ function findEarliestStartDate(readables: string[]) {
       if (confirmedDate) return;
       if (/\d{1,2}[mae]{1,3}/.test(token)) {
         confirmedDate = true;
+        runningDate = runningDate.set({day: parseInt(token)})
         if (runningDate < earliestStartingDate) earliestStartingDate = runningDate;
       } else if (/\d{4}/.test(token)) {
         const newYear = DateTime.fromISO(`${token}-01-01`);
@@ -214,6 +215,12 @@ function findEarliestStartDate(readables: string[]) {
   return earliestStartingDate;
 }
 
+function monthsDiffFromDays(first: DateTime, second: DateTime): number {
+  const yearsDiff = second.year - first.year;
+  const monthsDiff = second.month - first.month;
+  return yearsDiff * 12 + monthsDiff;
+}
+
 function readablesToUrl(readables: string[]) {
   let earliestStartingDate = findEarliestStartDate(readables)
   const showsDates = readables.map((text, i) => {
@@ -224,6 +231,7 @@ function readablesToUrl(readables: string[]) {
     tokens.forEach((token) => {
       if (/\d{1,2}[mae]{1,3}/.test(token)) {
         output += getUrlTokenFromReadableToken(token)
+        runningDate = runningDate.set({day: parseInt(token)})
         lastConfirmedDate = runningDate; 
       } else if (/\d{4}/.test(token)) {
         const newYear = DateTime.fromISO(`${token}-01-01`);
@@ -236,7 +244,7 @@ function readablesToUrl(readables: string[]) {
         }
         runningDate = newMonth;
         if (lastConfirmedDate) {
-          const monthsDiff = newMonth.diff(lastConfirmedDate, 'months').toObject().months || 0;
+          const monthsDiff = monthsDiffFromDays(lastConfirmedDate, newMonth);
           Array.from(new Array(monthsDiff)).forEach(() => output += '0')
         }
       }
