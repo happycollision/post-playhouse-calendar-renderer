@@ -85,6 +85,11 @@ function isMonthName(str: string): boolean {
   return MONTHS.includes(str.toLowerCase());
 }
 
+export function idTokenToShowingToken(token: string): string {
+  const [dateId, slotId] = token;
+  return `${getDaysFromDateId(dateId) + 1}${getSlotShorthandFromSlotsId(slotId)}`;
+}
+
 export function fullCodeStringToReadable(str: string) {
   const {startingDateString, showsDates} = urlCodeParts(str);
   const startingDate = DateTime.fromISO(startingDateString);
@@ -99,8 +104,7 @@ export function fullCodeStringToReadable(str: string) {
         runningMonth = runningMonth.plus({months: 1});
         return runningMonth.toFormat('LLLL');
       }
-      const [dateId, slotId] = token;
-      return `${getDaysFromDateId(dateId) + 1}${getSlotShorthandFromSlotsId(slotId)}`;
+      return idTokenToShowingToken(token);
     }).reduce((acc: string[], token, i) => {
       if (i === 0 && isShowingCode(token)) {
         acc.push(startingDate.toFormat('LLLL'));
@@ -123,7 +127,7 @@ export function fullCodeStringToReadable(str: string) {
   });
 }
 
-function dateCodeStringToTokens(str: string) {
+export function dateCodeStringToTokens(str: string) {
   return str.match(/(0|.{2})/g) || []
 }
 
@@ -147,7 +151,7 @@ function getShorthandObj(slotsId: string, showId: number): IDayShowings {
   return output;
 }
 
-function urlCodeParts(urlCode: string) {
+export function urlCodeParts(urlCode: string) {
   const [startingDateString, ...showsDates] = urlCode.split(/\[\d*\]/g);
   return {startingDateString, showsDates};
 }
