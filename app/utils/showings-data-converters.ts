@@ -91,7 +91,7 @@ export function fullCodeStringToReadable(str: string) {
   let year = startingDate.toFormat('yyyy');
 
   return showsDates.map(dateCodes => {
-    let output = year + '\n';
+    let output = year;
     let runningMonth = startingDate.startOf('month');
     
     dateCodeStringToTokens(dateCodes).map((token) => {
@@ -102,14 +102,10 @@ export function fullCodeStringToReadable(str: string) {
       const [dateId, slotId] = token;
       return `${getDaysFromDateId(dateId) + 1}${getSlotShorthandFromSlotsId(slotId)}`;
     }).reduce((acc: string[], token, i) => {
-      console.log({token})
-
       if (i === 0 && isShowingCode(token)) {
-        console.log('fired month push');
-        
         acc.push(startingDate.toFormat('LLLL'));
       }
-      const lastToken = acc[i - 1];
+      const lastToken = acc[acc.length - 1];
       if (isMonthName(token) && lastToken) {
         if (isMonthName(lastToken)) {
           acc[i - 1] = token;
@@ -119,10 +115,9 @@ export function fullCodeStringToReadable(str: string) {
       acc.push(token);
       return acc;
     }, []).forEach(token => {
-      console.log({finalToken: token})
       if (isMonthName(token)) return output += `\n${token}`;
       if (isShowingCode(token)) return output += ` ${token},`;
-      return output += token; // This should just be the year... I think
+      return // should be nothing left
     })
     return output;
   });

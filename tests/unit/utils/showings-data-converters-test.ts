@@ -6,15 +6,15 @@ const URL_CODE = '2018-06-29' +
 '[2]D30b2' +
 '[3]0f3';
 
-const READABLE = [
+const READABLE = () => [
 `2018
 June 29a,
-July 1e`,
+July 1e,`,
 `2018
-June 30e
-July 2a`,
+June 30e,
+July 2a,`,
 `2018
-July 6e`
+July 6e,`
 ]
 
 const SHORTHAND = () => ({startingDate: '2018-06-29', showData: [
@@ -56,10 +56,15 @@ module('Unit | Utility | showings-data-converters | simple functions', function(
   });
 });
 
-module('Unit | Utility | showings-data-converters | simple functions', function() {
+module('Unit | Utility | showings-data-converters | big converters', function() {
 
   test('fullCodeStringToReadable', function(assert) {
     let result = dc.fullCodeStringToReadable(URL_CODE);
-    assert.equal(result, READABLE)
+    assert.deepEqual(result, READABLE())
+  });
+
+  test('readablesToUrl', function(assert) {
+    let result = dc.readablesToUrl(READABLE());
+    assert.equal(result, URL_CODE)
   });
 });
