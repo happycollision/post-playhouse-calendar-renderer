@@ -33,7 +33,7 @@ export class ShowData {
   }
 }
 
-const MATCH_SHOWING_CODE = /\d{1,2}|[mae]{1,3}/;
+const MATCH_SHOWING_CODE = /\d{1,2}[mae]{1,3}/;
 const SPLIT_SHOWING_CODE = /(\d{1,2}|[mae]{1,3})/g;
 const MONTHS = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
 
@@ -105,14 +105,15 @@ export function fullCodeStringToReadable(str: string) {
         return runningMonth.toFormat('LLLL');
       }
       return idTokenToShowingToken(token);
-    }).reduce((acc: string[], token, i) => {
+    }).reduce((acc: string[], token, i, init) => {
+      // if (token === 'May' || token === 'June') debugger
       if (i === 0 && isShowingCode(token)) {
         acc.push(startingDate.toFormat('LLLL'));
       }
       const lastToken = acc[acc.length - 1];
       if (isMonthName(token) && lastToken) {
         if (isMonthName(lastToken)) {
-          acc[i - 1] = token;
+          acc[acc.length - 1] = token;
           return acc;
         }
       }
@@ -258,7 +259,6 @@ export function readablesToUrl(readables: string[]) {
     let output = `[${i+1}]`;
     const tokens = (text.match(/\s*(\d{4}|[A-z]+|\d{1,2}[mae]{1,3}),?\s*/g) || []).map(t => t.replace(/,/g, '').trim())
     tokens.forEach((token) => {
-      if (i === 2) debugger
       if (/\d{1,2}[mae]{1,3}/.test(token)) {
         output += getUrlTokenFromReadableToken(token)
         runningDate = runningDate.set({day: parseInt(token)})
