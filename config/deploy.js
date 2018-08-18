@@ -3,8 +3,11 @@
 
 module.exports = function(deployTarget) {
   let ENV = {
-    build: {}
+    build: {},
     // include other plugin configuration that applies to all deploy targets here
+    ghpages: {
+      gitRemoteUrl: 'https://github.com/happycollision/post-playhouse-calendar-renderer.git'
+    }
   };
 
   if (deployTarget === 'development') {

@@ -49,6 +49,9 @@ module.exports = function(environment) {
 
   if (environment === 'production') {
     // here you can enable a production-specific feature
+    ENV.rootURL = '/post-playhouse-calendar-renderer/';
+    ENV.locationType = 'hash';
+
   }
 
   return ENV;
