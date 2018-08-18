@@ -1,36 +1,12 @@
 {{keyboard-press key="Escape" onDown=(toggle-action 'editing' this)}}
 
 {{#if editing}}
-  <form onsubmit="">
-    <h2>Press Escape to close and open this form</h2>
-    <p>
-      Full titles go in the legend at the top. <br>
-      Short ones go into the actual calendar. <br>
-      Follow the pattern established in the dates field to modify those. <br>
-      (m = morning, a = afternoon, e = evening)<br><br>
-      Changes are applied when you click outside each field.
-    </p>
-    {{#each titles.long as |title index|}}
-      <div>
-        <label>Show {{add index 1}}</label>
-        <div class="field"><span>Full:</span> {{input value=title change=(action 'changeLongTitle' title)}}</div>
-        {{#with (object-at index titles.short) as |shortTitle|}}
-          <div class="field"><span>Short: </span>{{input value=shortTitle change=(action 'changeShortTitle' shortTitle)}}</div>
-        {{/with}}
-      </div>
-      <div>
-        {{#with (object-at index readableDates) as |showDates|}}
-          Dates: {{textarea rows="8" cols="60" value=showDates change=(action 'changeReadableDates' index)}}
-        {{/with}}
-      </div>
-    {{/each}}
-    <button type="button" onclick={{action 'shiftDays' -1}}>Shift Back 1 day</button>
-    <button type="button" onclick={{action 'shiftDays' 1}}>Shift Forward 1 day</button>
-    <button type="button" onclick={{action 'shiftDays' -7}}>Shift Back 1 week</button>
-    <button type="button" onclick={{action 'shiftDays' 7}}>Shift Forward 1 week</button>
-    <button type="button" onclick={{action 'shiftDays' -365}}>Shift Back 1 year</button>
-    <button type="button" onclick={{action 'shiftDays' 365}}>Shift Forward 1 year</button>
-  </form>
+  {{edit-form titles=titles readableDates=readableDates actns=(hash
+    changeLongTitle=(action 'changeLongTitle')
+    changeShortTitle=(action 'changeShortTitle')
+    changeReadableDates=(action 'changeReadableDates')
+    shiftDays=(action 'shiftDays')
+  )}}
 {{/if}}
 
 {{p-calendar weeksData=weeksData longTitles=titles.long isEditing=editing}}
