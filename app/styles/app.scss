@@ -35,6 +35,11 @@ form {
   }
 }
 
-.cal-component-wrapper.is-editing {
-  transform: scale(0.5) translate(-50%, -50%)
+.containers-wrapper.is-editing {
+  display: flex;
+  > * {
+    flex-basis: 50%;
+    flex-grow: 0;
+    flex-shrink: 0;
+  }
 }

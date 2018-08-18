@@ -1,14 +1,20 @@
 {{keyboard-press key="Escape" onDown=(toggle-action 'editing' this)}}
 
-{{#if editing}}
-  {{edit-form titles=titles readableDates=readableDates actns=(hash
-    changeLongTitle=(action 'changeLongTitle')
-    changeShortTitle=(action 'changeShortTitle')
-    changeReadableDates=(action 'changeReadableDates')
-    shiftDays=(action 'shiftDays')
-  )}}
-{{/if}}
+<div class="containers-wrapper {{if editing 'is-editing'}}">
+  <div class="cal-component-wrapper">
+    {{#squishable-container}}
+      {{p-calendar weeksData=weeksData longTitles=titles.long isEditing=editing}}
+    {{/squishable-container}}
+  </div>
 
-<div class="cal-component-wrapper {{if editing 'is-editing'}}">
-  {{p-calendar weeksData=weeksData longTitles=titles.long isEditing=editing}}
+  {{#if editing}}
+    <div class="form-component-wrapper">
+        {{edit-form titles=titles readableDates=readableDates actns=(hash
+          changeLongTitle=(action 'changeLongTitle')
+          changeShortTitle=(action 'changeShortTitle')
+          changeReadableDates=(action 'changeReadableDates')
+          shiftDays=(action 'shiftDays')
+        )}}
+    </div>
+  {{/if}}
 </div>
