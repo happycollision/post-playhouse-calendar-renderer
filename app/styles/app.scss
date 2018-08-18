@@ -34,3 +34,7 @@ form {
     }
   }
 }
+
+.cal-component-wrapper.is-editing {
+  transform: scale(0.5) translate(-50%, -50%)
+}
