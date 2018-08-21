@@ -3,7 +3,7 @@
 @import "calendar";
 
 form {
-  font-size: 0.85em;
+  font-size: 1rem;
   max-width: 600px;
   margin: auto;
 
@@ -11,12 +11,9 @@ form {
     margin: 20px auto;
   }
 
-  textarea {
+  textarea, input {
     vertical-align: text-top;
-  }
-
-  input {
-    font-size: 1rem;
+    font-size: 0.85rem;
   }
 
   label {

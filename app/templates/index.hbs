@@ -2,9 +2,9 @@
 
 <div class="containers-wrapper {{if editing 'is-editing'}}">
   <div class="cal-component-wrapper">
-    {{#squishable-container}}
+    {{#maybe-squish squish=editing}}
       {{p-calendar weeksData=weeksData longTitles=titles.long isEditing=editing}}
-    {{/squishable-container}}
+    {{/maybe-squish}}
   </div>
 
   {{#if editing}}
