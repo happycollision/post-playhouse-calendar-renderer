@@ -40,3 +40,16 @@ form {
     flex-shrink: 0;
   }
 }
+
+@media (max-width: 1030px) {
+  .containers-wrapper.is-editing {
+    flex-wrap: wrap;
+    > * {
+      flex-basis: 100%;
+
+      &:first-child {
+        order: 2;
+      }
+    }
+  }
+}
