@@ -34,14 +34,15 @@ $calendar-day-date-color: black
 $dark-day-bg: rgba(0,0,0,0.4)
 $cal-bg-color: #0087aa
 $cal-border-color: black
+
 $cal-border-width: 2px
-$cal-base-font-size: 24px
-$cal-vert-button-pad: 9.35px
+$cal-base-font-size: 1.5rem // 24px
+$cal-vert-button-pad: 0.584rem // 9.35px
 
 $alt-bg-color: #d1dcc4
 
 $filter-margins: 2px
-$doc-width: 1424px // 2136 is the height
+$doc-width: 89rem // 1424px // 2136px becomes the height
 
 $paperWidth: 8
 $paperHeight: 12
@@ -50,6 +51,7 @@ $ratio: 100% * $paperHeight / $paperWidth
 html
   margin: 0
   padding: 0
+  font-size: $base-font-size
 
 body
   background-color: #ccc
@@ -102,7 +104,7 @@ body
       background-color: $show-5-color
 
 .proportional-wrapper
-  width: $doc-width
+  width: 100%
 
   .outer
     width: 100%
