@@ -10,9 +10,9 @@
   {{#each titles.long as |title index|}}
     <div>
       <label>Show {{add index 1}}</label>
-      <div class="field"><span>Full:</span> {{input value=title change=(action actns.changeLongTitle title)}}</div>
+      <div class="field"><span>Full:</span> {{input value=title change=(action actns.changeLongTitle index)}}</div>
       {{#let (object-at index titles.short) as |shortTitle|}}
-        <div class="field"><span>Short: </span>{{input value=shortTitle change=(action actns.changeShortTitle shortTitle)}}</div>
+        <div class="field"><span>Short: </span>{{input value=shortTitle change=(action actns.changeShortTitle index)}}</div>
       {{/let}}
     </div>
     <div>

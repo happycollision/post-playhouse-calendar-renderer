@@ -100,14 +100,10 @@ export default Controller.extend({
     return decodeURIComponent(document.location.href).replace(/ /g, '+')
   }), 
 
-  _changeTitle(originalTitle: string, ev: InputEvent, shortOrLong: 'short' | 'long') {
-    ev.preventDefault();
-    const newVal = ev.target.value;
+  _changeTitle(index: number, newTitle: string, shortOrLong: 'short' | 'long') {
     const oldTitles: string[] = get(get(this, 'titles'), shortOrLong);
-    const newTitles = oldTitles.map(t => {
-      if (t !== originalTitle) return t;
-      return newVal;
-    });
+    const newTitles = oldTitles.concat([]);
+    newTitles[index] = newTitle;
     const theProp = `${shortOrLong}Titles` as 'shortTitles' | 'longTitles';
     this.set(theProp, newTitles.join(','))
   },
@@ -123,12 +119,14 @@ export default Controller.extend({
   },
 
   actions: {
-    changeLongTitle(originalTitle: string, ev: InputEvent) {
-      this._changeTitle(originalTitle, ev, 'long');
+    changeLongTitle(index: number, ev: InputEvent) {
+      ev.preventDefault();
+      this._changeTitle(index, ev.target.value, 'long');
     },
 
-    changeShortTitle(originalTitle: string, ev: InputEvent) {
-      this._changeTitle(originalTitle, ev, 'short');
+    changeShortTitle(index: number, ev: InputEvent) {
+      ev.preventDefault();
+      this._changeTitle(index, ev.target.value, 'short');
     },
 
     changeReadableDates(index: number, ev: InputEvent) {
