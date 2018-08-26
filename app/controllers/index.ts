@@ -139,7 +139,14 @@ export default Controller.extend({
     shiftDays(numDays: number, ev: InputEvent) {
       ev.preventDefault();
       this._shiftDates('days', numDays);
-    }
+    },
+
+    addShow(ev: InputEvent) {
+      ev.preventDefault();
+      this.set('shortTitles', this.shortTitles + ',');
+      this.set('longTitles', this.longTitles + ',');
+      this.set('dates', this.dates + `[${this.get('titles').short.length}]`);
+    },
   }
 
 });
