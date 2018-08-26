@@ -11,14 +11,14 @@
     <div>
       <label>Show {{add index 1}}</label>
       <div class="field"><span>Full:</span> {{input value=title change=(action actns.changeLongTitle title)}}</div>
-      {{#with (object-at index titles.short) as |shortTitle|}}
+      {{#let (object-at index titles.short) as |shortTitle|}}
         <div class="field"><span>Short: </span>{{input value=shortTitle change=(action actns.changeShortTitle shortTitle)}}</div>
-      {{/with}}
+      {{/let}}
     </div>
     <div>
-      {{#with (object-at index readableDates) as |showDates|}}
+      {{#let (object-at index readableDates) as |showDates|}}
         Dates: {{textarea rows="5" cols="60" value=showDates change=(action actns.changeReadableDates index)}}
-      {{/with}}
+      {{/let}}
     </div>
   {{/each}}
   <button type="button" onclick={{action actns.shiftDays -1}}>Shift Back 1 day</button>
