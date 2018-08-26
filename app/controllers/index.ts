@@ -97,7 +97,20 @@ export default Controller.extend({
 
   url: computed('dates', 'titles', function() {
     if (this.get('fastboot.isFastBoot')) { return '' }
-    return decodeURIComponent(document.location.href).replace(/ /g, '+')
+    let hash = document.location.search + document.location.hash;
+    const beforeHash = document.location.origin + document.location.pathname;
+    // hash = hash.split('&').map(part => decodeURIComponent(part).replace(/ /g, '+').replace(/&/g, encodeURIComponent('&'))).join('&')
+    hash = hash.replace(/%5B|%5D|%20|%2C|%27/g, (match) => {
+      switch (match) {
+        case '%5B': return '[';
+        case '%5D': return ']';
+        case '%20': return '+';
+        case '%2C': return ',';
+        case '%27': return '\'';
+        default: return match;
+      }
+    })
+    return (beforeHash + hash);
   }), 
 
   _changeTitle(index: number, newTitle: string, shortOrLong: 'short' | 'long') {
