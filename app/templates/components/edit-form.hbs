@@ -21,11 +21,22 @@
       {{/let}}
     </div>
   {{/each}}
-  <button type="button" onclick={{action actns.shiftDays -1}}>Shift Back 1 day</button>
-  <button type="button" onclick={{action actns.shiftDays 1}}>Shift Forward 1 day</button>
-  <button type="button" onclick={{action actns.shiftDays -7}}>Shift Back 1 week</button>
-  <button type="button" onclick={{action actns.shiftDays 7}}>Shift Forward 1 week</button>
-  <button type="button" onclick={{action actns.shiftDays -365}}>Shift Back 1 year</button>
-  <button type="button" onclick={{action actns.shiftDays 365}}>Shift Forward 1 year</button>
-  <button type="button" onclick={{action actns.addShow}}>Add Show</button>
+  
+  <div style="margin-top: 2em">
+    <button type="button" onclick={{action actns.addShow}}>Add Show</button>
+  </div>
+  
+  <h2>Actions with all dates</h2>
+  <div>
+    <button type="button" onclick={{action actns.shiftDays -1}}>Shift Back 1 day</button>
+    <button type="button" onclick={{action actns.shiftDays 1}}>Shift Forward 1 day</button>
+  </div>
+  <div>
+    <button type="button" onclick={{action actns.shiftDays -7}}>Shift Back 1 week</button>
+    <button type="button" onclick={{action actns.shiftDays 7}}>Shift Forward 1 week</button>
+  </div>
+  <div>
+    <button type="button" onclick={{action actns.shiftDays -365}}>Shift Back 1 year</button>
+    <button type="button" onclick={{action actns.shiftDays 365}}>Shift Forward 1 year</button>
+  </div>
 </form>
