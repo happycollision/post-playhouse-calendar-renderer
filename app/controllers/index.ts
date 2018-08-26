@@ -147,6 +147,20 @@ export default Controller.extend({
       this.set('longTitles', this.longTitles + ',');
       this.set('dates', this.dates + `[${this.get('titles').short.length}]`);
     },
+
+    removeShow(index: number, ev: InputEvent) {
+      ev.preventDefault();
+      const shortTitles = this.shortTitles.split(',');
+      const longTitles = this.longTitles.split(',');
+      shortTitles.splice(index, 1);
+      longTitles.splice(index, 1);
+      this.set('shortTitles', shortTitles.join(','));
+      this.set('longTitles', longTitles.join(','));
+      let count = -1;
+      this.set('dates', this.dates.replace(/\[\d*\][^&\[]*/g, (matched) => {
+        return ++count === index ? '' : matched;
+      }));
+    }
   }
 
 });

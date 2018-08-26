@@ -9,7 +9,7 @@
   </p>
   {{#each titles.long as |title index|}}
     <div>
-      <label>Show {{add index 1}}</label>
+      <label>Show {{add index 1}}</label> <button type="button" onclick={{action actns.removeShow index}}>Remove</button>
       <div class="field"><span>Full:</span> {{input value=title change=(action actns.changeLongTitle index)}}</div>
       {{#let (object-at index titles.short) as |shortTitle|}}
         <div class="field"><span>Short: </span>{{input value=shortTitle change=(action actns.changeShortTitle index)}}</div>
