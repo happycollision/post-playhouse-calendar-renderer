@@ -1,5 +1,6 @@
 import Controller from '@ember/controller';
 import { computed, get } from '@ember/object';
+import { inject as service } from '@ember/service';
 import { DateTime } from 'luxon';
 import {
   DEFAULT_TITLES,
@@ -31,6 +32,8 @@ export default Controller.extend({
   longTitles: DEFAULT_LONG_TITLES,
   dates: DEFAULT_DATES,
   editing: false,
+
+  fastboot: service(),
 
   shorthandShowData: computed('dates', function() {
     return urlToShorthand(this.dates);
@@ -91,6 +94,11 @@ export default Controller.extend({
       long: longTitles.split(','),
     };
   }),
+
+  url: computed('dates', 'titles', function() {
+    if (this.get('fastboot.isFastBoot')) { return '' }
+    return decodeURIComponent(document.location.href).replace(/ /g, '+')
+  }), 
 
   _changeTitle(originalTitle: string, ev: InputEvent, shortOrLong: 'short' | 'long') {
     ev.preventDefault();
