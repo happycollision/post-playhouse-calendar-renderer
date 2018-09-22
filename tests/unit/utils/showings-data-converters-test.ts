@@ -2,13 +2,13 @@ import * as dc from 'post-playhouse-calendar-renderer/utils/showings-data-conver
 import { module, test } from 'qunit';
 
 const URL_CODE = '2018-06-29' +
-'[1]C20a3' +
+'[1]C2D30a3' +
 '[2]D30b2' +
 '[3]0f3';
 
 const READABLE = () => [
 `2018
-June 29a,
+June 29a, 30e,
 July 1e,`,
 `2018
 June 30e,
@@ -19,7 +19,7 @@ July 6e,`
 
 const SHORTHAND = () => ({startingDate: '2018-06-29', showData: [
   { "a": [1] },
-  { "e": [2] },
+  { "e": [1, 2] },
   { "e": [1] },
   { "a": [2] },
   {},
@@ -57,12 +57,12 @@ module('Unit | Utility | showings-data-converters | simple functions', function(
 
   test('urlCodeParts', function(assert) {
     let result = dc.urlCodeParts(URL_CODE);
-    assert.deepEqual(result, {startingDateString: '2018-06-29', showsDates: ['C20a3', 'D30b2', '0f3']})
+    assert.deepEqual(result, {startingDateString: '2018-06-29', showsDates: ['C2D30a3', 'D30b2', '0f3']})
   });
 
   test('dateCodeStringToTokens', function(assert) {
     let result = dc.dateCodeStringToTokens(dc.urlCodeParts(URL_CODE).showsDates.join(''));
-    assert.deepEqual(result, ['C2', '0', 'a3', 'D3', '0', 'b2', '0', 'f3'])
+    assert.deepEqual(result, ['C2', 'D3', '0', 'a3', 'D3', '0', 'b2', '0', 'f3'])
   });
 });
 
@@ -81,7 +81,7 @@ module('Unit | Utility | showings-data-converters | big converters', function() 
 
 
 module('Unit | Utility | showings-data-converters | real data ', function() {
-  const REAL_URL = '2019-05-31[1]E30a3b2d3k3s3u3w20c3m3q3t1u2x2A2D30c1g2j1k2o3q2[2]0g3h3i2l3r3v3z30f2k3p3s3y3B20a3c3i3n2[3]0n3o3p2t3y30b3j2l2n2t2w3A1E30c2f3h3j3p3r2[4]0B3C3D20j3l3r3z30b3g3j2m3q3[5]00e3f3g2i3m2q2t3x3A3E20d2n3';
+  const REAL_URL = '2019-05-31[1]E30a3b2d3k3s3u3w20c3m3q3t1u2x2A2D30c1g2j1k2o3q2[2]E30g3h3i2l3r3v3z30f2k3p3s3y3B20a3c3i3n2[3]0n3o3p2t3y30b3j2l2n2t2w3A1E30c2f3h3j3p3r2[4]0B3C3D20j3l3r3z30b3g3j2m3q3[5]00e3f3g2i3m2q2t3x3A3E20d2n3';
 
   const REAL_READABLE = () => [
   `2019
@@ -90,6 +90,7 @@ June 1e, 2a, 4e, 11e, 19e, 21e, 23a,
 July 3e, 13e, 17e, 20m, 21a, 24a, 27a, 30e,
 August 3m, 7a, 10m, 11a, 15e, 17a,`,
   `2019
+May 31e,
 June 7e, 8e, 9a, 12e, 18e, 22e, 26e,
 July 6a, 11e, 16e, 19e, 25e, 28a,
 August 1e, 3e, 9e, 14a,`,

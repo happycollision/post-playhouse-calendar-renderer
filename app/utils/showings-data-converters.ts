@@ -193,7 +193,11 @@ export function urlToShorthand(urlCode: string): IShorthandObject {
   const showData = urlToShorthandPerShow(urlCode).reduce((a, perfsForCurrentShow) => {
     const longestLength = Math.max(a.length, perfsForCurrentShow.length);
     for (let index = 0; index < longestLength; index++) {
-      a[index] = Object.assign(a[index] || {}, perfsForCurrentShow[index] || {});
+      a[index] = a[index] || {};
+      Object.keys((perfsForCurrentShow[index] || {})).forEach((showingKey: 'm'|'a'|'e') => {
+        const arrayOfNumbers = a[index][showingKey] || [];
+        a[index][showingKey] = arrayOfNumbers.concat(perfsForCurrentShow[index][showingKey] || []);
+      })
     }
     return a
   }, [])
