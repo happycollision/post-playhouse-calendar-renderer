@@ -73,11 +73,11 @@ export default Controller.extend({
       const {showData, startingDate} = data;
       const frontPadding = getPaddingFor(startingDate);
       const showsByDay = showData.map(function(shorthand) {
-        const output = [];
+        const output: ShowData[] = [];
         const {m, a, e} = shorthand;
-        if (m) { output.push(new ShowData(m, '10a', idLookup))}
-        if (a) { output.push(new ShowData(a, '2p', idLookup))}
-        if (e) { output.push(new ShowData(e, '8p', idLookup))}
+        if (m) { m.forEach(showId => output.push(new ShowData(showId, '10a', idLookup)))}
+        if (a) { a.forEach(showId => output.push(new ShowData(showId, '2p', idLookup)))}
+        if (e) { e.forEach(showId => output.push(new ShowData(showId, '8p', idLookup)))}
         return output;
       });
       const backPadding = i === xweeksData.length - 1

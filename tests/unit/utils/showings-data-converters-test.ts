@@ -18,14 +18,14 @@ July 6e,`
 ]
 
 const SHORTHAND = () => ({startingDate: '2018-06-29', showData: [
-  { "a": 1 },
-  { "e": 2 },
-  { "e": 1 },
-  { "a": 2 },
+  { "a": [1] },
+  { "e": [2] },
+  { "e": [1] },
+  { "a": [2] },
   {},
   {},
   {},
-  { "e": 3 }
+  { "e": [3] }
 ]})
 
 function numDaysWithShowings(showings: dc.IDayShowings[]): number {

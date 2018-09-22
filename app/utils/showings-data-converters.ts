@@ -14,9 +14,9 @@ export interface IIdLookup {
 }
 
 export interface IDayShowings {
-  m?: number;
-  a?: number;
-  e?: number;
+  m?: number[];
+  a?: number[];
+  e?: number[];
 }
 
 export interface IShorthandObject {
@@ -64,10 +64,16 @@ export function shorthandToUrl(shorthandObj: IShorthandObject) {
     const yearsFromStart = today.year - startingDay.year;
     const monthsFromStart = Math.abs(today.month - startingDay.month) + yearsFromStart * 12;
     const {m,a,e} = cur; 
-    const showsToday = []; 
-    if (m) showsToday[m] = 'm'; 
-    if (a) showsToday[a] = (showsToday[a] || '') + 'a'; 
-    if (e) showsToday[e] = (showsToday[e] || '') + 'e'; 
+    const showsToday: ('m'|'a'|'e')[] = []; 
+    if (m) {
+      m.forEach(showId => showsToday[showId] = 'm')
+    }
+    if (a) {
+      a.forEach(showId => showsToday[showId] = 'a');
+    }
+    if (e) {
+      e.forEach(showId => showsToday[showId] = 'e');
+    }
     showsToday.forEach((showingGroup: TShowingCode, i) => { 
       if (!acc[i]) acc[i] = ''; 
       while(notEnoughMonths(acc[i], monthsFromStart)) { acc[i] += '0'; } 
@@ -105,7 +111,7 @@ export function fullCodeStringToReadable(str: string) {
         return runningMonth.toFormat('LLLL');
       }
       return idTokenToShowingToken(token);
-    }).reduce((acc: string[], token, i, init) => {
+    }).reduce((acc: string[], token, i, _init) => {
       // if (token === 'May' || token === 'June') debugger
       if (i === 0 && isShowingCode(token)) {
         acc.push(startingDate.toFormat('LLLL'));
@@ -147,8 +153,8 @@ function getSlotShorthandFromSlotsId(slotsId: string) {
 
 function getShorthandObj(slotsId: string, showId: number): IDayShowings {
   let props = getSlotShorthandFromSlotsId(slotsId);
-  const output: any = {};
-  Array.from(props).forEach(letter => output[letter] = showId);
+  const output: IDayShowings = {};
+  Array.from(props).forEach((letter: 'm'|'a'|'e') => output[letter] = [showId]);
   return output;
 }
 
