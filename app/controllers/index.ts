@@ -1,6 +1,7 @@
 import Controller from '@ember/controller';
-import { computed, get } from '@ember/object';
-import { inject as service } from '@ember/service';
+import { get } from '@ember/object';
+import { service } from '@ember-decorators/service';
+import { action, computed } from '@ember-decorators/object';
 import { DateTime } from 'luxon';
 import {
   DEFAULT_TITLES,
@@ -21,29 +22,33 @@ type InputEvent = Event & {target: HTMLInputElement};
 
 
 
-export default Controller.extend({
+export default class IndexController extends Controller.extend({
   queryParams: {
     shortTitles: { replace: true },
     longTitles: { replace: true },
     dates: { replace: true },
     editing: { replace: true },
   },
-  shortTitles: DEFAULT_TITLES,
-  longTitles: DEFAULT_LONG_TITLES,
-  dates: DEFAULT_DATES,
-  editing: false,
+}) {
+  shortTitles = DEFAULT_TITLES;
+  longTitles = DEFAULT_LONG_TITLES;
+  dates = DEFAULT_DATES;
+  editing = false;
 
-  fastboot: service(),
+  @service('fastboot') fastboot!: any;
 
-  shorthandShowData: computed('dates', function() {
+  @computed('dates')
+  get shorthandShowData() {
     return urlToShorthand(this.dates);
-  }),
+  }
 
-  readableDates: computed('dates', function() {
+  @computed('dates')
+  get readableDates() {
     return fullCodeStringToReadable(this.dates);
-  }),
+  }
 
-  xweeksData: computed('shorthandShowData', function(): IShorthandObject[] {
+  @computed('shorthandShowData')
+  get xweeksData(): IShorthandObject[] {
     const cd: IShorthandObject = this.shorthandShowData;
     const oldData: IDayShowings[] = [...cd.showData];
     const firstWeekLength = 7 - getPaddingFor(cd.startingDate);
@@ -59,9 +64,10 @@ export default Controller.extend({
       }
       return result;
     })
-  }),
+  }
 
-  weeksData: computed('xweeksData', 'titles', function() {
+  @computed('xweeksData', 'titles')
+  get weeksData() {
     const xweeksData: IShorthandObject[] = this.xweeksData;
     const titles: {short: string[], long: string[]} = this.titles;
     const idLookup = titles.short.reduce((a,c, i) => {
@@ -85,18 +91,20 @@ export default Controller.extend({
           : undefined;
       return {startingDate, showsByDay, frontPadding: frontPadding === 0 ? undefined : frontPadding, backPadding};
     })
-  }),
+  }
 
-  titles: computed('shortTitles', 'longTitles', function() {
+  @computed('shortTitles', 'longTitles')
+  get titles() {
     const {shortTitles, longTitles} = this;
     return {
       short: shortTitles.split(','),
       long: longTitles.split(','),
     };
-  }),
+  }
 
-  url: computed('dates', 'titles', function() {
-    if (this.get('fastboot.isFastBoot')) { return '' }
+  @computed('dates', 'titles')
+  get url(): string {
+    if (this.get('fastboot').isFastBoot) { return '' }
     let hash = document.location.search + document.location.hash;
     const beforeHash = document.location.origin + document.location.pathname;
     // hash = hash.split('&').map(part => decodeURIComponent(part).replace(/ /g, '+').replace(/&/g, encodeURIComponent('&'))).join('&')
@@ -111,7 +119,7 @@ export default Controller.extend({
       }
     })
     return (beforeHash + hash);
-  }), 
+  }
 
   _changeTitle(index: number, newTitle: string, shortOrLong: 'short' | 'long') {
     const oldTitles: string[] = get(get(this, 'titles'), shortOrLong);
@@ -119,7 +127,7 @@ export default Controller.extend({
     newTitles[index] = newTitle;
     const theProp = `${shortOrLong}Titles` as 'shortTitles' | 'longTitles';
     this.set(theProp, newTitles.join(','))
-  },
+  }
 
   _shiftDates(incrementType: string, numIncrements: number) {
     const data: IShorthandObject = Object.assign({}, this.shorthandShowData as any);
@@ -129,51 +137,55 @@ export default Controller.extend({
     const newStartingDate = DateTime.fromISO(startingDate).plus(incrementor).toFormat('yyyy-MM-dd');
     data.startingDate = newStartingDate;
     this.set('dates', shorthandToUrl(data));
-  },
-
-  actions: {
-    changeLongTitle(index: number, ev: InputEvent) {
-      ev.preventDefault();
-      this._changeTitle(index, ev.target.value, 'long');
-    },
-
-    changeShortTitle(index: number, ev: InputEvent) {
-      ev.preventDefault();
-      this._changeTitle(index, ev.target.value, 'short');
-    },
-
-    changeReadableDates(index: number, ev: InputEvent) {
-      const newVal = ev.target.value;
-      const newObj: string[] = ((this.readableDates as any) as string[]).concat([]);
-      newObj[index] = newVal;
-      this.set('dates', readablesToUrl(newObj));
-    },
-
-    shiftDays(numDays: number, ev: InputEvent) {
-      ev.preventDefault();
-      this._shiftDates('days', numDays);
-    },
-
-    addShow(ev: InputEvent) {
-      ev.preventDefault();
-      this.set('shortTitles', this.shortTitles + ',');
-      this.set('longTitles', this.longTitles + ',');
-      this.set('dates', this.dates + `[${this.get('titles').short.length}]`);
-    },
-
-    removeShow(index: number, ev: InputEvent) {
-      ev.preventDefault();
-      const shortTitles = this.shortTitles.split(',');
-      const longTitles = this.longTitles.split(',');
-      shortTitles.splice(index, 1);
-      longTitles.splice(index, 1);
-      this.set('shortTitles', shortTitles.join(','));
-      this.set('longTitles', longTitles.join(','));
-      let count = -1;
-      this.set('dates', this.dates.replace(/\[\d*\][^&\[]*/g, (matched) => {
-        return ++count === index ? '' : matched;
-      }));
-    }
   }
 
-});
+  @action
+  changeLongTitle(index: number, ev: InputEvent) {
+    ev.preventDefault();
+    this._changeTitle(index, ev.target.value, 'long');
+  }
+
+  @action
+  changeShortTitle(index: number, ev: InputEvent) {
+    ev.preventDefault();
+    this._changeTitle(index, ev.target.value, 'short');
+  }
+
+  @action
+  changeReadableDates(index: number, ev: InputEvent) {
+    const newVal = ev.target.value;
+    const newObj: string[] = ((this.readableDates as any) as string[]).concat([]);
+    newObj[index] = newVal;
+    this.set('dates', readablesToUrl(newObj));
+  }
+
+  @action
+  shiftDays(numDays: number, ev: InputEvent) {
+    ev.preventDefault();
+    this._shiftDates('days', numDays);
+  }
+
+  @action
+  addShow(ev: InputEvent) {
+    ev.preventDefault();
+    this.set('shortTitles', this.shortTitles + ',');
+    this.set('longTitles', this.longTitles + ',');
+    this.set('dates', this.dates + `[${this.get('titles').short.length}]`);
+  }
+
+  @action
+  removeShow(index: number, ev: InputEvent) {
+    ev.preventDefault();
+    const shortTitles = this.shortTitles.split(',');
+    const longTitles = this.longTitles.split(',');
+    shortTitles.splice(index, 1);
+    longTitles.splice(index, 1);
+    this.set('shortTitles', shortTitles.join(','));
+    this.set('longTitles', longTitles.join(','));
+    let count = -1;
+    this.set('dates', this.dates.replace(/\[\d*\][^&\[]*/g, (matched) => {
+      return ++count === index ? '' : matched;
+    }));
+  }
+
+}

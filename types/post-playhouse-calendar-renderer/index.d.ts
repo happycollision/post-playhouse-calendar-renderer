@@ -6,5 +6,10 @@ declare global {
   // interface Function extends Ember.FunctionPrototypeExtensions {}
 }
 
-export {};
+declare module '@ember/service' {
+  interface Registry {
+    'fastboot': any;
+  }
+}
 
+export {};
