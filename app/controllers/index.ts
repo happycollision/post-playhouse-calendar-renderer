@@ -16,6 +16,7 @@ import {
   ShowData,
   shorthandToUrl,
   readablesToUrl,
+  urlToShorthandPerShow,
 } from 'post-playhouse-calendar-renderer/utils/showings-data-converters';
 
 type InputEvent = Event & {target: HTMLInputElement};
@@ -40,6 +41,11 @@ export default class IndexController extends Controller.extend({
   @computed('dates')
   get shorthandShowData() {
     return urlToShorthand(this.dates);
+  }
+
+  @computed('dates')
+  get shorthandPerShow() {
+    return urlToShorthandPerShow(this.dates);
   }
 
   @computed('dates')
