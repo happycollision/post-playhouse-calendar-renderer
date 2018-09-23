@@ -33,6 +33,14 @@ form {
   }
 }
 
+.showing-info {
+  font-size: 1rem;
+  display: inline-block;
+}
+.showing-info > div {
+  padding-left: 2rem;
+}
+
 .containers-wrapper.is-editing {
   display: flex;
   > * {

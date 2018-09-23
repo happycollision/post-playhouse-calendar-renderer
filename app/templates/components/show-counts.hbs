@@ -1,7 +1,8 @@
 {{#each titles as |title index|}}
   <div class="showing-info" data-test-showing="{{index}}">
+    {{title}}:
     <div class="all">
-      {{title}} Showings: <span data-test-showing-all="{{index}}">{{object-at index allShowings}}</span>
+      all: <span data-test-showing-all="{{index}}">{{object-at index allShowings}}</span>
     </div>
     <div class="morning">
       morning: <span data-test-showing-morning="{{index}}">{{object-at index morningShowings}}</span>

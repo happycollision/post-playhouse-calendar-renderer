@@ -1,10 +1,13 @@
 import Component from '@ember/component';
 import { computed } from '@ember-decorators/object';
+import { tagName } from '@ember-decorators/component';
 import { IDayShowings } from 'post-playhouse-calendar-renderer/utils/showings-data-converters';
 import { assert } from '@ember/debug';
 
 
+@tagName('')
 export default class ShowCounts extends Component {
+
   shorthandPerShow!: IDayShowings[][];
 
   init() {
