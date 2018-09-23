@@ -42,6 +42,33 @@ module('Unit | Utility | showings-data-converters | simple functions', function(
     assert.equal(result, 5);
   });
 
+  test('urlToShorthandPerShow', function(assert) {
+    let result = dc.urlToShorthandPerShow(URL_CODE);
+    let expected = [
+      [
+        { "a": [1] },
+        { "e": [1] },
+        { "e": [1] },
+      ],[
+        {},
+        { "e": [2] },
+        {},
+        { "a": [2] },
+      ],[
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        { "e": [3] }
+      ]
+    ]
+
+    assert.deepEqual(result, expected, 'show data looks correct');
+  });
+
   test('urlToShorthand', function(assert) {
     let result = dc.urlToShorthand(URL_CODE);
 

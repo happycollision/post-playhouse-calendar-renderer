@@ -163,7 +163,7 @@ export function urlCodeParts(urlCode: string) {
   return {startingDateString, showsDates};
 }
 
-function urlToShorthandPerShow(urlCode: string) {
+export function urlToShorthandPerShow(urlCode: string) {
   const {startingDateString, showsDates} =  urlCodeParts(urlCode);
   return showsDates.map((c, showIndex) => {
     const showId = showIndex + 1;
