@@ -28,7 +28,7 @@ $show-4-color-drop-shadow: $yellow-shadow
 $show-5-color-drop-shadow: $green-shadow
 
 $proxima: "Proxima Nova", sans-serif
-$azo: "Azo Sans Uber", sans
+$azo: "Azo Sans Uber", sans-serif
 
 $calendar-day-date-color: black
 $dark-day-bg: rgba(0,0,0,0.4)
@@ -69,7 +69,7 @@ body
     color: darken($alt-bg-color, 20)
     float: left
     font-family: $proxima
-    font-size: $cal-base-font-size * 1.78
+    font-size: $cal-base-font-size * 1.75
     padding: ($cal-base-font-size * 0.2) ($cal-base-font-size * 0.52) 2px
     line-height: $cal-base-font-size * 2
 
@@ -91,6 +91,9 @@ body
     &.show-5
       border-color: lighten($show-5-color, 20)
       +drop-shadow($show-5-color-drop-shadow)
+
+    &.show-6
+      display: none
 
     &.show-1.selected
       background-color: $show-1-color
@@ -149,30 +152,37 @@ body
   +breakpoint($cal-large)
     border-width: $cal-border-width
 
+  .month-holder
+    position: relative
+
   .month-name
     display: none
+    color: $calendar-day-date-color
+    font-family: $azo
+    font-weight: bolder
+    position: absolute
+    background: transparent
+    font-size: $cal-base-font-size * 2.5
+    z-index: 2
+    transform: rotate(-15deg)
 
   &.day-1
-    .month-holder
-      position: relative
     .month-name
-      color: $calendar-day-date-color
-      font-family: $azo
       display: block
-      position: absolute
-      background: transparent
-      font-size: $cal-base-font-size * 2.5
-      z-index: 2
-      transform: rotate(-15deg)
 
       &.jun
-        left: -2em
+        // left: -2em
         top: -0.8em
       &.jul
-        top: 1.0em
+        top: -0.3em
+        right: -4em
       &.aug
         top: -0.8em
-        left: -0.55em
+        // left: -0.55em
+  &.day-31 .may.month-name
+    display: block
+    top: -0.8em
+
 
 .day-name
   display: none
