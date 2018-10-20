@@ -317,3 +317,9 @@ export function readablesToUrl(readables: string[]) {
   });
   return earliestStartingDate.toFormat('yyyy-MM-dd') + showsDates.join('');
 }
+
+export function urlDataToShowingsLists(commaSeparatedTitles: string, urlDatesCode: string) {
+  const titles = commaSeparatedTitles.split(',');
+  const datesList = fullCodeStringToPublishable(urlDatesCode);
+  return titles.map((title, i) => ({title, dates: datesList[i]}));
+}

@@ -1,6 +1,8 @@
 import * as dc from 'post-playhouse-calendar-renderer/utils/showings-data-converters';
 import { module, test } from 'qunit';
 
+const LONG_TITLES = 'Show One,Show Two,Show Three';
+
 const URL_DATES_CODE = '2018-06-29' +
 '[1]C2D30a3' +
 '[2]D30b4' +
@@ -117,6 +119,25 @@ module('Unit | Utility | showings-data-converters | big converters', function() 
     let result = dc.readablesToUrl(READABLE_DATES());
     assert.equal(result, URL_DATES_CODE)
   });
+
+  test('urlDataToShowingsLists', function(assert) {
+    let result = dc.urlDataToShowingsLists(LONG_TITLES, URL_DATES_CODE);
+    let expected = [
+      {
+        title: 'Show One',
+        dates: 'June 29*, 30\nJuly 1'
+      },
+      {
+        title: 'Show Two',
+        dates: 'June 30\nJuly 2‡, 2*'
+      },
+      {
+        title: 'Show Three',
+        dates: 'July 6'
+      },
+    ]
+    assert.deepEqual(result, expected);
+  })
 });
 
 
