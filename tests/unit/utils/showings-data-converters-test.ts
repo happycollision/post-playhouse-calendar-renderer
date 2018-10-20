@@ -3,7 +3,7 @@ import { module, test } from 'qunit';
 
 const URL_CODE = '2018-06-29' +
 '[1]C2D30a3' +
-'[2]D30b2' +
+'[2]D30b4' +
 '[3]0f3';
 
 const READABLE = () => [
@@ -12,16 +12,16 @@ June 29a, 30e,
 July 1e,`,
 `2018
 June 30e,
-July 2a,`,
+July 2ma,`,
 `2018
 July 6e,`
 ]
-
+  
 const SHORTHAND = () => ({startingDate: '2018-06-29', showData: [
   { "a": [1] },
   { "e": [1, 2] },
   { "e": [1] },
-  { "a": [2] },
+  { "m": [2], "a": [2] },
   {},
   {},
   {},
@@ -53,7 +53,7 @@ module('Unit | Utility | showings-data-converters | simple functions', function(
         {},
         { "e": [2] },
         {},
-        { "a": [2] },
+        { "m": [2], "a": [2] },
       ],[
         {},
         {},
@@ -84,12 +84,12 @@ module('Unit | Utility | showings-data-converters | simple functions', function(
 
   test('urlCodeParts', function(assert) {
     let result = dc.urlCodeParts(URL_CODE);
-    assert.deepEqual(result, {startingDateString: '2018-06-29', showsDates: ['C2D30a3', 'D30b2', '0f3']})
+    assert.deepEqual(result, {startingDateString: '2018-06-29', showsDates: ['C2D30a3', 'D30b4', '0f3']})
   });
 
   test('dateCodeStringToTokens', function(assert) {
     let result = dc.dateCodeStringToTokens(dc.urlCodeParts(URL_CODE).showsDates.join(''));
-    assert.deepEqual(result, ['C2', 'D3', '0', 'a3', 'D3', '0', 'b2', '0', 'f3'])
+    assert.deepEqual(result, ['C2', 'D3', '0', 'a3', 'D3', '0', 'b4', '0', 'f3'])
   });
 });
 

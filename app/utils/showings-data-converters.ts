@@ -64,15 +64,15 @@ export function shorthandToUrl(shorthandObj: IShorthandObject) {
     const yearsFromStart = today.year - startingDay.year;
     const monthsFromStart = Math.abs(today.month - startingDay.month) + yearsFromStart * 12;
     const {m,a,e} = cur; 
-    const showsToday: ('m'|'a'|'e')[] = []; 
+    const showsToday: string[] = []; // the string will be 'm', 'a', 'e', 'ma', 'me', 'ae' etc.
     if (m) {
       m.forEach(showId => showsToday[showId] = 'm')
     }
     if (a) {
-      a.forEach(showId => showsToday[showId] = 'a');
+      a.forEach(showId => showsToday[showId] = showsToday[showId] ? showsToday[showId] + 'a': 'a');
     }
     if (e) {
-      e.forEach(showId => showsToday[showId] = 'e');
+      e.forEach(showId => showsToday[showId] = showsToday[showId] ? showsToday[showId] + 'e' : 'e');
     }
     showsToday.forEach((showingGroup: TShowingCode, i) => { 
       if (!acc[i]) acc[i] = ''; 
