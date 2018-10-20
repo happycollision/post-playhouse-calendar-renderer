@@ -329,24 +329,35 @@ export function urlDataToShowingsAgenda(commaSeparatedTitles: string, urlDatesCo
   return showingsList
     .map(sl => monthAndDayListFromDatesString(sl.dates, sl.title))
     .reduce((a,b) => a.concat(b))
-    .reduce(reduceAgendaDates, []);
+    .reduce(reduceAgendaDates, [])
+    .sort(sortAgendaDays)
+    .map(sortAgendaDayPerformances)
+    .map(({dateString, performances}) => ({dateString, performances}))
 }
 
 type Agenda = AgendaDay[];
-type AgendaDay<T = string> = {dateString: string, performances: {timeString: string, title: T}[]}
+interface AgendaDay<T = string> {
+  dateString: string;
+  inaccurateDate?: DateTime; // The year will be wrong. Just good for sorting adjacent days within the same year. Will fail from December into January. See Implemenation below.
+  performances: Array<{
+    timeString: string;
+    title: T;
+  }>
+}
 
 function monthAndDayListFromDatesString(datesPreprendedWithMonth: string, title: string): Agenda {
   return datesPreprendedWithMonth.split('\n')
     .map(monthAndDays => {
       const month = monthAndDays.match(/^\w+ /)![0].trim();
       const daysAndTimes = monthAndDays.match(/\d{1,2}\S?/g);
-      return daysAndTimes!.map(dt => {
+      return daysAndTimes!.map((dt): AgendaDay => {
         const [_full, day, timeSymbol] = dt.match(/(\d{1,2})(.?)/)!;
-        const timeString = timeSymbol === '' ? '8pm'
-                     : timeSymbol === '*' ? '2pm'
-                     : '10am'; 
+        const timeString = timeSymbol === '*' ? '2pm'
+                         : timeSymbol === '‡' ? '10am'
+                         : '8pm'; 
         return {
           dateString: `${month} ${day}`,
+          inaccurateDate: DateTime.fromFormat(`${month} ${day}, 2000`, 'LLLL d, yyyy'),
           performances: [
             {timeString, title}
           ]
@@ -357,14 +368,32 @@ function monthAndDayListFromDatesString(datesPreprendedWithMonth: string, title:
     .reduce(reduceAgendaDates, [] as Agenda)
 }
 
-function reduceAgendaDates(a: Agenda, b: AgendaDay): Agenda {
-  for (let i = 0; i < a.length; i++) {
-    const day = a[i];
-    if (day.dateString === b.dateString) {
-      day.performances = day.performances.concat(b.performances)
-      return a;
+function reduceAgendaDates(acc: Agenda, current: AgendaDay): Agenda {
+  for (let i = 0; i < acc.length; i++) {
+    const day = acc[i];
+    if (day.dateString === current.dateString) {
+      day.performances = day.performances.concat(current.performances)
+      return acc;
     };
   }
-  a.push(b);
-  return a;
+  acc.push(current);
+  return acc;
+}
+
+function sortAgendaDays(a: AgendaDay, b: AgendaDay): 0 | -1 | 1 {
+  const diff = a.inaccurateDate!.diff(b.inaccurateDate!).as('seconds');
+  return diff < 0 ? -1
+       : diff === 0 ? 0
+       : 1;         
+}
+
+function sortAgendaDayPerformances(agendaDay: AgendaDay): AgendaDay {
+  agendaDay.performances.sort((a, b) => {
+    let time1 = parseInt(a.timeString, 10);
+    time1 = time1 === 10 ? 1 : time1;
+    let time2 = parseInt(b.timeString, 10);
+    time2 = time2 === 10 ? 1 : time2;
+    return time1 - time2;
+  })
+  return agendaDay;
 }

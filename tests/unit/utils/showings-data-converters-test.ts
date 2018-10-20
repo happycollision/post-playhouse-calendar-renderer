@@ -1,5 +1,6 @@
 import * as dc from 'post-playhouse-calendar-renderer/utils/showings-data-converters';
 import { module, test } from 'qunit';
+import {DEFAULT_LONG_TITLES, DEFAULT_DATES} from 'post-playhouse-calendar-renderer/utils/showings-data-converters'
 
 const LONG_TITLES = 'Show One,Show Two,Show Three';
 
@@ -226,6 +227,420 @@ August 2, 7, 10*, 13, 17`,
 August 4*, 14`
     ]
 
+  const REAL_SHOWINGS_AGENDA_FROM_DEFAULTS = [
+    {
+      dateString: 'June 1',
+      performances: [
+        { timeString: '8pm', title: 'Disney\'s The Little Mermaid' },
+      ]
+    },
+    {
+      dateString: 'June 2',
+      performances: [
+        { timeString: '8pm', title: 'Disney\'s The Little Mermaid' },
+      ]
+    },
+    {
+      dateString: 'June 3',
+      performances: [
+        { timeString: '2pm', title: 'Disney\'s The Little Mermaid' },
+      ]
+    },
+    {
+      dateString: 'June 5',
+      performances: [
+        { timeString: '8pm', title: 'Disney\'s The Little Mermaid' },
+      ]
+    },
+    {
+      dateString: 'June 8',
+      performances: [
+        { timeString: '8pm', title: 'Footloose' },
+      ]
+    },
+    {
+      dateString: 'June 9',
+      performances: [
+        { timeString: '8pm', title: 'Footloose' },
+      ]
+    },
+    {
+      dateString: 'June 10',
+      performances: [
+        { timeString: '2pm', title: 'Footloose' },
+      ]
+    },
+    {
+      dateString: 'June 12',
+      performances: [
+        { timeString: '8pm', title: 'Disney\'s The Little Mermaid' },
+      ]
+    },
+    {
+      dateString: 'June 13',
+      performances: [
+        { timeString: '8pm', title: 'Footloose' },
+      ]
+    },
+    {
+      dateString: 'June 15',
+      performances: [
+        { timeString: '8pm', title: 'Chitty Chitty Bang Bang' },
+      ]
+    },
+    {
+      dateString: 'June 16',
+      performances: [
+        { timeString: '8pm', title: 'Chitty Chitty Bang Bang' },
+      ]
+    },
+    {
+      dateString: 'June 17',
+      performances: [
+        { timeString: '2pm', title: 'Chitty Chitty Bang Bang' },
+      ]
+    },
+    {
+      dateString: 'June 19',
+      performances: [
+        { timeString: '8pm', title: 'Footloose' },
+      ]
+    },
+    {
+      dateString: 'June 20',
+      performances: [
+        { timeString: '8pm', title: 'Disney\'s The Little Mermaid' },
+      ]
+    },
+    {
+      dateString: 'June 21',
+      performances: [
+        { timeString: '8pm', title: 'Chitty Chitty Bang Bang' },
+      ]
+    },
+    {
+      dateString: 'June 22',
+      performances: [
+        { timeString: '8pm', title: 'Disney\'s The Little Mermaid' },
+      ]
+    },
+    {
+      dateString: 'June 23',
+      performances: [
+        { timeString: '8pm', title: 'Footloose' },
+      ]
+    },
+    {
+      dateString: 'June 24',
+      performances: [
+        { timeString: '2pm', title: 'Disney\'s The Little Mermaid' },
+      ]
+    },
+    {
+      dateString: 'June 26',
+      performances: [
+        { timeString: '8pm', title: 'Chitty Chitty Bang Bang' },
+      ]
+    },
+    {
+      dateString: 'June 27',
+      performances: [
+        { timeString: '8pm', title: 'Footloose' },
+      ]
+    },
+    {
+      dateString: 'June 29',
+      performances: [
+        { timeString: '8pm', title: 'Urinetown' },
+      ]
+    },
+    {
+      dateString: 'June 30',
+      performances: [
+        { timeString: '8pm', title: 'Urinetown' },
+      ]
+    },
+
+
+
+
+
+    {
+      dateString: 'July 1',
+      performances: [
+        { timeString: '2pm', title: 'Urinetown' },
+      ]
+    },
+    {
+      dateString: 'July 3',
+      performances: [
+        { timeString: '8pm', title: 'Chitty Chitty Bang Bang' },
+      ]
+    },
+    {
+      dateString: 'July 4',
+      performances: [
+        { timeString: '8pm', title: 'Disney\'s The Little Mermaid' },
+      ]
+    },
+    {
+      dateString: 'July 6',
+      performances: [
+        { timeString: '8pm', title: '42nd Street' },
+      ]
+    },
+    {
+      dateString: 'July 7',
+      performances: [
+        { timeString: '2pm', title: 'Footloose' },
+        { timeString: '8pm', title: '42nd Street' },
+      ]
+    },
+    {
+      dateString: 'July 8',
+      performances: [
+        { timeString: '2pm', title: '42nd Street' },
+      ]
+    },
+    {
+      dateString: 'July 10',
+      performances: [
+        { timeString: '8pm', title: '42nd Street' },
+      ]
+    },
+    {
+      dateString: 'July 11',
+      performances: [
+        { timeString: '2pm', title: 'Chitty Chitty Bang Bang' },
+        { timeString: '8pm', title: 'Urinetown' },
+      ]
+    },
+    {
+      dateString: 'July 12',
+      performances: [
+        { timeString: '8pm', title: 'Footloose' },
+      ]
+    },
+    {
+      dateString: 'July 13',
+      performances: [
+        { timeString: '2pm', title: 'Chitty Chitty Bang Bang' },
+        { timeString: '8pm', title: 'Urinetown' },
+      ]
+    },
+    {
+      dateString: 'July 14',
+      performances: [
+        { timeString: '2pm', title: '42nd Street' },
+        { timeString: '8pm', title: 'Disney\'s The Little Mermaid' },
+      ]
+    },
+    {
+      dateString: 'July 15',
+      performances: [
+        { timeString: '2pm', title: 'Chitty Chitty Bang Bang' },
+      ]
+    },
+    {
+      dateString: 'July 17',
+      performances: [
+        { timeString: '8pm', title: 'Footloose' },
+      ]
+    },
+    {
+      dateString: 'July 18',
+      performances: [
+        { timeString: '2pm', title: '42nd Street' },
+        { timeString: '8pm', title: 'Disney\'s The Little Mermaid' },
+      ]
+    },
+    {
+      dateString: 'July 19',
+      performances: [
+        { timeString: '8pm', title: 'Urinetown' },
+      ]
+    },
+    {
+      dateString: 'July 20',
+      performances: [
+        { timeString: '8pm', title: 'Footloose' },
+      ]
+    },
+    {
+      dateString: 'July 21',
+      performances: [
+        { timeString: '10am', title: 'Disney\'s The Little Mermaid' },
+        { timeString: '2pm', title: 'Chitty Chitty Bang Bang' },
+        { timeString: '8pm', title: '42nd Street' },
+      ]
+    },
+    {
+      dateString: 'July 22',
+      performances: [
+        { timeString: '2pm', title: 'Disney\'s The Little Mermaid' },
+      ]
+    },
+    {
+      dateString: 'July 24',
+      performances: [
+        { timeString: '8pm', title: 'Chitty Chitty Bang Bang' },
+      ]
+    },
+    {
+      dateString: 'July 25',
+      performances: [
+        { timeString: '2pm', title: 'Disney\'s The Little Mermaid' },
+        { timeString: '8pm', title: '42nd Street' },
+      ]
+    },
+    {
+      dateString: 'July 26',
+      performances: [
+        { timeString: '8pm', title: 'Footloose' },
+      ]
+    },
+    {
+      dateString: 'July 27',
+      performances: [
+        { timeString: '8pm', title: 'Urinetown' },
+      ]
+    },
+    {
+      dateString: 'July 28',
+      performances: [
+        { timeString: '10am', title: 'Chitty Chitty Bang Bang' },
+        { timeString: '2pm', title: 'Disney\'s The Little Mermaid' },
+        { timeString: '8pm', title: '42nd Street' },
+      ]
+    },
+    {
+      dateString: 'July 29',
+      performances: [
+        { timeString: '2pm', title: 'Footloose' },
+      ]
+    },
+    {
+      dateString: 'July 31',
+      performances: [
+        { timeString: '8pm', title: 'Disney\'s The Little Mermaid' },
+      ]
+    },
+
+
+
+
+    {
+      dateString: 'August 1',
+      performances: [
+        { timeString: '2pm', title: '42nd Street' },
+        { timeString: '8pm', title: 'Chitty Chitty Bang Bang' },
+      ]
+    },
+    {
+      dateString: 'August 2',
+      performances: [
+        { timeString: '8pm', title: 'Footloose' },
+      ]
+    },
+    {
+      dateString: 'August 3',
+      performances: [
+        { timeString: '8pm', title: 'Urinetown' },
+      ]
+    },
+    {
+      dateString: 'August 4',
+      performances: [
+        { timeString: '10am', title: 'Disney\'s The Little Mermaid' },
+        { timeString: '2pm', title: 'Chitty Chitty Bang Bang' },
+        { timeString: '8pm', title: 'Footloose' },
+      ]
+    },
+    {
+      dateString: 'August 5',
+      performances: [
+        { timeString: '2pm', title: '42nd Street' },
+      ]
+    },
+    {
+      dateString: 'August 7',
+      performances: [
+        { timeString: '8pm', title: 'Chitty Chitty Bang Bang' },
+      ]
+    },
+    {
+      dateString: 'August 8',
+      performances: [
+        { timeString: '2pm', title: 'Disney\'s The Little Mermaid' },
+        { timeString: '8pm', title: 'Urinetown' },
+      ]
+    },
+    {
+      dateString: 'August 9',
+      performances: [
+        { timeString: '8pm', title: 'Chitty Chitty Bang Bang' },
+      ]
+    },
+    {
+      dateString: 'August 10',
+      performances: [
+        { timeString: '8pm', title: 'Footloose' },
+      ]
+    },
+    {
+      dateString: 'August 11',
+      performances: [
+        { timeString: '10am', title: 'Disney\'s The Little Mermaid' },
+        { timeString: '2pm', title: 'Urinetown' },
+        { timeString: '8pm', title: 'Chitty Chitty Bang Bang' },
+      ]
+    },
+    {
+      dateString: 'August 12',
+      performances: [
+        { timeString: '2pm', title: 'Disney\'s The Little Mermaid' },
+      ]
+    },
+    {
+      dateString: 'August 14',
+      performances: [
+        { timeString: '8pm', title: 'Urinetown' },
+      ]
+    },
+    {
+      dateString: 'August 15',
+      performances: [
+        { timeString: '2pm', title: 'Footloose' },
+        { timeString: '8pm', title: '42nd Street' },
+      ]
+    },
+    {
+      dateString: 'August 16',
+      performances: [
+        { timeString: '8pm', title: 'Disney\'s The Little Mermaid' },
+      ]
+    },
+    {
+      dateString: 'August 17',
+      performances: [
+        { timeString: '8pm', title: 'Chitty Chitty Bang Bang' },
+      ]
+    },
+    {
+      dateString: 'August 18',
+      performances: [
+        { timeString: '2pm', title: 'Disney\'s The Little Mermaid' },
+        { timeString: '8pm', title: 'Urinetown' },
+      ]
+    },
+    {
+      dateString: 'August 19',
+      performances: [
+        { timeString: '2pm', title: 'Chitty Chitty Bang Bang' },
+      ]
+    },
+  ];
+
   test('this data actually matches MY thinking', function(assert) {
     const tokens = dc.dateCodeStringToTokens(dc.urlCodeParts(REAL_URL_DATES_CODE).showsDates.join('')).filter(t => t !== '0');
     const showings = REAL_READABLE_DATES().join(' ').match(/\d{1,2}[aem]/g);
@@ -246,7 +661,12 @@ August 4*, 14`
 
   test('readablesToUrl', function(assert) {
     let result = dc.readablesToUrl(REAL_READABLE_DATES());
-    assert.equal(result, REAL_URL_DATES_CODE)
+    assert.deepEqual(result, REAL_URL_DATES_CODE)
+  });
+
+  test('urlDataToShowingsAgenda', function(assert) {
+    let result = dc.urlDataToShowingsAgenda(DEFAULT_LONG_TITLES, DEFAULT_DATES);
+    assert.deepEqual(result, REAL_SHOWINGS_AGENDA_FROM_DEFAULTS);
   });
 });
 
