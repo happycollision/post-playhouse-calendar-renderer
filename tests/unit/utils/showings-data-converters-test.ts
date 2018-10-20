@@ -1,12 +1,12 @@
 import * as dc from 'post-playhouse-calendar-renderer/utils/showings-data-converters';
 import { module, test } from 'qunit';
 
-const URL_CODE = '2018-06-29' +
+const URL_DATES_CODE = '2018-06-29' +
 '[1]C2D30a3' +
 '[2]D30b4' +
 '[3]0f3';
 
-const READABLE = () => [
+const READABLE_DATES = () => [
 `2018
 June 29a, 30e,
 July 1e,`,
@@ -51,7 +51,7 @@ module('Unit | Utility | showings-data-converters | simple functions', function(
   });
 
   test('urlToShorthandPerShow', function(assert) {
-    let result = dc.urlToShorthandPerShow(URL_CODE);
+    let result = dc.urlToShorthandPerShow(URL_DATES_CODE);
     let expected = [
       [
         { "a": [1] },
@@ -78,7 +78,7 @@ module('Unit | Utility | showings-data-converters | simple functions', function(
   });
 
   test('urlToShorthand', function(assert) {
-    let result = dc.urlToShorthand(URL_CODE);
+    let result = dc.urlToShorthand(URL_DATES_CODE);
 
     assert.equal(numDaysWithShowings(result.showData), 5, 'has correct number of showings');
     assert.equal(result.startingDate, '2018-06-29', 'has the correct starting date')
@@ -87,16 +87,16 @@ module('Unit | Utility | showings-data-converters | simple functions', function(
 
   test('shorthandToUrl', function(assert) {
     let result = dc.shorthandToUrl(SHORTHAND());
-    assert.equal(result, URL_CODE)
+    assert.equal(result, URL_DATES_CODE)
   });
 
   test('urlCodeParts', function(assert) {
-    let result = dc.urlCodeParts(URL_CODE);
+    let result = dc.urlCodeParts(URL_DATES_CODE);
     assert.deepEqual(result, {startingDateString: '2018-06-29', showsDates: ['C2D30a3', 'D30b4', '0f3']})
   });
 
   test('dateCodeStringToTokens', function(assert) {
-    let result = dc.dateCodeStringToTokens(dc.urlCodeParts(URL_CODE).showsDates.join(''));
+    let result = dc.dateCodeStringToTokens(dc.urlCodeParts(URL_DATES_CODE).showsDates.join(''));
     assert.deepEqual(result, ['C2', 'D3', '0', 'a3', 'D3', '0', 'b4', '0', 'f3'])
   });
 });
@@ -104,26 +104,26 @@ module('Unit | Utility | showings-data-converters | simple functions', function(
 module('Unit | Utility | showings-data-converters | big converters', function() {
 
   test('fullCodeStringToReadable', function(assert) {
-    let result = dc.fullCodeStringToReadable(URL_CODE);
-    assert.deepEqual(result, READABLE())
+    let result = dc.fullCodeStringToReadable(URL_DATES_CODE);
+    assert.deepEqual(result, READABLE_DATES())
   });
 
   test('fullCodeStringToPublishable', function(assert) {
-    let result = dc.fullCodeStringToPublishable(URL_CODE);
+    let result = dc.fullCodeStringToPublishable(URL_DATES_CODE);
     assert.deepEqual(result, PUBLISHABLE_DATES())
   });
 
   test('readablesToUrl', function(assert) {
-    let result = dc.readablesToUrl(READABLE());
-    assert.equal(result, URL_CODE)
+    let result = dc.readablesToUrl(READABLE_DATES());
+    assert.equal(result, URL_DATES_CODE)
   });
 });
 
 
 module('Unit | Utility | showings-data-converters | real data ', function() {
-  const REAL_URL = '2019-05-31[1]E30a3b2d3k3s3u3w20c3m3q3t1u2x2A2D30c1g2j1k2o3q2[2]E30g3h3i2l3r3v3z30f2k3p3s3y3B20a3c3i3n2[3]0n3o3p2t3y30b3j2l2n2t2w3A1E30c2f3h3j3p3r2[4]0B3C3D20j3l3r3z30b3g3j2m3q3[5]00e3f3g2i3m2q2t3x3A3E20d2n3';
+  const REAL_URL_DATES_CODE = '2019-05-31[1]E30a3b2d3k3s3u3w20c3m3q3t1u2x2A2D30c1g2j1k2o3q2[2]E30g3h3i2l3r3v3z30f2k3p3s3y3B20a3c3i3n2[3]0n3o3p2t3y30b3j2l2n2t2w3A1E30c2f3h3j3p3r2[4]0B3C3D20j3l3r3z30b3g3j2m3q3[5]00e3f3g2i3m2q2t3x3A3E20d2n3';
 
-  const REAL_READABLE = () => [
+  const REAL_READABLE_DATES = () => [
   `2019
 May 31e,
 June 1e, 2a, 4e, 11e, 19e, 21e, 23a,
@@ -167,26 +167,26 @@ August 4*, 14`
     ]
 
   test('this data actually matches MY thinking', function(assert) {
-    const tokens = dc.dateCodeStringToTokens(dc.urlCodeParts(REAL_URL).showsDates.join('')).filter(t => t !== '0');
-    const showings = REAL_READABLE().join(' ').match(/\d{1,2}[aem]/g);
+    const tokens = dc.dateCodeStringToTokens(dc.urlCodeParts(REAL_URL_DATES_CODE).showsDates.join('')).filter(t => t !== '0');
+    const showings = REAL_READABLE_DATES().join(' ').match(/\d{1,2}[aem]/g);
     const idTokens = tokens.map(t => dc.idTokenToShowingToken(t));
 
     assert.deepEqual(showings, idTokens);
   })
   
   test('fullCodeStringToReadable', function(assert) {
-    let result = dc.fullCodeStringToReadable(REAL_URL);
-    assert.deepEqual(result, REAL_READABLE())
+    let result = dc.fullCodeStringToReadable(REAL_URL_DATES_CODE);
+    assert.deepEqual(result, REAL_READABLE_DATES())
   });
 
   test('fullCodeStringToPublishable', function(assert) {
-    let result = dc.fullCodeStringToPublishable(REAL_URL);
+    let result = dc.fullCodeStringToPublishable(REAL_URL_DATES_CODE);
     assert.deepEqual(result, REAL_PUBLISHABLE_DATES())
   });
 
   test('readablesToUrl', function(assert) {
-    let result = dc.readablesToUrl(REAL_READABLE());
-    assert.equal(result, REAL_URL)
+    let result = dc.readablesToUrl(REAL_READABLE_DATES());
+    assert.equal(result, REAL_URL_DATES_CODE)
   });
 });
 
