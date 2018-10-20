@@ -134,6 +134,30 @@ export function fullCodeStringToReadable(str: string) {
   });
 }
 
+export function fullCodeStringToPublishable(str: string) {
+  return fullCodeStringToReadable(str)
+  .map(readableString => {
+    return readableString
+      .replace(/\d{4}\s+/g, '')
+      .replace(/(\d{1,2})([mae]{1,3})/g, (_fullMatch, p1, p2) => {
+        const values = {m: 1, a: 2, e: 3};
+        const date: string = p1;
+        const times: string[] = p2.split('');
+        times.sort((a: 'm'|'a'|'e', b: 'm'|'a'|'e') => {
+          const val1 = values[a];
+          const val2 = values[b];
+          return val1 - val2;
+        })
+        return times.map(t => `${date}${t}`).join(', ')
+      })
+      .replace(/(\d{1,2})([mae])/g, (_full, p1, p2: 'm'|'a'|'e') => {
+        const replacements = { m: '‡', a: '*', e: '' };
+        return `${p1}${replacements[p2]}`;
+      })
+      .replace(/,$/mg, '');
+  });
+}
+
 export function dateCodeStringToTokens(str: string) {
   return str.match(/(0|.{2})/g) || []
 }

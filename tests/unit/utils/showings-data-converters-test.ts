@@ -16,6 +16,14 @@ July 2ma,`,
 `2018
 July 6e,`
 ]
+
+const PUBLISHABLE_DATES = () => [
+`June 29*, 30
+July 1`,
+`June 30
+July 2‡, 2*`,
+`July 6`
+]
   
 const SHORTHAND = () => ({startingDate: '2018-06-29', showData: [
   { "a": [1] },
@@ -100,6 +108,11 @@ module('Unit | Utility | showings-data-converters | big converters', function() 
     assert.deepEqual(result, READABLE())
   });
 
+  test('fullCodeStringToPublishable', function(assert) {
+    let result = dc.fullCodeStringToPublishable(URL_CODE);
+    assert.deepEqual(result, PUBLISHABLE_DATES())
+  });
+
   test('readablesToUrl', function(assert) {
     let result = dc.readablesToUrl(READABLE());
     assert.equal(result, URL_CODE)
@@ -134,6 +147,25 @@ July 5e, 6e, 7a, 9e, 13a, 17a, 20e, 24e, 27e, 31a,
 August 4a, 14e,`
   ]
 
+  const REAL_PUBLISHABLE_DATES = () => [
+    `May 31
+June 1, 2*, 4, 11, 19, 21, 23*
+July 3, 13, 17, 20‡, 21*, 24*, 27*, 30
+August 3‡, 7*, 10‡, 11*, 15, 17*`,
+  `May 31
+June 7, 8, 9*, 12, 18, 22, 26
+July 6*, 11, 16, 19, 25, 28*
+August 1, 3, 9, 14*`,
+  `June 14, 15, 16*, 20, 25
+July 2, 10*, 12*, 14*, 20*, 23, 27‡, 31
+August 3*, 6, 8, 10, 16, 18*`,
+  `June 28, 29, 30*
+July 10, 12, 18, 26
+August 2, 7, 10*, 13, 17`,
+  `July 5, 6, 7*, 9, 13*, 17*, 20, 24, 27, 31*
+August 4*, 14`
+    ]
+
   test('this data actually matches MY thinking', function(assert) {
     const tokens = dc.dateCodeStringToTokens(dc.urlCodeParts(REAL_URL).showsDates.join('')).filter(t => t !== '0');
     const showings = REAL_READABLE().join(' ').match(/\d{1,2}[aem]/g);
@@ -145,6 +177,11 @@ August 4a, 14e,`
   test('fullCodeStringToReadable', function(assert) {
     let result = dc.fullCodeStringToReadable(REAL_URL);
     assert.deepEqual(result, REAL_READABLE())
+  });
+
+  test('fullCodeStringToPublishable', function(assert) {
+    let result = dc.fullCodeStringToPublishable(REAL_URL);
+    assert.deepEqual(result, REAL_PUBLISHABLE_DATES())
   });
 
   test('readablesToUrl', function(assert) {
