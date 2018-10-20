@@ -138,6 +138,45 @@ module('Unit | Utility | showings-data-converters | big converters', function() 
     ]
     assert.deepEqual(result, expected);
   })
+
+  test('urlDataToShowingsAgenda', function(assert) {
+    let result = dc.urlDataToShowingsAgenda(LONG_TITLES, URL_DATES_CODE);
+    let expected = [
+      {
+        dateString: 'June 29',
+        performances: [
+          {timeString: '2pm', title: 'Show One'}
+        ],
+      },
+      {
+        dateString: 'June 30',
+        performances: [
+          {timeString: '8pm', title: 'Show One'},
+          {timeString: '8pm', title: 'Show Two'},
+        ],
+      },
+      {
+        dateString: 'July 1',
+        performances: [
+          {timeString: '8pm', title: 'Show One'},
+        ],
+      },
+      {
+        dateString: 'July 2',
+        performances: [
+          {timeString: '10am', title: 'Show Two'},
+          {timeString: '2pm', title: 'Show Two'},
+        ],
+      },
+      {
+        dateString: 'July 6',
+        performances: [
+          {timeString: '8pm', title: 'Show Three'},
+        ],
+      },
+    ];
+    assert.deepEqual(result, expected);
+  })
 });
 
 

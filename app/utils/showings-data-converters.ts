@@ -318,8 +318,53 @@ export function readablesToUrl(readables: string[]) {
   return earliestStartingDate.toFormat('yyyy-MM-dd') + showsDates.join('');
 }
 
-export function urlDataToShowingsLists(commaSeparatedTitles: string, urlDatesCode: string) {
+export function urlDataToShowingsLists(commaSeparatedTitles: string, urlDatesCode: string): {title: string, dates: string}[] {
   const titles = commaSeparatedTitles.split(',');
   const datesList = fullCodeStringToPublishable(urlDatesCode);
   return titles.map((title, i) => ({title, dates: datesList[i]}));
+}
+
+export function urlDataToShowingsAgenda(commaSeparatedTitles: string, urlDatesCode: string): Agenda {
+  const showingsList = urlDataToShowingsLists(commaSeparatedTitles, urlDatesCode);
+  return showingsList
+    .map(sl => monthAndDayListFromDatesString(sl.dates, sl.title))
+    .reduce((a,b) => a.concat(b))
+    .reduce(reduceAgendaDates, []);
+}
+
+type Agenda = AgendaDay[];
+type AgendaDay<T = string> = {dateString: string, performances: {timeString: string, title: T}[]}
+
+function monthAndDayListFromDatesString(datesPreprendedWithMonth: string, title: string): Agenda {
+  return datesPreprendedWithMonth.split('\n')
+    .map(monthAndDays => {
+      const month = monthAndDays.match(/^\w+ /)![0].trim();
+      const daysAndTimes = monthAndDays.match(/\d{1,2}\S?/g);
+      return daysAndTimes!.map(dt => {
+        const [_full, day, timeSymbol] = dt.match(/(\d{1,2})(.?)/)!;
+        const timeString = timeSymbol === '' ? '8pm'
+                     : timeSymbol === '*' ? '2pm'
+                     : '10am'; 
+        return {
+          dateString: `${month} ${day}`,
+          performances: [
+            {timeString, title}
+          ]
+        };
+      })
+    })
+    .reduce((a,b) => a.concat(b))
+    .reduce(reduceAgendaDates, [] as Agenda)
+}
+
+function reduceAgendaDates(a: Agenda, b: AgendaDay): Agenda {
+  for (let i = 0; i < a.length; i++) {
+    const day = a[i];
+    if (day.dateString === b.dateString) {
+      day.performances = day.performances.concat(b.performances)
+      return a;
+    };
+  }
+  a.push(b);
+  return a;
 }
