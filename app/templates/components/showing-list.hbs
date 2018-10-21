@@ -1,0 +1,25 @@
+<div class="monospace">
+By Production:
+==============
+
+Showtimes are 8:00pm unless otherwise noted:
+  * = 2:00pm  ‡ = 10:00am
+
+{{#each showAndDates as |data|}}
+
+{{data.title}}
+{{data.showDateList}}
+{{/each}}
+
+
+
+By Dates:
+=========
+{{#each datedShowings as |showing|}}
+
+  {{showing.dateString}}
+  {{#each showing.performances as |performance|}}
+    {{performance.timeString}}  {{performance.title}}
+  {{/each}}
+{{/each}}
+</div>
