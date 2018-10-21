@@ -1,4 +1,6 @@
 import { DateTime } from 'luxon';
+import EmberObject from '@ember/object';
+import { computed } from '@ember-decorators/object';
 
 export const DEFAULT_TITLES = 'Mermaid,Footloose,Chitty,Urinetown,42nd St';
 export const DEFAULT_LONG_TITLES = 'Disney\'s The Little Mermaid,Footloose,Chitty Chitty Bang Bang,Urinetown,42nd Street';
@@ -138,6 +140,61 @@ export function urlPartsToData(shortTitlesUrl: string, longTitlesUrl: string, da
     }, [] as AgendaDayData[])
   }).reduce((a, b) => a.concat(b));
   return mergeStrictAgendaDates(agenda);
+}
+
+export class ShowingsData extends EmberObject {
+  constructor(
+    public shortTitlesUrl: string,
+    public fullTitlesUrl: string,
+    public datesUrl: string
+  ) {
+    super();
+  }
+  
+  @computed('shortTitlesUrl', 'fullTitlesUrl')
+  get titles(): {short: string[], full: string[]} {
+    return {
+      short: this.shortTitlesUrl.split(','),
+      full: this.fullTitlesUrl.split(','),  
+    }
+  }
+  set titles(input: {short: string[], full: string[]}) {
+    this.set('shortTitlesUrl', input.short.join(','));
+    this.set('fullTitlesUrl', input.full.join(','));
+  }
+  
+  @computed('agendasPerShow')
+  get agendaForAllShows(): DataAgenda {
+    return mergeStrictAgendaDates(this.agendasPerShow.reduce((a, b) => a.concat(b)));
+  }
+
+  @computed('shortTitlesUrl', 'fullTitlesUrl', 'datesUrl')
+  get agendasPerShow(): DataAgenda[] {
+    return this.dataConversion(this.datesUrl);
+  }
+
+  private dataConversion(datesUrl: string) {
+    const {startingDateString, showsDates} = urlCodeParts(datesUrl);
+    const startingDate = DateTime.fromISO(startingDateString);
+  
+    return showsDates.map((dateCodes, i) => {
+      let runningMonth = startingDate.startOf('month');
+      
+      return dateCodeStringToTokens(dateCodes).reduce((acc, token) => {
+        if (token === '0') {
+          runningMonth = runningMonth.plus({months: 1});
+          return acc;
+        }
+        const {dayOfMonth, showings} = dayOfMonthAndShowingsFromToken(token);
+        const theDate = runningMonth.plus({days: dayOfMonth - 1});
+        return acc.concat([{
+          timestamp: theDate.toMillis(),
+          dateString: theDate.toFormat('LLLL d'),
+          performances: showings.map(s => ({...s, shortTitle: this.titles.short[i], fullTitle: this.titles.full[i]}))
+        }]);
+      }, [] as AgendaDayData[])
+    });
+  }
 }
 
 export function fullCodeStringToReadable(str: string) {

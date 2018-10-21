@@ -718,3 +718,161 @@ August 4*, 14`
   });
 });
 
+module('Unit | Utility | ShowingsData class', function() {
+  const createTimestamp = (str: string) => DateTime.fromFormat(`${str}, 2018`, 'LLLL d, yyyy').toMillis();
+  const createDateString = (str: string) => DateTime.fromFormat(`${str}, 2018`, 'LLLL d, yyyy').toFormat('LLLL d');
+
+  test('it initializes', function(assert) {
+    assert.ok(new dc.ShowingsData(SHORT_TITLES, LONG_TITLES, URL_DATES_CODE))
+  });
+
+  test('agendaForAllShows', function(assert) {
+    let result = new dc.ShowingsData(SHORT_TITLES, LONG_TITLES, URL_DATES_CODE);
+    let expected = [
+      {
+        timestamp: createTimestamp('June 29'),
+        dateString: createDateString('June 29'),
+        performances: [
+          {timeString: '2pm', fullTitle: 'Show One', shortTitle: 'S1'}
+        ],
+      },
+      {
+        timestamp: createTimestamp('June 30'),
+        dateString: createDateString('June 30'),
+        performances: [
+          {timeString: '8pm', fullTitle: 'Show One', shortTitle: 'S1'},
+          {timeString: '8pm', fullTitle: 'Show Two', shortTitle: 'S2'},
+        ],
+      },
+      {
+        timestamp: createTimestamp('July 1'),
+        dateString: createDateString('July 1'),
+        performances: [
+          {timeString: '8pm', fullTitle: 'Show One', shortTitle: 'S1'},
+        ],
+      },
+      {
+        timestamp: createTimestamp('July 2'),
+        dateString: createDateString('July 2'),
+        performances: [
+          {timeString: '10am', fullTitle: 'Show Two', shortTitle: 'S2'},
+          {timeString: '2pm', fullTitle: 'Show Two', shortTitle: 'S2'},
+        ],
+      },
+      {
+        timestamp: createTimestamp('July 6'),
+        dateString: createDateString('July 6'),
+        performances: [
+          {timeString: '8pm', fullTitle: 'Show Three', shortTitle: 'S3'},
+        ],
+      },
+    ];
+    assert.deepEqual(result.agendaForAllShows, expected);
+  });
+
+  test('agendasPerShow', function(assert) {
+    let result = new dc.ShowingsData(SHORT_TITLES, LONG_TITLES, URL_DATES_CODE);
+    let expected = [
+      [
+        {
+          timestamp: createTimestamp('June 29'),
+          dateString: createDateString('June 29'),
+          performances: [
+            { timeString: '2pm', fullTitle: 'Show One', shortTitle: 'S1' }
+          ],
+        },
+        {
+          timestamp: createTimestamp('June 30'),
+          dateString: createDateString('June 30'),
+          performances: [
+            { timeString: '8pm', fullTitle: 'Show One', shortTitle: 'S1' },
+          ],
+        },
+        {
+          timestamp: createTimestamp('July 1'),
+          dateString: createDateString('July 1'),
+          performances: [
+            { timeString: '8pm', fullTitle: 'Show One', shortTitle: 'S1' },
+          ],
+        },
+      ],
+      [
+        {
+          timestamp: createTimestamp('June 30'),
+          dateString: createDateString('June 30'),
+          performances: [
+            { timeString: '8pm', fullTitle: 'Show Two', shortTitle: 'S2' },
+          ],
+        },
+        {
+          timestamp: createTimestamp('July 2'),
+          dateString: createDateString('July 2'),
+          performances: [
+            { timeString: '10am', fullTitle: 'Show Two', shortTitle: 'S2' },
+            { timeString: '2pm', fullTitle: 'Show Two', shortTitle: 'S2' },
+          ],
+        },
+      ],
+      [
+        {
+          timestamp: createTimestamp('July 6'),
+          dateString: createDateString('July 6'),
+          performances: [
+            { timeString: '8pm', fullTitle: 'Show Three', shortTitle: 'S3' },
+          ],
+        },
+      ]
+    ];
+    assert.deepEqual(result.agendasPerShow, expected);
+  });
+
+  test('updating the titles works', function(assert) {
+    let showingsData = new dc.ShowingsData(SHORT_TITLES, LONG_TITLES, URL_DATES_CODE);
+    const expected = (one: string, two: string, three: string) => [
+      {
+        timestamp: createTimestamp('June 29'),
+        dateString: createDateString('June 29'),
+        performances: [
+          {timeString: '2pm', fullTitle: 'Show One', shortTitle: one}
+        ],
+      },
+      {
+        timestamp: createTimestamp('June 30'),
+        dateString: createDateString('June 30'),
+        performances: [
+          {timeString: '8pm', fullTitle: 'Show One', shortTitle: one},
+          {timeString: '8pm', fullTitle: 'Show Two', shortTitle: two},
+        ],
+      },
+      {
+        timestamp: createTimestamp('July 1'),
+        dateString: createDateString('July 1'),
+        performances: [
+          {timeString: '8pm', fullTitle: 'Show One', shortTitle: one},
+        ],
+      },
+      {
+        timestamp: createTimestamp('July 2'),
+        dateString: createDateString('July 2'),
+        performances: [
+          {timeString: '10am', fullTitle: 'Show Two', shortTitle: two},
+          {timeString: '2pm', fullTitle: 'Show Two', shortTitle: two},
+        ],
+      },
+      {
+        timestamp: createTimestamp('July 6'),
+        dateString: createDateString('July 6'),
+        performances: [
+          {timeString: '8pm', fullTitle: 'Show Three', shortTitle: three},
+        ],
+      },
+    ];
+
+    showingsData.set('shortTitlesUrl', 'One,Two,Three');
+    assert.deepEqual(showingsData.agendaForAllShows, expected('One', 'Two', 'Three'));
+
+
+    showingsData.set('titles', {short: ['1', '2', '3'], full: showingsData.titles.full});
+    assert.deepEqual(showingsData.agendaForAllShows, expected('1', '2', '3'));
+  });
+});
