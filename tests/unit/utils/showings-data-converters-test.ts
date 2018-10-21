@@ -1,8 +1,10 @@
 import * as dc from 'post-playhouse-calendar-renderer/utils/showings-data-converters';
 import { module, test } from 'qunit';
 import {DEFAULT_LONG_TITLES, DEFAULT_DATES} from 'post-playhouse-calendar-renderer/utils/showings-data-converters'
+import { DateTime } from 'luxon';
 
 const LONG_TITLES = 'Show One,Show Two,Show Three';
+const SHORT_TITLES = 'S1,S2,S3'
 
 const URL_DATES_CODE = '2018-06-29' +
 '[1]C2D30a3' +
@@ -173,6 +175,52 @@ module('Unit | Utility | showings-data-converters | big converters', function() 
         dateString: 'July 6',
         performances: [
           {timeString: '8pm', title: 'Show Three'},
+        ],
+      },
+    ];
+    assert.deepEqual(result, expected);
+  })
+
+  test('urlDataToShowingsAgenda', function(assert) {
+    let result = dc.urlPartsToData(SHORT_TITLES, LONG_TITLES, URL_DATES_CODE);
+    const createTimestamp = (str: string) => DateTime.fromFormat(`${str}, 2018`, 'LLLL d, yyyy').toMillis();
+    const createDateString = (str: string) => DateTime.fromFormat(`${str}, 2018`, 'LLLL d, yyyy').toFormat('LLLL d');
+    let expected = [
+      {
+        timestamp: createTimestamp('June 29'),
+        dateString: createDateString('June 29'),
+        performances: [
+          {timeString: '2pm', fullTitle: 'Show One', shortTitle: 'S1'}
+        ],
+      },
+      {
+        timestamp: createTimestamp('June 30'),
+        dateString: createDateString('June 30'),
+        performances: [
+          {timeString: '8pm', fullTitle: 'Show One', shortTitle: 'S1'},
+          {timeString: '8pm', fullTitle: 'Show Two', shortTitle: 'S2'},
+        ],
+      },
+      {
+        timestamp: createTimestamp('July 1'),
+        dateString: createDateString('July 1'),
+        performances: [
+          {timeString: '8pm', fullTitle: 'Show One', shortTitle: 'S1'},
+        ],
+      },
+      {
+        timestamp: createTimestamp('July 2'),
+        dateString: createDateString('July 2'),
+        performances: [
+          {timeString: '10am', fullTitle: 'Show Two', shortTitle: 'S2'},
+          {timeString: '2pm', fullTitle: 'Show Two', shortTitle: 'S2'},
+        ],
+      },
+      {
+        timestamp: createTimestamp('July 6'),
+        dateString: createDateString('July 6'),
+        performances: [
+          {timeString: '8pm', fullTitle: 'Show Three', shortTitle: 'S3'},
         ],
       },
     ];

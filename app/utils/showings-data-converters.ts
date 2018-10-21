@@ -43,7 +43,7 @@ export function getPaddingFor(startingDate: string): number {
 }
 
 function getDaysFromDateId(dateId: string) {
-  return 'abcdefghijklmnopqrstuvwxyzABCDE'.indexOf(dateId)
+  return 'abcdefghijklmnopqrstuvwxyzABCDE'.indexOf(dateId) + 1
 }
 
 function getDateIdFromDay(day: string | number) {
@@ -93,7 +93,51 @@ function isMonthName(str: string): boolean {
 
 export function idTokenToShowingToken(token: string): string {
   const [dateId, slotId] = token;
-  return `${getDaysFromDateId(dateId) + 1}${getSlotShorthandFromSlotsId(slotId)}`;
+  return `${getDaysFromDateId(dateId)}${getSlotShorthandFromSlotsId(slotId)}`;
+}
+
+function dayOfMonthAndShowingsFromToken(token: string) {
+  const [dateId, slotsId] = token;
+  const dayOfMonth = getDaysFromDateId(dateId);
+  let props = getSlotShorthandFromSlotsId(slotsId);
+  const showings: {timeString: string}[] = [];
+  Array.from(props).forEach((letter: 'm'|'a'|'e') => {
+    switch (letter) {
+      case 'm': showings.push({timeString: '10am'}); break;
+      case 'a': showings.push({timeString: '2pm'}); break;
+      case 'e': showings.push({timeString: '8pm'}); break;
+    }
+  });
+
+  return {dayOfMonth, showings}
+}
+
+export function urlPartsToData(shortTitlesUrl: string, longTitlesUrl: string, datesUrl: string) {
+  const titles = {
+    short: shortTitlesUrl.split(','),
+    long: longTitlesUrl.split(','),
+  };
+  const {startingDateString, showsDates} = urlCodeParts(datesUrl);
+  const startingDate = DateTime.fromISO(startingDateString);
+
+  const agenda = showsDates.map((dateCodes, i) => {
+    let runningMonth = startingDate.startOf('month');
+    
+    return dateCodeStringToTokens(dateCodes).reduce((acc, token) => {
+      if (token === '0') {
+        runningMonth = runningMonth.plus({months: 1});
+        return acc;
+      }
+      const {dayOfMonth, showings} = dayOfMonthAndShowingsFromToken(token);
+      const theDate = runningMonth.plus({days: dayOfMonth - 1});
+      return acc.concat([{
+        timestamp: theDate.toMillis(),
+        dateString: theDate.toFormat('LLLL d'),
+        performances: showings.map(s => ({...s, shortTitle: titles.short[i], fullTitle: titles.long[i]}))
+      }]);
+    }, [] as AgendaDayData[])
+  }).reduce((a, b) => a.concat(b));
+  return mergeStrictAgendaDates(agenda);
 }
 
 export function fullCodeStringToReadable(str: string) {
@@ -200,8 +244,8 @@ export function urlToShorthandPerShow(urlCode: string) {
         return;
       }
       const [dateId, slotsId] = input.split('');
-      const days = getDaysFromDateId(dateId);
-      const daysFromStart = startingDate.startOf('month').plus({months: addedMonths, days}).diff(startingDate, 'days').toObject().days || 0;
+      const addedDays = getDaysFromDateId(dateId) - 1;
+      const daysFromStart = startingDate.startOf('month').plus({months: addedMonths, days: addedDays}).diff(startingDate, 'days').toObject().days || 0;
       dates[daysFromStart] = getShorthandObj(slotsId, showId)
     })
     const a = [];
@@ -345,6 +389,17 @@ interface AgendaDay<T = string> {
   }>
 }
 
+type DataAgenda = AgendaDayData[];
+interface AgendaDayData {
+  timestamp: number;
+  dateString: string;
+  performances: Array<{
+    timeString: string;
+    shortTitle: string;
+    fullTitle: string;
+  }>
+}
+
 function monthAndDayListFromDatesString(datesPreprendedWithMonth: string, title: string): Agenda {
   return datesPreprendedWithMonth.split('\n')
     .map(monthAndDays => {
@@ -378,6 +433,22 @@ function reduceAgendaDates(acc: Agenda, current: AgendaDay): Agenda {
   }
   acc.push(current);
   return acc;
+}
+
+function mergeStrictAgendaDates(agenda: DataAgenda): DataAgenda {
+  const keptAgenda: DataAgenda = []
+  const daysHash: {[x: number]: AgendaDayData} = {};
+  for (let i = 0; i < agenda.length; i++) {
+    const day = agenda[i];
+    const dupeDay = daysHash[day.timestamp];
+    if (dupeDay) {
+      dupeDay.performances.push(...day.performances);
+    } else {
+      keptAgenda.push(day);
+      daysHash[day.timestamp] = day;
+    }
+  }
+  return keptAgenda;
 }
 
 function sortAgendaDays(a: AgendaDay, b: AgendaDay): 0 | -1 | 1 {
