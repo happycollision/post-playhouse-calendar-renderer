@@ -27,8 +27,8 @@ $show-3-color-drop-shadow: $red-shadow
 $show-4-color-drop-shadow: $yellow-shadow
 $show-5-color-drop-shadow: $green-shadow
 
-$proxima: "Proxima Nova", sans-serif
-$azo: "Azo Sans Uber", sans-serif
+$proxima: proxima-nova, sans-serif
+$azo: azo-sans-uber, sans-serif
 
 $calendar-day-date-color: black
 $dark-day-bg: rgba(0,0,0,0.4)
@@ -124,7 +124,7 @@ body
     bottom: 0
 
 .calendar
-  font-family: proxima-nova
+  font-family: $proxima
   padding: 1em
 
 .month
@@ -203,7 +203,7 @@ body
 .week:nth-child(2)
   .day .day-name
     display: inline
-    font-family: "Proxima Nova Extra Condensed"
+    font-family: proxima-nova-extra-condensed
     color: $calendar-day-date-color
   .day.dark .day-name
     color: white
