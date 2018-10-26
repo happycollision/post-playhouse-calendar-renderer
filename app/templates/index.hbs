@@ -1,29 +1,34 @@
 {{keyboard-press key="Escape" onDown=(toggle-action 'editing' this)}}
 
-<div class="containers-wrapper {{if editing 'is-editing'}}">
-  <div class="cal-component-wrapper">
-    {{#maybe-squish squish=editing}}
-      {{p-calendar weeksData=weeksData longTitles=titles.long isEditing=editing}}
-    {{/maybe-squish}}
+{{#if editing}}
+  <div class="containers-wrapper is-editing">
+    <div class="cal-component-wrapper">
+      {{#maybe-squish squish=true}}
+        {{p-calendar weeksData=weeksData longTitles=titles.long isEditing=true}}
+      {{/maybe-squish}}
+    </div>
+
+    {{#if editing}}
+      <div class="form-component-wrapper">
+        <div>Url to share:</div>
+        <textarea disabled rows="8" style="width: calc(100% - 20px); margin: auto; display: block; font-size: .85rem">{{url}}</textarea>
+        
+        {{show-counts shorthandPerShow=shorthandPerShow titles=titles.short}}
+
+        {{edit-form titles=titles readableDates=readableDates actns=(hash
+          changeLongTitle=(action 'changeLongTitle')
+          changeShortTitle=(action 'changeShortTitle')
+          changeReadableDates=(action 'changeReadableDates')
+          shiftDays=(action 'shiftDays')
+          addShow=(action 'addShow')
+          removeShow=(action 'removeShow')
+        )}}
+
+      {{showing-list titles=titles.long datesCode=dates}}
+      </div>
+    {{/if}}
   </div>
 
-  {{#if editing}}
-    <div class="form-component-wrapper">
-      <div>Url to share:</div>
-      <textarea disabled rows="8" style="width: calc(100% - 20px); margin: auto; display: block; font-size: .85rem">{{url}}</textarea>
-      
-      {{show-counts shorthandPerShow=shorthandPerShow titles=titles.short}}
-
-      {{edit-form titles=titles readableDates=readableDates actns=(hash
-        changeLongTitle=(action 'changeLongTitle')
-        changeShortTitle=(action 'changeShortTitle')
-        changeReadableDates=(action 'changeReadableDates')
-        shiftDays=(action 'shiftDays')
-        addShow=(action 'addShow')
-        removeShow=(action 'removeShow')
-      )}}
-
-    {{showing-list titles=titles.long datesCode=dates}}
-    </div>
-  {{/if}}
-</div>
+{{else}}
+  {{p-calendar weeksData=weeksData longTitles=titles.long isEditing=false}}
+{{/if}}
