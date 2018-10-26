@@ -1,5 +1,6 @@
+$ds-mult: 0.035
 =drop-shadow($color)
-  text-shadow: 1px 1px 0px $color, 1px 2px 0px $color
+  text-shadow: (1em * $ds-mult) (1em * $ds-mult) 0px $color, (1em * $ds-mult) (2em * $ds-mult) 0px $color
 
 $cal-xs: 0px, 574px
 $cal-small: 575px, 900px
@@ -11,7 +12,7 @@ $blue: rgb(28,117,188)
 $red: rgb(198,41,46)
 $pink: rgb(243,136,167)
 $purple: rgb(146,39,143)
-$yellow: rgb(254,189,64)
+$yellow: rgb(224, 170, 54)
 $brown: #56402c
 
 $blue-shadow: darken($blue, 20)
@@ -21,10 +22,10 @@ $yellow-shadow: darken($yellow, 35)
 $green-shadow: darken($green, 10)
 
 $show-1-color: $blue
-$show-2-color: $purple
+$show-2-color: $green
 $show-3-color: $red
 $show-4-color: $yellow
-$show-5-color: $green
+$show-5-color: $purple
 
 $show-1-color-drop-shadow: $blue-shadow
 $show-2-color-drop-shadow: $purple-shadow
@@ -42,7 +43,7 @@ $cal-border-color: black
 
 $cal-border-width: 2px
 $cal-base-font-size: 1.5rem // 24px
-$cal-vert-button-pad: 0.584rem // 9.35px
+$cal-vert-button-pad: 0.29rem
 
 $alt-bg-color: #d1dcc4
 
@@ -250,18 +251,33 @@ body
 
 $showing-1-2-vert-padding: (($cal-vert-button-pad * 2 + ($cal-base-font-size)) / 2 * 3 / 2 - $cal-base-font-size / 2)
 $showing-3-up-vert-padding: $cal-vert-button-pad
-$showing-vert-spacer: (($cal-vert-button-pad * 2 + $cal-base-font-size) * 1.5 )
-$medium-mult: .5
+$showing-vert-spacer: (($cal-vert-button-pad * 2 + $cal-base-font-size) * 1.6 )
+$medium-mult: .56
 $medium-mult-single: .3
 
 .showing
+  display: flex
+  justify-content: space-between
+  align-items: center
+  .show-time
+    color: black
+    margin-left: 2%
+    text-shadow: none
+    text-align: center
+    background-color: white
+    width: 1.5em
+    border-radius: 10%
+    padding: 0.1em 0
+    line-height: 1
+  .show-title
+    flex-grow: 1
+    
   background-color: grey
   color: white
   +drop-shadow(black) // default (for Bald Mountain Rounders)
   padding: $showing-3-up-vert-padding 2px
   margin-bottom: 0
   text-align: center
-  line-height: $cal-base-font-size
   font-size: $cal-base-font-size * 1.2
   font-weight: 300
   +breakpoint($cal-medium)
