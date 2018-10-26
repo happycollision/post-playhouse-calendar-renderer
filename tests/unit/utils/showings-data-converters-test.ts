@@ -1,6 +1,6 @@
 import * as dc from 'post-playhouse-calendar-renderer/utils/showings-data-converters';
 import { module, test } from 'qunit';
-import {DEFAULT_LONG_TITLES, DEFAULT_DATES} from 'post-playhouse-calendar-renderer/utils/showings-data-converters'
+import { DEFAULT_DATES, DEFAULT_LONG_TITLES } from 'post-playhouse-calendar-renderer/tests/test-data';
 import { DateTime } from 'luxon';
 
 const LONG_TITLES = 'Show One,Show Two,Show Three';

@@ -2,7 +2,8 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import { DEFAULT_DATES, DEFAULT_LONG_TITLES, fullCodeStringToPublishable } from 'post-playhouse-calendar-renderer/utils/showings-data-converters';
+import { DEFAULT_DATES, DEFAULT_LONG_TITLES } from 'post-playhouse-calendar-renderer/tests/test-data';
+import { fullCodeStringToPublishable } from 'post-playhouse-calendar-renderer/utils/showings-data-converters';
 
 module('Integration | Component | showing-list', function(hooks) {
   setupRenderingTest(hooks);
