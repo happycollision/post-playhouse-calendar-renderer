@@ -34,7 +34,7 @@ module('Integration | Component | p calendar/day', function(hooks) {
       this.set('shows', shows);
     }
     setData();
-    await render(hbs`{{p-calendar/day dayNameFull=dayNameFull mDay=mDay monthName=monthName shows=shows}}`);
+    await render(hbs`{{p-calendar/day dayNameFull=dayNameFull mDay=mDay monthName=monthName shows=shows isEditing=true}}`);
 
     
     setData([

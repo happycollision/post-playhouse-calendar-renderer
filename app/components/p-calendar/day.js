@@ -21,7 +21,8 @@ export default Component.extend({
   }),
 
   isError: computed('shows', 'dayNameFull', function() {
-    const {shows, dayNameFull} = this.getProperties('shows', 'dayNameFull')
+    const {shows, dayNameFull, isEditing} = this.getProperties('shows', 'dayNameFull', 'isEditing')
+    if (!isEditing) return false;
     if (shows.length === 0) return false;
     
     // Sunday time other than 2pm

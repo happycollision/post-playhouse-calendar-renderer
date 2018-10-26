@@ -24,7 +24,7 @@
                 {{/if}}
 
                 {{#each days as |day|}}
-                  {{p-calendar/day mDay=day.mDay monthName=day.monthName shows=day.shows dayNameFull=day.dayNameFull tagName="td"}}
+                  {{p-calendar/day mDay=day.mDay monthName=day.monthName shows=day.shows dayNameFull=day.dayNameFull isEditing=isEditing tagName="td"}}
                 {{/each}}
               
               </tr><!-- week -->
