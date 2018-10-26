@@ -4,9 +4,6 @@ import { service } from '@ember-decorators/service';
 import { action, computed } from '@ember-decorators/object';
 import { DateTime } from 'luxon';
 import {
-  DEFAULT_TITLES,
-  DEFAULT_DATES,
-  DEFAULT_LONG_TITLES,
   urlToShorthand,
   fullCodeStringToReadable,
   IShorthandObject,
@@ -21,6 +18,16 @@ import {
 
 type InputEvent = Event & {target: HTMLInputElement};
 
+const DEFAULT_TITLES = 'Mary,Frog & T,Little Shop,Music M,Sister Act,TBA,Crawford';
+const DEFAULT_LONG_TITLES = 'Disney\'s Mary Poppins,A Year With Frog & Toad,Little Shop of Horrors,The Music Man,Sister Act,TBA,Songs Around a Piano - A Cabaret at the Old Crawford Firehall';
+const DEFAULT_DATES = '2019-05-31' +
+  '[1]E30a3b2d3k3s3w20c3k3m3q3s2u2x2A2D30c2g2j1k2n3p2' +
+  '[2]0B3C3D20i3m1p3t1y3z2E20c1i3m3' +
+  '[3]00e3f3g2k2m2q2t3w3z30c3i2n2q2' +
+  '[4]0n3o3p2t3v3y30b3j3l2n2r3t2x3A1E30b3d2g3j2o3q3' +
+  '[5]0g3h3i2l3r3u3z30f2j2l3r2s3y2A3B20a3b2f3h3j3p3r2' +
+  '[6]000a2h2o2' +
+  '[7]00B3'
 
 
 export default class IndexController extends Controller.extend({
