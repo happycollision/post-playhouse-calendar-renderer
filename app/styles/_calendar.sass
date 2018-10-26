@@ -1,6 +1,11 @@
 =drop-shadow($color)
   text-shadow: 1px 1px 0px $color, 1px 2px 0px $color
 
+$cal-xs: 0px, 574px
+$cal-small: 575px, 900px
+$cal-medium: 901px, 1422px
+$cal-large: 1424px
+
 $green: rgb(0,110,43)
 $blue: rgb(28,117,188)
 $red: rgb(198,41,46)
@@ -70,8 +75,13 @@ body
     float: left
     font-family: $proxima
     font-size: $cal-base-font-size * 1.75
-    padding: ($cal-base-font-size * 0.2) ($cal-base-font-size * 0.52) 2px
+    padding: ($cal-base-font-size * 0.2) ($cal-base-font-size * 0.52)
     line-height: $cal-base-font-size * 2
+
+    +breakpoint($cal-medium)
+      font-size: $cal-base-font-size * 1.15
+      padding: ($cal-base-font-size * 0.1) ($cal-base-font-size * 0.2)
+      line-height: $cal-base-font-size * 1.5
 
     &.selected
       color: white
@@ -129,6 +139,12 @@ body
 .calendar
   font-family: $proxima
   padding: 1em
+  +breakpoint($cal-xs)
+    max-width: nth($cal-xs, 1)
+  +breakpoint($cal-small)
+    max-width: nth($cal-small, 1)
+  +breakpoint($cal-medium)
+    max-width: nth($cal-medium, 1)
 
 .month
   width: 100%
@@ -146,13 +162,13 @@ body
 .day
   width: 14%
   padding: 0.75%
-  border: 1px solid $cal-border-color
+  border: $cal-border-width solid $cal-border-color
   background: white
   min-height: 14%
   // position: relative
   vertical-align: top
 
-  +breakpoint($cal-large)
+  +breakpoint($cal-medium)
     border-width: $cal-border-width
 
   .month-holder
@@ -168,6 +184,9 @@ body
     font-size: $cal-base-font-size * 2.5
     z-index: 2
     transform: rotate(-15deg)
+    top: -0.8em
+    +breakpoint($cal-medium)
+      font-size: $cal-base-font-size * 1.75
 
   &.day-1
     .month-name
@@ -175,16 +194,15 @@ body
 
       &.jun
         // left: -2em
-        top: -0.8em
+        // top: -0.8em
       &.jul
-        top: -0.3em
-        right: -4em
+        // top: -0.3em
+        right: -3.5em
       &.aug
-        top: -0.8em
+        // top: -0.8em
         // left: -0.55em
   &.day-31 .may.month-name
     display: block
-    top: -0.8em
 
 
 .day-name
@@ -218,27 +236,37 @@ body
   align-items: baseline
   > *
     flex-grow: 1
+  +breakpoint($cal-medium)
+    font-size: $cal-base-font-size * 1
 
 
 .mday
   font-family: proxima-nova-condensed
   font-weight: 300
   color: $calendar-day-date-color
-  +breakpoint($cal-medium)
-    text-align: right
-    margin-bottom: 6px
-    line-height: $cal-base-font-size
+  text-align: right
+  margin-bottom: 6px
+  line-height: $cal-base-font-size
+
+$showing-1-2-vert-padding: (($cal-vert-button-pad * 2 + ($cal-base-font-size)) / 2 * 3 / 2 - $cal-base-font-size / 2)
+$showing-3-up-vert-padding: $cal-vert-button-pad
+$showing-vert-spacer: (($cal-vert-button-pad * 2 + $cal-base-font-size) * 1.5 )
+$medium-mult: .5
+$medium-mult-single: .3
 
 .showing
   background-color: grey
   color: white
   +drop-shadow(black) // default (for Bald Mountain Rounders)
-  padding: $cal-vert-button-pad 2px
+  padding: $showing-3-up-vert-padding 2px
   margin-bottom: 0
   text-align: center
   line-height: $cal-base-font-size
   font-size: $cal-base-font-size * 1.2
   font-weight: 300
+  +breakpoint($cal-medium)
+    font-size: $cal-base-font-size * .75
+    padding: $showing-3-up-vert-padding * $medium-mult-single 2px
 
   &.show-1
     background-color: $show-1-color
@@ -256,15 +284,21 @@ body
     background-color: $show-5-color
     +drop-shadow($show-5-color-drop-shadow)
 
+
 .day-content.show-count-1,
 .day-content.show-count-2
   .showing
-    padding: (($cal-vert-button-pad * 2 + ($cal-base-font-size)) / 2 * 3 / 2 - $cal-base-font-size / 2) 2px
+    padding: $showing-1-2-vert-padding 2px
+    +breakpoint($cal-medium)
+      padding: $showing-1-2-vert-padding * $medium-mult 2px
 
 .day-content.show-count-1
   .spacer
     display: block
-    height: (($cal-vert-button-pad * 2 + $cal-base-font-size) * 1.5 )
+    height: $showing-vert-spacer
+    +breakpoint($cal-medium)
+      height: $showing-vert-spacer * .68
+
 
 .week
   &:nth-child(1)
