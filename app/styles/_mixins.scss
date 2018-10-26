@@ -24,7 +24,13 @@
       @warn "The breakpoint mixin supports the following attributes: xs, sm, md, lg";
     }
   }
-  @else if $type == number {
+  @if $type == list {
+    $list: $min;
+    $min: nth($list, 1);
+    $max: nth($list, 2);
+    $type: number;
+  }
+  @if $type == number {
     // Allow for custom parameters for min and max size
     $query: "all" !default;
 
