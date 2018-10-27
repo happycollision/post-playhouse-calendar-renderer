@@ -165,9 +165,6 @@ body
   padding: 0.75%
   border: $cal-border-width solid $cal-border-color
   background: white
-  min-height: 14%
-  // position: relative
-  vertical-align: top
 
   +breakpoint($cal-medium)
     border-width: $cal-border-width
@@ -249,41 +246,39 @@ body
   margin-bottom: 6px
   line-height: $cal-base-font-size
 
-$showing-1-2-vert-padding: (($cal-vert-button-pad * 2 + ($cal-base-font-size)) / 2 * 3 / 2 - $cal-base-font-size / 2)
-$showing-3-up-vert-padding: $cal-vert-button-pad
-$showing-vert-spacer: (($cal-vert-button-pad * 2 + $cal-base-font-size) * 1.6 )
-$medium-mult: .56
-$medium-mult-single: .3
+// trick the height of the table cells to allow content of height 100%
+tr
+  height: 0px
+td
+  height: inherit
+// end trick
+
+.day-wrapper
+  display: flex
+  flex-direction: column
+  height: 100%
+
+.day-content
+  flex-grow: 1
+  display: flex
+  flex-direction: column
+
+  .spacer
+    flex-basis: 1.2em
+    flex-grow: 1
 
 .showing
+  font-size: $cal-base-font-size * 1.2
+  font-weight: 300
+  text-align: center
+  background-color: grey
+  color: white
+
   display: flex
   justify-content: space-between
   align-items: center
-  .show-time
-    color: black
-    margin-left: 2%
-    text-shadow: none
-    text-align: center
-    background-color: white
-    width: 1.5em
-    border-radius: 10%
-    padding: 0.1em 0
-    line-height: 1
-  .show-title
-    flex-grow: 1
-    
-  background-color: grey
-  color: white
-  +drop-shadow(black) // default (for Bald Mountain Rounders)
-  padding: $showing-3-up-vert-padding 2px
-  margin-bottom: 0
-  text-align: center
-  font-size: $cal-base-font-size * 1.2
-  font-weight: 300
-  +breakpoint($cal-medium)
-    font-size: $cal-base-font-size * .75
-    padding: $showing-3-up-vert-padding * $medium-mult-single 2px
 
+  +drop-shadow(black) // default (for Bald Mountain Rounders)
   &.show-1
     background-color: $show-1-color
     +drop-shadow($show-1-color-drop-shadow)
@@ -301,28 +296,23 @@ $medium-mult-single: .3
     +drop-shadow($show-5-color-drop-shadow)
 
 
-.day-content.show-count-1,
-.day-content.show-count-2
+$base-height: 2.16em  
+.show-count-1, .show-count-2
   .showing
-    padding: $showing-1-2-vert-padding 2px
-    +breakpoint($cal-medium)
-      padding: $showing-1-2-vert-padding * $medium-mult 2px
+    flex-basis: $base-height
 
-.day-content.show-count-1
-  .spacer
-    display: block
-    height: $showing-vert-spacer
-    +breakpoint($cal-medium)
-      height: $showing-vert-spacer * .68
+.showing
+  flex-basis: $base-height * 2 / 3
 
-
-.week
-  &:nth-child(1)
-    .spacer
-      height: 0
-  &:nth-child(2),
-  &:nth-child(3),
-  &:nth-child(4),
-  &:nth-child(5)
-    .spacer
-      height: 26px
+.show-time
+  color: black
+  margin-left: 2%
+  text-shadow: none
+  text-align: center
+  background-color: white
+  width: 1.5em
+  border-radius: 10%
+  padding: 0.1em 0
+  line-height: 1
+.show-title
+  flex-grow: 1
