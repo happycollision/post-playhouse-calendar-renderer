@@ -277,6 +277,8 @@ td
   display: flex
   justify-content: space-between
   align-items: center
+  +breakpoint($cal-medium)
+    font-size: $cal-base-font-size * 0.75
 
   +drop-shadow(black) // default (for Bald Mountain Rounders)
   &.show-1
