@@ -43,7 +43,7 @@ $dark-day-bg: rgba(0,0,0,0.4)
 $cal-bg-color: #0087aa
 $cal-border-color: black
 
-$cal-border-width: 2px
+$cal-border-width: 1px
 $cal-base-font-size: 1.5rem // 24px
 $cal-vert-button-pad: 0.29rem
 
@@ -152,6 +152,8 @@ $ratio: 100% * $paperHeight / $paperWidth
   border-collapse: collapse
   background-color: $cal-bg-color
   border: $cal-border-width solid $cal-bg-color
+  +breakpoint($cal-large)
+    border-width: $cal-border-width * 2
 
 .week:first-child .day:first-child
   padding: 0
@@ -165,9 +167,8 @@ $ratio: 100% * $paperHeight / $paperWidth
   padding: 0.75%
   border: $cal-border-width solid $cal-border-color
   background: white
-
-  +breakpoint($cal-medium)
-    border-width: $cal-border-width
+  +breakpoint($cal-large)
+    border-width: $cal-border-width * 2
 
   .month-holder
     position: relative
