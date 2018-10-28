@@ -3,7 +3,8 @@ import { computed } from '@ember/object';
 
 export default Component.extend({
   classNames: ['day'],
-  classNameBindings: ['isDark:dark', 'whichDay', 'isError:error'],
+  classNameBindings: ['isDark:dark', 'whichDay', 'whichWeekday', 'isError:error'],
+  whichWeekday: computed('dayNameFull', function() { return `${this.dayNameFull.toLowerCase()}`;}),
   whichDay: computed('mDay', function() { return `day-${this.mDay}`;}),
 
   displayMonthName: computed('monthName', function() {
