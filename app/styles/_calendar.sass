@@ -28,10 +28,10 @@ $show-4-color: $yellow
 $show-5-color: $purple
 
 $show-1-color-drop-shadow: $blue-shadow
-$show-2-color-drop-shadow: $purple-shadow
+$show-2-color-drop-shadow: $green-shadow
 $show-3-color-drop-shadow: $red-shadow
 $show-4-color-drop-shadow: $yellow-shadow
-$show-5-color-drop-shadow: $green-shadow
+$show-5-color-drop-shadow: $purple-shadow
 
 $font-body: proxima-nova, sans-serif
 $font-condensed: proxima-nova-condensed
@@ -62,6 +62,7 @@ $ratio: 100% * $paperHeight / $paperWidth
   ul // reset
     padding: 0
     margin: 0
+    list-style: none
 
 .calendar-filters
   .filter
@@ -150,9 +151,60 @@ $ratio: 100% * $paperHeight / $paperWidth
   // +breakpoint($cal-medium)
   //   max-width: nth($cal-medium, 1)
 
-
+// borders
+$cal-border-style: 0 solid $cal-border-color
+.day.padding
+  border: none !important
 .day
+  border: $cal-border-style
+  border-left-width: $cal-border-width
+  &:last-child
+    border-right-width: $cal-border-width
+.week
+  border: $cal-border-style
+  border-bottom-width: $cal-border-width
+  &:first-child
+    .day
+      border-top-width: $cal-border-width
+  &:last-child
+    border: none
+    .day
+      position: relative
+      border-bottom-width: $cal-border-width
+      border-right-width: 0
+      &:after
+        content: ''
+        border: $cal-border-style
+        border-left-width: $cal-border-width
+        position: absolute
+        top: 0
+        right: -#{$cal-border-width}
+        bottom: -#{$cal-border-width}
++breakpoint($cal-large)
+  .day
+    border-left-width: $cal-border-width * 2
+    &:last-child
+      border-right-width: $cal-border-width * 2
+  .week
+    border-bottom-width: $cal-border-width * 2
+    &:first-child .day
+      border-top-width: $cal-border-width * 2
+    &:last-child .day
+      border-bottom-width: $cal-border-width * 2
+      &:after
+        border-left-width: $cal-border-width * 2
+        right: -#{$cal-border-width * 2}
+        bottom: -#{$cal-border-width * 2}
+
+
+.week
+  display: flex
+  width: 100%
+.day
+  // display: table-cell
+  flex-basis: 100% * 2 / 13
   &.monday
+    flex-basis: 100% * 1 / 13
     .day-name .full
       display: none
     .day-name .short
@@ -161,17 +213,12 @@ $ratio: 100% * $paperHeight / $paperWidth
 .week:first-child .day:first-child
   padding: 0
   padding-bottom: $filter-margins
-
-.day:nth-child(2)
-  width: 8%
+  flex-grow: 1
 
 .day
   width: 14%
   padding: 0.75%
-  border: $cal-border-width solid $cal-border-color
   background: white
-  +breakpoint($cal-large)
-    border-width: $cal-border-width * 2
 
   .month-holder
     position: relative
@@ -225,7 +272,6 @@ $ratio: 100% * $paperHeight / $paperWidth
 
 .day.padding
   background: transparent
-  border: none
 
 .week:nth-child(2)
   .day .day-name
@@ -256,13 +302,6 @@ $ratio: 100% * $paperHeight / $paperWidth
   text-align: right
   margin-bottom: 6px
   line-height: $cal-base-font-size
-
-// trick the height of the table cells to allow content of height 100%
-tr
-  height: 0px
-td
-  height: inherit
-// end trick
 
 .day-wrapper
   display: flex

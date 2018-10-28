@@ -1,17 +1,14 @@
 <div class="calendar-component-wrapper">
-<div class="proportional-wrapper">
-  <div class="outer">
-    <div class="inner">
-
-      <div class="calendar">
-        <table class="month" cellpadding="0" cellspacing="0">
-
+  <div class="proportional-wrapper">
+    <div class="outer">
+      <div class="inner">
+        <div class="calendar">
           {{#each weeksData as |wd wIndex|}}
             {{#p-calendar/week startingDate=wd.startingDate showsByDay=wd.showsByDay backPadding=wd.backPadding as |days|}}
-              <tr class="week">
+              <ul class="week">
 
                 {{#if (and (gt wd.frontPadding 0) (eq wIndex 0))}}
-                  <td class="day padding" colspan="{{wd.frontPadding}}">
+                  <li class="day padding" colspan="{{wd.frontPadding}}">
                     <div class="calendar-filters">
                       {{#each longTitles as |title index|}}
                         <div class="filter selected show-{{add index 1}}">
@@ -19,21 +16,18 @@
                         </div>
                       {{/each}}
                     </div>
-                  </td>
+                  </li>
                 {{/if}}
 
                 {{#each days as |day|}}
-                  {{p-calendar/day mDay=day.mDay monthName=day.monthName shows=day.shows dayNameFull=day.dayNameFull isEditing=isEditing tagName="td"}}
+                  {{p-calendar/day mDay=day.mDay monthName=day.monthName shows=day.shows dayNameFull=day.dayNameFull isEditing=isEditing tagName="li"}}
                 {{/each}}
               
-              </tr><!-- week -->
+              </ul><!-- week -->
             {{/p-calendar/week}}
           {{/each}}
-
-        </table>
+        </div>
       </div>
-
     </div>
   </div>
-</div>
 </div>
