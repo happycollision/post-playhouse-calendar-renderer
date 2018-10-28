@@ -85,6 +85,10 @@ $ratio: 100% * $paperHeight / $paperWidth
       font-size: $cal-base-font-size * 0.75
       padding: ($cal-base-font-size * 0.05) ($cal-base-font-size * 0.1)
       line-height: $cal-base-font-size * 1
+    +breakpoint($cal-xs)
+      font-size: $cal-base-font-size * 0.55
+      padding: ($cal-base-font-size * 0.025) ($cal-base-font-size * 0.05)
+      line-height: $cal-base-font-size * .75
 
     &.selected
       color: white
@@ -238,6 +242,10 @@ $cal-border-style: 0 solid $cal-border-color
       font-size: $cal-base-font-size * 1.75
     +breakpoint($cal-small)
       font-size: $cal-base-font-size * 1
+    +breakpoint($cal-xs)
+      font-size: $cal-base-font-size * .5
+      top: -1em
+      transform: rotate(0)
 
   &.day-1
     .month-name
@@ -248,11 +256,14 @@ $cal-border-style: 0 solid $cal-border-color
         // top: -0.8em
       &.jul
         // top: -0.3em
-        right: -3.5em
+        // right: -3.5em
+        display: none
       &.aug
         // top: -0.8em
         // left: -0.55em
   &.day-31 .may.month-name
+    display: block
+  &.day-2 .jul.month-name
     display: block
 
 
@@ -278,6 +289,13 @@ $cal-border-style: 0 solid $cal-border-color
     display: inline
     font-family: $font-extra-condensed
     color: $calendar-day-date-color
+  +breakpoint($cal-xs)
+    & .monday .short
+      display: none
+    & .full
+      display: none
+    & .short
+      display: inline
   .day.dark .day-name
     color: white
 
@@ -293,6 +311,8 @@ $cal-border-style: 0 solid $cal-border-color
     font-size: $cal-base-font-size * 1
   +breakpoint($cal-small)
     font-size: $cal-base-font-size * 0.75
+  +breakpoint($cal-xs)
+    font-size: $cal-base-font-size * 0.5
 
 
 .mday
@@ -301,7 +321,7 @@ $cal-border-style: 0 solid $cal-border-color
   color: $calendar-day-date-color
   text-align: right
   margin-bottom: 6px
-  line-height: $cal-base-font-size
+  line-height: 1
 
 .day-wrapper
   display: flex
@@ -318,6 +338,8 @@ $cal-border-style: 0 solid $cal-border-color
     flex-basis: 1.2em
     +breakpoint($cal-small)
       flex-basis: 0.75em
+    +breakpoint($cal-xs)
+      display: none
 
 .showing
   font-size: $cal-base-font-size * 1.2
@@ -333,6 +355,11 @@ $cal-border-style: 0 solid $cal-border-color
     font-size: $cal-base-font-size * 0.75
   +breakpoint($cal-small)
     font-size: $cal-base-font-size * 0.5
+  +breakpoint($cal-xs)
+    font-size: $cal-base-font-size * 0.5
+    border-radius: 999em
+    margin-top: 1px
+    justify-content: center
 
   +drop-shadow(black) // default (for Bald Mountain Rounders)
   &.show-1
@@ -356,9 +383,13 @@ $base-height: 2.16em
 .show-count-1, .show-count-2
   .showing
     flex-basis: $base-height
+    +breakpoint($cal-xs)
+      flex-basis: 1em
 
 .showing
   flex-basis: $base-height * 2 / 3
+  +breakpoint($cal-xs)
+    flex-basis: 1em
 
 .show-time
   color: black
@@ -373,9 +404,15 @@ $base-height: 2.16em
   +breakpoint($cal-small)
     font-weight: bold
     width: 1.75em
+  +breakpoint($cal-xs)
+    font-weight: bold
+    color: white
+    background-color: transparent
 
 .show-title
   flex-grow: 1
   white-space: nowrap
   +breakpoint($cal-small)
     font-family: $font-condensed
+  +breakpoint($cal-xs)
+    display: none
