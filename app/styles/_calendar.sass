@@ -158,6 +158,13 @@ $ratio: 100% * $paperHeight / $paperWidth
   +breakpoint($cal-large)
     border-width: $cal-border-width * 2
 
+.day
+  &.monday
+    .day-name .full
+      display: none
+    .day-name .short
+      display: inline
+
 .week:first-child .day:first-child
   padding: 0
   padding-bottom: $filter-margins
@@ -211,6 +218,8 @@ $ratio: 100% * $paperHeight / $paperWidth
 
 .day-name
   display: none
+  .short
+    display: none
 
 .day.error
   background: red

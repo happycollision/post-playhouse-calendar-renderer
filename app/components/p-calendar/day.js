@@ -16,6 +16,10 @@ export default Component.extend({
     }
   }),
 
+  dayNameShort: computed('dayNameFull', function() {
+    return this.dayNameFull.substring(0, 3)
+  }),
+
   isDark: computed('shows', function() {
     const length = this.get('shows.length');
     return (length === 0 || length === undefined)
