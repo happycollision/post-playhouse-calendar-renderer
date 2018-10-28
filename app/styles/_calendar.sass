@@ -33,8 +33,10 @@ $show-3-color-drop-shadow: $red-shadow
 $show-4-color-drop-shadow: $yellow-shadow
 $show-5-color-drop-shadow: $green-shadow
 
-$proxima: proxima-nova, sans-serif
-$azo: azo-sans-uber, sans-serif
+$font-body: proxima-nova, sans-serif
+$font-condensed: proxima-nova-condensed
+$font-extra-condensed: proxima-nova-extra-condensed
+$font-title: azo-sans-uber, sans-serif
 
 $calendar-day-date-color: black
 $dark-day-bg: rgba(0,0,0,0.4)
@@ -61,7 +63,7 @@ html
 
 body
   background-color: #ccc
-  font-family: $proxima
+  font-family: $font-body
   font-size: $cal-base-font-size
   margin: 0
   padding: 0
@@ -74,7 +76,7 @@ body
     border: 1px solid $alt-bg-color
     color: darken($alt-bg-color, 20)
     float: left
-    font-family: $proxima
+    font-family: $font-body
     font-size: $cal-base-font-size * 1.75
     padding: ($cal-base-font-size * 0.2) ($cal-base-font-size * 0.52)
     line-height: $cal-base-font-size * 2
@@ -138,7 +140,7 @@ body
     bottom: 0
 
 .calendar
-  font-family: $proxima
+  font-family: $font-body
   padding: 1em
   +breakpoint($cal-xs)
     max-width: nth($cal-xs, 1)
@@ -175,7 +177,7 @@ body
   .month-name
     display: none
     color: $calendar-day-date-color
-    font-family: $azo
+    font-family: $font-title
     font-weight: bolder
     position: absolute
     background: transparent
@@ -222,7 +224,7 @@ body
 .week:nth-child(2)
   .day .day-name
     display: inline
-    font-family: proxima-nova-extra-condensed
+    font-family: $font-extra-condensed
     color: $calendar-day-date-color
   .day.dark .day-name
     color: white
@@ -239,7 +241,7 @@ body
 
 
 .mday
-  font-family: proxima-nova-condensed
+  font-family: $font-condensed
   font-weight: 300
   color: $calendar-day-date-color
   text-align: right
