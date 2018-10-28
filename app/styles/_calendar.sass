@@ -58,6 +58,7 @@ $ratio: 100% * $paperHeight / $paperWidth
 
 .calendar-component-wrapper
   font-family: $font-body
+  background: $cal-bg-color
   font-size: $cal-base-font-size
   ul // reset
     padding: 0
@@ -129,19 +130,19 @@ $ratio: 100% * $paperHeight / $paperWidth
   max-width: $doc-width
   width: 100%
 
-  .outer
-    width: 100%
-    padding-top: $ratio
-    position: relative
-    overflow: visible
+  +breakpoint($cal-large)
+    .outer
+      width: 100%
+      padding-top: $ratio
+      position: relative
+      overflow: visible
 
-  .inner
-    background: $cal-bg-color
-    position: absolute
-    top: 0
-    left: 0
-    right: 0
-    bottom: 0
+    .inner
+      position: absolute
+      top: 0
+      left: 0
+      right: 0
+      bottom: 0
 
 .calendar
   font-family: $font-body
