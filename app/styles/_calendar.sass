@@ -21,17 +21,17 @@ $red-shadow: darken($red, 20)
 $yellow-shadow: darken($yellow, 35)
 $green-shadow: darken($green, 10)
 
-$show-1-color: $blue
+$show-1-color: $yellow
 $show-2-color: $green
-$show-3-color: $red
-$show-4-color: $yellow
-$show-5-color: $purple
+$show-3-color: $purple
+$show-4-color: $red
+$show-5-color: $blue
 
-$show-1-color-drop-shadow: $blue-shadow
+$show-1-color-drop-shadow: $yellow-shadow
 $show-2-color-drop-shadow: $green-shadow
-$show-3-color-drop-shadow: $red-shadow
-$show-4-color-drop-shadow: $yellow-shadow
-$show-5-color-drop-shadow: $purple-shadow
+$show-3-color-drop-shadow: $purple-shadow
+$show-4-color-drop-shadow: $red-shadow
+$show-5-color-drop-shadow: $blue-shadow
 
 $font-body: proxima-nova, sans-serif
 $font-condensed: proxima-nova-condensed
@@ -248,24 +248,16 @@ $cal-border-style: 0 solid $cal-border-color
       top: -1em
       transform: rotate(0)
 
-  &.day-1
-    .month-name
-      display: block
-
-      &.jun
-        // left: -2em
-        // top: -0.8em
-      &.jul
-        // top: -0.3em
-        // right: -3.5em
-        display: none
-      &.aug
-        // top: -0.8em
-        // left: -0.55em
-  &.day-31 .may.month-name
+  &.day-29 .month-name.may
     display: block
-  &.day-2 .jul.month-name
+  &.day-2  .month-name.jun
     display: block
+    left: -2rem
+  &.day-1  .month-name.jul
+    display: block
+  &.day-1  .month-name.aug
+    display: block
+    left: 2rem
 
 
 .day-name
