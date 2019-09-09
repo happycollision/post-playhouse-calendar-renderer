@@ -6,7 +6,7 @@ import { DateTime } from 'luxon';
 const LONG_TITLES = 'Show One,Show Two,Show Three';
 const SHORT_TITLES = 'S1,S2,S3';
 
-const URL_DATES_CODE = '2018-06-29' + '[1]C2D30a3' + '[2]D30b4' + '[3]0f3';
+const URL_DATES_CODE = '2018-06-29' + '[1]C2D30a3' + '[2]D30d4' + '[3]0f3';
 
 const READABLE_DATES = () => [
   `2018
@@ -14,7 +14,7 @@ June 29a, 30e,
 July 1e,`,
   `2018
 June 30e,
-July 2ma,`,
+July 4ma,`,
   `2018
 July 6e,`,
 ];
@@ -23,13 +23,13 @@ const PUBLISHABLE_DATES = () => [
   `June 29*, 30
 July 1`,
   `June 30
-July 2‡, 2*`,
+July 4‡, 4*`,
   `July 6`,
 ];
 
 const SHORTHAND = () => ({
   startingDate: '2018-06-29',
-  showData: [{ a: [1] }, { e: [1, 2] }, { e: [1] }, { m: [2], a: [2] }, {}, {}, {}, { e: [3] }],
+  showData: [{ a: [1] }, { e: [1, 2] }, { e: [1] }, {}, {}, { m: [2], a: [2] }, {}, { e: [3] }],
 });
 
 function numDaysWithShowings(showings: dc.IDayShowings[]): number {
@@ -49,7 +49,7 @@ module('Unit | Utility | showings-data-converters | simple functions', function(
     let result = dc.urlToShorthandPerShow(URL_DATES_CODE);
     let expected = [
       [{ a: [1] }, { e: [1] }, { e: [1] }],
-      [{}, { e: [2] }, {}, { m: [2], a: [2] }],
+      [{}, { e: [2] }, {}, {}, {}, { m: [2], a: [2] }],
       [{}, {}, {}, {}, {}, {}, {}, { e: [3] }],
     ];
 
@@ -71,12 +71,12 @@ module('Unit | Utility | showings-data-converters | simple functions', function(
 
   test('urlCodeParts', function(assert) {
     let result = dc.urlCodeParts(URL_DATES_CODE);
-    assert.deepEqual(result, { startingDateString: '2018-06-29', showsDates: ['C2D30a3', 'D30b4', '0f3'] });
+    assert.deepEqual(result, { startingDateString: '2018-06-29', showsDates: ['C2D30a3', 'D30d4', '0f3'] });
   });
 
   test('dateCodeStringToTokens', function(assert) {
     let result = dc.dateCodeStringToTokens(dc.urlCodeParts(URL_DATES_CODE).showsDates.join(''));
-    assert.deepEqual(result, ['C2', 'D3', '0', 'a3', 'D3', '0', 'b4', '0', 'f3']);
+    assert.deepEqual(result, ['C2', 'D3', '0', 'a3', 'D3', '0', 'd4', '0', 'f3']);
   });
 });
 
@@ -105,7 +105,7 @@ module('Unit | Utility | showings-data-converters | big converters', function() 
       },
       {
         title: 'Show Two',
-        dates: 'June 30\nJuly 2‡, 2*',
+        dates: 'June 30\nJuly 4‡, 4*',
       },
       {
         title: 'Show Three',
@@ -114,6 +114,25 @@ module('Unit | Utility | showings-data-converters | big converters', function() 
     ];
     assert.deepEqual(result, expected);
   });
+
+  // test('urlDataToShowingsByPriceGroups', function(assert) {
+  //   let result = dc.urlDataToShowingsByPriceGroups(LONG_TITLES, URL_DATES_CODE);
+  //   let expected = [
+  //     {
+  //       title: 'Show One',
+  //       dates: 'June 29*, 30\nJuly 1',
+  //     },
+  //     {
+  //       title: 'Show Two',
+  //       dates: 'June 30\nJuly 2‡, 2*',
+  //     },
+  //     {
+  //       title: 'Show Three',
+  //       dates: 'July 6',
+  //     },
+  //   ];
+  //   assert.deepEqual(result, expected);
+  // });
 
   test('urlDataToShowingsAgenda', function(assert) {
     let result = dc.urlDataToShowingsAgenda(LONG_TITLES, URL_DATES_CODE);
@@ -131,7 +150,7 @@ module('Unit | Utility | showings-data-converters | big converters', function() 
         performances: [{ timeString: '8pm', title: 'Show One' }],
       },
       {
-        dateString: 'July 2',
+        dateString: 'July 4',
         performances: [{ timeString: '10am', title: 'Show Two' }, { timeString: '2pm', title: 'Show Two' }],
       },
       {
@@ -166,8 +185,8 @@ module('Unit | Utility | showings-data-converters | big converters', function() 
         performances: [{ timeString: '8pm', fullTitle: 'Show One', shortTitle: 'S1' }],
       },
       {
-        timestamp: createTimestamp('July 2'),
-        dateString: createDateString('July 2'),
+        timestamp: createTimestamp('July 4'),
+        dateString: createDateString('July 4'),
         performances: [
           { timeString: '10am', fullTitle: 'Show Two', shortTitle: 'S2' },
           { timeString: '2pm', fullTitle: 'Show Two', shortTitle: 'S2' },
@@ -594,8 +613,8 @@ module('Unit | Utility | ShowingsData class', function() {
         performances: [{ timeString: '8pm', fullTitle: 'Show One', shortTitle: 'S1' }],
       },
       {
-        timestamp: createTimestamp('July 2'),
-        dateString: createDateString('July 2'),
+        timestamp: createTimestamp('July 4'),
+        dateString: createDateString('July 4'),
         performances: [
           { timeString: '10am', fullTitle: 'Show Two', shortTitle: 'S2' },
           { timeString: '2pm', fullTitle: 'Show Two', shortTitle: 'S2' },
@@ -637,8 +656,8 @@ module('Unit | Utility | ShowingsData class', function() {
           performances: [{ timeString: '8pm', fullTitle: 'Show Two', shortTitle: 'S2' }],
         },
         {
-          timestamp: createTimestamp('July 2'),
-          dateString: createDateString('July 2'),
+          timestamp: createTimestamp('July 4'),
+          dateString: createDateString('July 4'),
           performances: [
             { timeString: '10am', fullTitle: 'Show Two', shortTitle: 'S2' },
             { timeString: '2pm', fullTitle: 'Show Two', shortTitle: 'S2' },
@@ -678,8 +697,8 @@ module('Unit | Utility | ShowingsData class', function() {
         performances: [{ timeString: '8pm', fullTitle: 'Show One', shortTitle: one }],
       },
       {
-        timestamp: createTimestamp('July 2'),
-        dateString: createDateString('July 2'),
+        timestamp: createTimestamp('July 4'),
+        dateString: createDateString('July 4'),
         performances: [
           { timeString: '10am', fullTitle: 'Show Two', shortTitle: two },
           { timeString: '2pm', fullTitle: 'Show Two', shortTitle: two },
