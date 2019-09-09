@@ -20,21 +20,11 @@
     "baseUrl": ".",
     "module": "es6",
     "paths": {
-      "post-playhouse-calendar-renderer/tests/*": [
-        "tests/*"
-      ],
-      "post-playhouse-calendar-renderer/*": [
-        "app/*"
-      ],
-      "*": [
-        "types/*"
-      ]
+      "post-playhouse-calendar-renderer/tests/*": ["tests/*"],
+      "post-playhouse-calendar-renderer/*": ["app/*"],
+      "*": ["types/*"]
     },
     "experimentalDecorators": true
   },
-  "include": [
-    "app/**/*",
-    "tests/**/*",
-    "types/**/*"
-  ]
+  "include": ["app/**/*", "tests/**/*", "types/**/*"]
 }

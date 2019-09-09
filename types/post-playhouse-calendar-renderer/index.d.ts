@@ -1,4 +1,3 @@
-
 import Ember from 'ember';
 
 declare global {
@@ -8,7 +7,7 @@ declare global {
 
 declare module '@ember/service' {
   interface Registry {
-    'fastboot': any;
+    fastboot: any;
   }
 }
 

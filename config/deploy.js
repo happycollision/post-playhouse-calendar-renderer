@@ -6,8 +6,8 @@ module.exports = function(deployTarget) {
     build: {},
     // include other plugin configuration that applies to all deploy targets here
     ghpages: {
-      gitRemoteUrl: 'https://github.com/happycollision/post-playhouse-calendar-renderer.git'
-    }
+      gitRemoteUrl: 'https://github.com/happycollision/post-playhouse-calendar-renderer.git',
+    },
   };
 
   if (deployTarget === 'development') {

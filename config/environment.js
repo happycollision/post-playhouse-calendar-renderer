@@ -13,18 +13,18 @@ module.exports = function(environment) {
       },
       EXTEND_PROTOTYPES: {
         // Prevent Ember Data from overriding Date.parse.
-        Date: false
-      }
+        Date: false,
+      },
     },
 
     fastboot: {
-      hostWhitelist: ['example.com', 'subdomain.example.com', /^localhost:\d+$/]
+      hostWhitelist: ['example.com', 'subdomain.example.com', /^localhost:\d+$/],
     },
 
     APP: {
       // Here you can pass flags/options to your application instance
       // when it is created
-    }
+    },
   };
 
   if (environment === 'development') {
@@ -51,7 +51,6 @@ module.exports = function(environment) {
     // here you can enable a production-specific feature
     ENV.rootURL = '/post-playhouse-calendar-renderer/';
     ENV.locationType = 'hash';
-
   }
 
   return ENV;

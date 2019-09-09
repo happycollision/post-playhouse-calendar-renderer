@@ -9,7 +9,7 @@ export default Component.extend(EKMixin, {
     this._super(...arguments);
 
     this.set('keyboardActivated', true);
-    const {key, onDown} = this;
+    const { key, onDown } = this;
     this.on(keyDown(key), onDown);
   },
 });

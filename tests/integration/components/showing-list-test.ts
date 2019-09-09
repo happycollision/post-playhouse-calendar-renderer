@@ -9,8 +9,8 @@ module('Integration | Component | showing-list', function(hooks) {
   setupRenderingTest(hooks);
 
   test('it renders', async function(assert) {
-    this.set('dates', DEFAULT_DATES)
-    this.set('titles', DEFAULT_LONG_TITLES.split(','))
+    this.set('dates', DEFAULT_DATES);
+    this.set('titles', DEFAULT_LONG_TITLES.split(','));
 
     await render(hbs`{{showing-list datesCode=dates titles=titles}}`);
 
@@ -18,8 +18,8 @@ module('Integration | Component | showing-list', function(hooks) {
   });
 
   test('it shows all the show titles', async function(assert) {
-    this.set('dates', DEFAULT_DATES)
-    this.set('titles', DEFAULT_LONG_TITLES.split(','))
+    this.set('dates', DEFAULT_DATES);
+    this.set('titles', DEFAULT_LONG_TITLES.split(','));
 
     await render(hbs`{{showing-list datesCode=dates titles=titles}}`);
 
@@ -30,15 +30,14 @@ module('Integration | Component | showing-list', function(hooks) {
     assert.dom().containsText('42nd');
   });
 
-
   test('it shows all the show dates', async function(assert) {
-    this.set('dates', DEFAULT_DATES)
-    this.set('titles', DEFAULT_LONG_TITLES.split(','))
+    this.set('dates', DEFAULT_DATES);
+    this.set('titles', DEFAULT_LONG_TITLES.split(','));
 
     await render(hbs`{{showing-list datesCode=dates titles=titles}}`);
 
     fullCodeStringToPublishable(DEFAULT_DATES).map(str => {
       str.split('\n').map(str => assert.dom().containsText(str.trim()));
-    })
+    });
   });
 });

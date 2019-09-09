@@ -6,24 +6,24 @@ class DayInfo {
   constructor(dateTime) {
     const formattedString = dateTime.toFormat('cccc,d,LLL');
     const [dayName, mDay, monthName] = formattedString.split(',');
-    Object.assign(this, {dayName, mDay, monthName});
+    Object.assign(this, { dayName, mDay, monthName });
   }
 }
 
 export default Component.extend({
   tagName: '',
 
-  dateInfo: computed('startingDate', function () {
+  dateInfo: computed('startingDate', function() {
     const date = DateTime.fromISO(this.startingDate);
     const times = 7 - (date.weekday === 7 ? 0 : date.weekday);
     const backPadding = this.backPadding | 0;
 
     return Array.from(new Array(times - backPadding)).map(function(_, i) {
-      return new DayInfo(date.plus({day: i}))
-    })
+      return new DayInfo(date.plus({ day: i }));
+    });
   }),
 
-  days: computed( function() {
+  days: computed(function() {
     const shows = this.showsByDay;
     const dateInfo = this.dateInfo;
     return dateInfo.map(function(day, i) {
@@ -33,6 +33,6 @@ export default Component.extend({
         shows: shows[i],
         dayNameFull: day.dayName,
       };
-    })
-  })
+    });
+  }),
 });

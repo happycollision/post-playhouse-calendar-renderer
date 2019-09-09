@@ -2,7 +2,7 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import { initialize, triggerKeyDown, } from 'ember-keyboard';
+import { initialize, triggerKeyDown } from 'ember-keyboard';
 
 module('Integration | Component | keyboard press', function(hooks) {
   setupRenderingTest(hooks);
@@ -17,7 +17,7 @@ module('Integration | Component | keyboard press', function(hooks) {
 
     await render(hbs`{{keyboard-press key="KeyJ" onDown=(action (mut pressed) true)}}`);
 
-    triggerKeyDown('KeyJ')
+    triggerKeyDown('KeyJ');
 
     assert.equal(this.pressed, true);
   });
