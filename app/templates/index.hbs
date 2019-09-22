@@ -4,15 +4,16 @@
   <div class="containers-wrapper is-editing">
     <div class="cal-component-wrapper">
       {{#maybe-squish squish=true}}
-        {{p-calendar weeksData=weeksData longTitles=titles.long isEditing=true}}
+        {{p-calendar longTitles=titles.long isEditing=true showingsData=showingsData}}
       {{/maybe-squish}}
     </div>
 
     {{#if editing}}
       <div class="form-component-wrapper">
         <div>Url to share:</div>
-        <textarea disabled rows="8" style="width: calc(100% - 20px); margin: auto; display: block; font-size: .85rem">{{url}}</textarea>
-        
+        <textarea disabled rows="8"
+          style="width: calc(100% - 20px); margin: auto; display: block; font-size: .85rem">{{url}}</textarea>
+
         {{show-counts shorthandPerShow=shorthandPerShow titles=titles.short}}
 
         {{edit-form titles=titles readableDates=readableDates actns=(hash
@@ -24,11 +25,12 @@
           removeShow=(action 'removeShow')
         )}}
 
-      {{showing-list titles=titles.long datesCode=dates}}
+        {{showing-list titles=titles.long datesCode=dates}}
       </div>
     {{/if}}
   </div>
 
 {{else}}
-  {{p-calendar weeksData=weeksData longTitles=titles.long isEditing=false}}
+
+  {{p-calendar longTitles=titles.long isEditing=false showingsData=showingsData}}
 {{/if}}

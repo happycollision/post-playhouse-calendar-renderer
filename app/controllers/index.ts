@@ -14,6 +14,7 @@ import {
   shorthandToUrl,
   readablesToUrl,
   urlToShorthandPerShow,
+  ShowingsData,
 } from 'post-playhouse-calendar-renderer/utils/showings-data-converters';
 
 type InputEvent = Event & { target: HTMLInputElement };
@@ -45,6 +46,12 @@ export default class IndexController extends Controller.extend({
   editing = false;
 
   @service('fastboot') fastboot!: any;
+
+  @computed('dates', 'longTitles', 'shortTitles')
+  get showingsData(): ShowingsData {
+    const { dates, longTitles, shortTitles } = this.getProperties(['dates', 'longTitles', 'shortTitles']);
+    return new ShowingsData(shortTitles, longTitles, dates);
+  }
 
   @computed('dates')
   get shorthandShowData() {

@@ -115,25 +115,6 @@ module('Unit | Utility | showings-data-converters | big converters', function() 
     assert.deepEqual(result, expected);
   });
 
-  // test('urlDataToShowingsByPriceGroups', function(assert) {
-  //   let result = dc.urlDataToShowingsByPriceGroups(LONG_TITLES, URL_DATES_CODE);
-  //   let expected = [
-  //     {
-  //       title: 'Show One',
-  //       dates: 'June 29*, 30\nJuly 1',
-  //     },
-  //     {
-  //       title: 'Show Two',
-  //       dates: 'June 30\nJuly 2‡, 2*',
-  //     },
-  //     {
-  //       title: 'Show Three',
-  //       dates: 'July 6',
-  //     },
-  //   ];
-  //   assert.deepEqual(result, expected);
-  // });
-
   test('urlDataToShowingsAgenda', function(assert) {
     let result = dc.urlDataToShowingsAgenda(LONG_TITLES, URL_DATES_CODE);
     let expected = [
@@ -161,7 +142,7 @@ module('Unit | Utility | showings-data-converters | big converters', function() 
     assert.deepEqual(result, expected);
   });
 
-  test('urlDataToShowingsAgenda', function(assert) {
+  test('urlPartsToData', function(assert) {
     let result = dc.urlPartsToData(SHORT_TITLES, LONG_TITLES, URL_DATES_CODE);
     const createTimestamp = (str: string) => DateTime.fromFormat(`${str}, 2018`, 'LLLL d, yyyy').toMillis();
     const createDateString = (str: string) => DateTime.fromFormat(`${str}, 2018`, 'LLLL d, yyyy').toFormat('LLLL d');
@@ -169,33 +150,33 @@ module('Unit | Utility | showings-data-converters | big converters', function() 
       {
         timestamp: createTimestamp('June 29'),
         dateString: createDateString('June 29'),
-        performances: [{ timeString: '2pm', fullTitle: 'Show One', shortTitle: 'S1' }],
+        performances: [{ hourOfDay: 14, timeString: '2pm', fullTitle: 'Show One', shortTitle: 'S1' }],
       },
       {
         timestamp: createTimestamp('June 30'),
         dateString: createDateString('June 30'),
         performances: [
-          { timeString: '8pm', fullTitle: 'Show One', shortTitle: 'S1' },
-          { timeString: '8pm', fullTitle: 'Show Two', shortTitle: 'S2' },
+          { hourOfDay: 20, timeString: '8pm', fullTitle: 'Show One', shortTitle: 'S1' },
+          { hourOfDay: 20, timeString: '8pm', fullTitle: 'Show Two', shortTitle: 'S2' },
         ],
       },
       {
         timestamp: createTimestamp('July 1'),
         dateString: createDateString('July 1'),
-        performances: [{ timeString: '8pm', fullTitle: 'Show One', shortTitle: 'S1' }],
+        performances: [{ hourOfDay: 20, timeString: '8pm', fullTitle: 'Show One', shortTitle: 'S1' }],
       },
       {
         timestamp: createTimestamp('July 4'),
         dateString: createDateString('July 4'),
         performances: [
-          { timeString: '10am', fullTitle: 'Show Two', shortTitle: 'S2' },
-          { timeString: '2pm', fullTitle: 'Show Two', shortTitle: 'S2' },
+          { hourOfDay: 10, timeString: '10am', fullTitle: 'Show Two', shortTitle: 'S2' },
+          { hourOfDay: 14, timeString: '2pm', fullTitle: 'Show Two', shortTitle: 'S2' },
         ],
       },
       {
         timestamp: createTimestamp('July 6'),
         dateString: createDateString('July 6'),
-        performances: [{ timeString: '8pm', fullTitle: 'Show Three', shortTitle: 'S3' }],
+        performances: [{ hourOfDay: 20, timeString: '8pm', fullTitle: 'Show Three', shortTitle: 'S3' }],
       },
     ];
     assert.deepEqual(result, expected);
@@ -597,33 +578,33 @@ module('Unit | Utility | ShowingsData class', function() {
       {
         timestamp: createTimestamp('June 29'),
         dateString: createDateString('June 29'),
-        performances: [{ timeString: '2pm', fullTitle: 'Show One', shortTitle: 'S1' }],
+        performances: [{ hourOfDay: 14, timeString: '2pm', fullTitle: 'Show One', shortTitle: 'S1' }],
       },
       {
         timestamp: createTimestamp('June 30'),
         dateString: createDateString('June 30'),
         performances: [
-          { timeString: '8pm', fullTitle: 'Show One', shortTitle: 'S1' },
-          { timeString: '8pm', fullTitle: 'Show Two', shortTitle: 'S2' },
+          { hourOfDay: 20, timeString: '8pm', fullTitle: 'Show One', shortTitle: 'S1' },
+          { hourOfDay: 20, timeString: '8pm', fullTitle: 'Show Two', shortTitle: 'S2' },
         ],
       },
       {
         timestamp: createTimestamp('July 1'),
         dateString: createDateString('July 1'),
-        performances: [{ timeString: '8pm', fullTitle: 'Show One', shortTitle: 'S1' }],
+        performances: [{ hourOfDay: 20, timeString: '8pm', fullTitle: 'Show One', shortTitle: 'S1' }],
       },
       {
         timestamp: createTimestamp('July 4'),
         dateString: createDateString('July 4'),
         performances: [
-          { timeString: '10am', fullTitle: 'Show Two', shortTitle: 'S2' },
-          { timeString: '2pm', fullTitle: 'Show Two', shortTitle: 'S2' },
+          { hourOfDay: 10, timeString: '10am', fullTitle: 'Show Two', shortTitle: 'S2' },
+          { hourOfDay: 14, timeString: '2pm', fullTitle: 'Show Two', shortTitle: 'S2' },
         ],
       },
       {
         timestamp: createTimestamp('July 6'),
         dateString: createDateString('July 6'),
-        performances: [{ timeString: '8pm', fullTitle: 'Show Three', shortTitle: 'S3' }],
+        performances: [{ hourOfDay: 20, timeString: '8pm', fullTitle: 'Show Three', shortTitle: 'S3' }],
       },
     ];
     assert.deepEqual(result.agendaForAllShows, expected);
@@ -636,31 +617,31 @@ module('Unit | Utility | ShowingsData class', function() {
         {
           timestamp: createTimestamp('June 29'),
           dateString: createDateString('June 29'),
-          performances: [{ timeString: '2pm', fullTitle: 'Show One', shortTitle: 'S1' }],
+          performances: [{ hourOfDay: 14, timeString: '2pm', fullTitle: 'Show One', shortTitle: 'S1' }],
         },
         {
           timestamp: createTimestamp('June 30'),
           dateString: createDateString('June 30'),
-          performances: [{ timeString: '8pm', fullTitle: 'Show One', shortTitle: 'S1' }],
+          performances: [{ hourOfDay: 20, timeString: '8pm', fullTitle: 'Show One', shortTitle: 'S1' }],
         },
         {
           timestamp: createTimestamp('July 1'),
           dateString: createDateString('July 1'),
-          performances: [{ timeString: '8pm', fullTitle: 'Show One', shortTitle: 'S1' }],
+          performances: [{ hourOfDay: 20, timeString: '8pm', fullTitle: 'Show One', shortTitle: 'S1' }],
         },
       ],
       [
         {
           timestamp: createTimestamp('June 30'),
           dateString: createDateString('June 30'),
-          performances: [{ timeString: '8pm', fullTitle: 'Show Two', shortTitle: 'S2' }],
+          performances: [{ hourOfDay: 20, timeString: '8pm', fullTitle: 'Show Two', shortTitle: 'S2' }],
         },
         {
           timestamp: createTimestamp('July 4'),
           dateString: createDateString('July 4'),
           performances: [
-            { timeString: '10am', fullTitle: 'Show Two', shortTitle: 'S2' },
-            { timeString: '2pm', fullTitle: 'Show Two', shortTitle: 'S2' },
+            { hourOfDay: 10, timeString: '10am', fullTitle: 'Show Two', shortTitle: 'S2' },
+            { hourOfDay: 14, timeString: '2pm', fullTitle: 'Show Two', shortTitle: 'S2' },
           ],
         },
       ],
@@ -668,7 +649,7 @@ module('Unit | Utility | ShowingsData class', function() {
         {
           timestamp: createTimestamp('July 6'),
           dateString: createDateString('July 6'),
-          performances: [{ timeString: '8pm', fullTitle: 'Show Three', shortTitle: 'S3' }],
+          performances: [{ hourOfDay: 20, timeString: '8pm', fullTitle: 'Show Three', shortTitle: 'S3' }],
         },
       ],
     ];
@@ -681,33 +662,33 @@ module('Unit | Utility | ShowingsData class', function() {
       {
         timestamp: createTimestamp('June 29'),
         dateString: createDateString('June 29'),
-        performances: [{ timeString: '2pm', fullTitle: 'Show One', shortTitle: one }],
+        performances: [{ hourOfDay: 14, timeString: '2pm', fullTitle: 'Show One', shortTitle: one }],
       },
       {
         timestamp: createTimestamp('June 30'),
         dateString: createDateString('June 30'),
         performances: [
-          { timeString: '8pm', fullTitle: 'Show One', shortTitle: one },
-          { timeString: '8pm', fullTitle: 'Show Two', shortTitle: two },
+          { hourOfDay: 20, timeString: '8pm', fullTitle: 'Show One', shortTitle: one },
+          { hourOfDay: 20, timeString: '8pm', fullTitle: 'Show Two', shortTitle: two },
         ],
       },
       {
         timestamp: createTimestamp('July 1'),
         dateString: createDateString('July 1'),
-        performances: [{ timeString: '8pm', fullTitle: 'Show One', shortTitle: one }],
+        performances: [{ hourOfDay: 20, timeString: '8pm', fullTitle: 'Show One', shortTitle: one }],
       },
       {
         timestamp: createTimestamp('July 4'),
         dateString: createDateString('July 4'),
         performances: [
-          { timeString: '10am', fullTitle: 'Show Two', shortTitle: two },
-          { timeString: '2pm', fullTitle: 'Show Two', shortTitle: two },
+          { hourOfDay: 10, timeString: '10am', fullTitle: 'Show Two', shortTitle: two },
+          { hourOfDay: 14, timeString: '2pm', fullTitle: 'Show Two', shortTitle: two },
         ],
       },
       {
         timestamp: createTimestamp('July 6'),
         dateString: createDateString('July 6'),
-        performances: [{ timeString: '8pm', fullTitle: 'Show Three', shortTitle: three }],
+        performances: [{ hourOfDay: 20, timeString: '8pm', fullTitle: 'Show Three', shortTitle: three }],
       },
     ];
 

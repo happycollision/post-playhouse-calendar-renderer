@@ -26,6 +26,193 @@ export class ShowData {
   }
 }
 
+const monthDayCodeArray = [
+  'a',
+  'b',
+  'c',
+  'd',
+  'e',
+  'f',
+  'g',
+  'h',
+  'i',
+  'j',
+  'k',
+  'l',
+  'm',
+  'n',
+  'o',
+  'p',
+  'q',
+  'r',
+  's',
+  't',
+  'u',
+  'v',
+  'w',
+  'x',
+  'y',
+  'z',
+  'A',
+  'B',
+  'C',
+  'D',
+  'E',
+];
+const monthDayLookup: IHash<number | string> = {};
+monthDayCodeArray.forEach((s, i) => {
+  monthDayLookup[s] = i + 1;
+  monthDayLookup[i + 1] = s;
+});
+
+const reverseLookupMonthDay = <T extends string | number>(key: T): T extends number ? string : number =>
+  monthDayLookup[key] as any;
+
+type TokenConstructor = {
+  productionId: number | string;
+  exactTime: DateTime;
+  idLookup: (id: string | number) => { short: string; full: string };
+};
+// type DatedConstructor = {title: string, date: DateTime, showingCode: 'm'|'a'|'e'}
+class Showing {
+  readonly dateTime: DateTime;
+  readonly title: { short: string; full: string };
+  readonly productionId: number;
+  readonly monthDayCode: string;
+  readonly weekend: boolean;
+  get weekday() {
+    return !this.weekend;
+  }
+
+  constructor(x: TokenConstructor) {
+    this.dateTime = x.exactTime;
+    this.monthDayCode = reverseLookupMonthDay(this.dateTime.day);
+    this.title = x.idLookup(x.productionId);
+    this.weekend = this.dateTime.weekday > 4;
+    this.productionId = +x.productionId;
+  }
+}
+
+const makeShowingsWithLookup = (idLookup: (id: string | number) => { short: string; full: string }) => (
+  x: ExcludeSubset<TokenConstructor, 'idLookup'>,
+) => new Showing({ ...x, idLookup });
+
+/**
+ * These are helpers for the calendar class
+ */
+const c = {
+  getReadableDate(dateTime: DateTime) {
+    return dateTime.toISODate();
+  },
+
+  sortShowings(date: Showing[]) {
+    date.sort((a, b) =>
+      a.dateTime.toMillis() > b.dateTime.toMillis() ? 1 : a.dateTime.toMillis() === b.dateTime.toMillis() ? 0 : -1,
+    );
+  },
+
+  guaranteedDateTime(date: DateTime | string): DateTime {
+    return typeof date === 'string' ? DateTime.fromISO(date) : date;
+  },
+};
+
+class Calendar {
+  /**
+   * ISO date string keys
+   */
+  private dates: IHash<Showing[]> = {};
+
+  public addEvent(showing: Showing) {
+    const date = this.getWritableDate(showing.dateTime);
+    date.push(showing);
+    c.sortShowings(date);
+  }
+
+  public getShowingsForDate(date: DateTime | string): Showing[] {
+    return [...this.getWritableDate(c.guaranteedDateTime(date))];
+  }
+
+  private getWritableDate(dateTime: DateTime): Showing[] {
+    const readableDate = c.getReadableDate(dateTime);
+    if (this.dates[readableDate]) {
+      return this.dates[readableDate];
+    } else {
+      return (this.dates[readableDate] = []);
+    }
+  }
+
+  public getDates() {
+    this.cleanDates();
+    return Object.keys(this.dates)
+      .map(isoDate => ({ date: isoDate, showings: this.getShowingsForDate(isoDate) }))
+      .sortBy('date');
+  }
+
+  private cleanDates() {
+    this.trimDates();
+    this.addMissingDates();
+  }
+
+  private addMissingDates() {
+    findMissingDates(Object.keys(this.dates)).forEach(d => (this.dates[d] = []));
+  }
+
+  private trimDates() {
+    const dateKeys = Object.keys(this.dates).sort();
+
+    if (dateKeys.length === 0) {
+      return;
+    }
+
+    // trim front
+    for (let i = 0; i < dateKeys.length; i++) {
+      const date = dateKeys[i];
+      if (this.getShowingsForDate(date).length === 0) {
+        delete this.dates[date];
+      } else {
+        continue;
+      }
+    }
+
+    // trim back
+    for (let i = dateKeys.length - 1; i >= 0; i--) {
+      const date = dateKeys[i];
+      if (this.getShowingsForDate(date).length === 0) {
+        delete this.dates[date];
+      } else {
+        continue;
+      }
+    }
+  }
+
+  /**
+   * returns array of ISO date strings
+   */
+}
+
+function findMissingDates(isoDates: string[]): string[] {
+  const dateKeys = isoDates.sort();
+
+  if (!dateKeys.length) {
+    return [];
+  }
+
+  const startDate = DateTime.fromISO(dateKeys.slice(0, 1)[0]);
+  const endDate = DateTime.fromISO(dateKeys.slice(-1)[0]);
+
+  if (startDate.toISODate() === endDate.toISODate()) {
+    return [];
+  }
+
+  let daysRemaining = endDate.diff(startDate, 'days').days;
+  let alldays: string[] = [];
+  while (daysRemaining > 0) {
+    alldays.unshift(startDate.plus({ days: daysRemaining }).toISODate());
+    --daysRemaining;
+  }
+  return alldays.filter(d => !dateKeys.includes(d));
+}
+
 const MATCH_SHOWING_CODE = /\d{1,2}[mae]{1,3}/;
 const SPLIT_SHOWING_CODE = /(\d{1,2}|[mae]{1,3})/g;
 const MONTHS = [
@@ -110,17 +297,17 @@ function dayOfMonthAndShowingsFromToken(token: string) {
   const [dateId, slotsId] = token;
   const dayOfMonth = getDaysFromDateId(dateId);
   let props = getSlotShorthandFromSlotsId(slotsId);
-  const showings: { timeString: string }[] = [];
+  const showings: { timeString: string; hourOfDay: number }[] = [];
   Array.from(props).forEach((letter: 'm' | 'a' | 'e') => {
     switch (letter) {
       case 'm':
-        showings.push({ timeString: '10am' });
+        showings.push({ timeString: '10am', hourOfDay: 10 });
         break;
       case 'a':
-        showings.push({ timeString: '2pm' });
+        showings.push({ timeString: '2pm', hourOfDay: 14 });
         break;
       case 'e':
-        showings.push({ timeString: '8pm' });
+        showings.push({ timeString: '8pm', hourOfDay: 20 });
         break;
     }
   });
@@ -164,6 +351,7 @@ export function urlPartsToData(shortTitlesUrl: string, longTitlesUrl: string, da
 }
 
 export class ShowingsData extends EmberObject {
+  private _calendar!: Calendar;
   constructor(public shortTitlesUrl: string, public fullTitlesUrl: string, public datesUrl: string) {
     super();
   }
@@ -185,40 +373,64 @@ export class ShowingsData extends EmberObject {
     return mergeStrictAgendaDates(this.agendasPerShow.reduce((a, b) => a.concat(b)));
   }
 
-  @computed('shortTitlesUrl', 'fullTitlesUrl', 'datesUrl')
-  get agendasPerShow(): DataAgenda[] {
-    return this.dataConversion(this.datesUrl);
+  @computed('agendaForAllShows')
+  get agendaForAllShowsWithDarkDays(): DataAgenda {
+    return padMissingAgendaDates(mergeStrictAgendaDates(this.agendasPerShow.reduce((a, b) => a.concat(b))));
   }
 
-  private dataConversion(datesUrl: string) {
-    const { startingDateString, showsDates } = urlCodeParts(datesUrl);
+  @computed('dataConversion')
+  get agendasPerShow(): DataAgenda[] {
+    return this.dataConversion;
+  }
+
+  @computed('dataConversion')
+  get calendar(): Calendar {
+    this.dataConversion;
+    return this._calendar;
+  }
+
+  @computed('shortTitlesUrl', 'fullTitlesUrl', 'datesUrl')
+  private get dataConversion() {
+    this._calendar = new Calendar(); // SIDE EFFECT
+
+    const { startingDateString, showsDates } = urlCodeParts(this.datesUrl);
     const startingDate = DateTime.fromISO(startingDateString);
+    const makeShowing = makeShowingsWithLookup(id => ({
+      full: this.titles.full[+id - 1],
+      short: this.titles.short[+id - 1],
+    }));
 
     return showsDates.map((dateCodes, i) => {
       let runningMonth = startingDate.startOf('month');
 
-      return dateCodeStringToTokens(dateCodes).reduce(
-        (acc, token) => {
-          if (token === '0') {
-            runningMonth = runningMonth.plus({ months: 1 });
-            return acc;
-          }
-          const { dayOfMonth, showings } = dayOfMonthAndShowingsFromToken(token);
-          const theDate = runningMonth.plus({ days: dayOfMonth - 1 });
-          return acc.concat([
-            {
-              timestamp: theDate.toMillis(),
-              dateString: theDate.toFormat('LLLL d'),
-              performances: showings.map(s => ({
-                ...s,
-                shortTitle: this.titles.short[i],
-                fullTitle: this.titles.full[i],
-              })),
-            },
-          ]);
-        },
-        [] as AgendaDayData[],
-      );
+      return dateCodeStringToTokens(dateCodes).reduce<AgendaDayData[]>((acc, token) => {
+        if (token === '0') {
+          runningMonth = runningMonth.plus({ months: 1 });
+          return acc;
+        }
+        const { dayOfMonth, showings } = dayOfMonthAndShowingsFromToken(token);
+        const theDate = runningMonth.plus({ days: dayOfMonth - 1 });
+
+        // SIDE EFFECT
+        showings.forEach(showing => {
+          this._calendar.addEvent(
+            makeShowing({ productionId: i + 1, exactTime: theDate.plus({ hours: showing.hourOfDay }) }),
+          );
+        });
+        // END SIDE EFFECT
+
+        return acc.concat([
+          {
+            timestamp: theDate.toMillis(),
+            dateString: theDate.toFormat('LLLL d'),
+            performances: showings.map(s => ({
+              ...s,
+              shortTitle: this.titles.short[i],
+              fullTitle: this.titles.full[i],
+            })),
+          },
+        ]);
+      }, []);
     });
   }
 }
@@ -555,7 +767,23 @@ function mergeStrictAgendaDates(agenda: DataAgenda): DataAgenda {
       daysHash[day.timestamp] = day;
     }
   }
-  return keptAgenda;
+  return keptAgenda.sortBy('timestamp');
+}
+
+function padMissingAgendaDates(agenda: DataAgenda): DataAgenda {
+  const missingDates = findMissingDates(agenda.map(a => DateTime.fromMillis(a.timestamp).toISODate()));
+  return agenda
+    .concat(
+      missingDates.map(isoDate => {
+        const dt = DateTime.fromISO(isoDate);
+        return {
+          timestamp: dt.toMillis(),
+          dateString: dt.toFormat('LLLL d'),
+          performances: [],
+        };
+      }),
+    )
+    .sortBy('timestamp');
 }
 
 function sortAgendaDays(a: AgendaDay, b: AgendaDay): 0 | -1 | 1 {
