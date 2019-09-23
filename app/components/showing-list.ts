@@ -5,37 +5,36 @@ import { computed } from '@ember-decorators/object';
 import {
   fullCodeStringToPublishable,
   urlDataToShowingsAgenda,
+  ShowingsData,
 } from 'post-playhouse-calendar-renderer/utils/showings-data-converters';
 
 export default class ShowingList extends Component.extend({
   // anything which *must* be merged to prototype here
 }) {
   // normal class body definition here
-  datesCode!: string;
-  titles!: string[];
+  showingsData!: ShowingsData;
 
   init() {
     super.init();
-    assert('Dates must be provided to the component', !isEmpty(this.datesCode));
-    assert('Titles must be provided to the component', !isEmpty(this.titles));
+    assert('showingsData must be provided to the component', !isEmpty(this.showingsData));
   }
 
-  @computed('titles', 'datesCode')
+  @computed('showingsData')
   get showAndDates() {
-    const { titles, datesCode }: { titles: string[]; datesCode: string } = this.getProperties('titles', 'datesCode');
-    const pubDates = fullCodeStringToPublishable(datesCode).map(str =>
+    const { titles, datesUrl } = this.showingsData;
+    const pubDates = fullCodeStringToPublishable(datesUrl).map(str =>
       str
         .split('\n')
         .map(str => prepend('  ', str))
         .join('\n'),
     );
-    return titles.map((title, i) => ({ title, showDateList: pubDates[i] }));
+    return titles.full.map((title, i) => ({ title, showDateList: pubDates[i] }));
   }
 
-  @computed('titles', 'datesCode')
+  @computed('showingsData')
   get datedShowings() {
-    const { titles, datesCode }: { titles: string[]; datesCode: string } = this.getProperties('titles', 'datesCode');
-    const agenda = urlDataToShowingsAgenda(titles.join(','), datesCode);
+    const { titles, datesUrl } = this.showingsData;
+    const agenda = urlDataToShowingsAgenda(titles.full.join(','), datesUrl);
     agenda.forEach(day => day.performances.forEach(perf => (perf.timeString = rightPad(perf.timeString, 4))));
     return agenda;
   }
