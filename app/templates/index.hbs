@@ -1,6 +1,6 @@
 {{keyboard-press key="Escape" onDown=(toggle-action 'editing' this)}}
 
-{{#with (component 'p-calendar' longTitles=titles.long isEditing=editing showingsData=showingsData) as |theCalendar|}}
+{{#with (component 'p-calendar' isEditing=editing showingsData=showingsData) as |theCalendar|}}
 
   {{#if editing}}
     <div class="containers-wrapper is-editing">

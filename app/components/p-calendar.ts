@@ -42,6 +42,11 @@ export default class PCalendar extends Component {
   showingsData!: ShowingsData;
 
   @computed('showingsData')
+  get longTitles(): string[] {
+    return this.showingsData.titles.full;
+  }
+
+  @computed('showingsData')
   get weeksData(): WeeksData {
     const agenda = this.showingsData.calendar.getDates();
     const firstDate = DateTime.fromISO(agenda[0].date);
