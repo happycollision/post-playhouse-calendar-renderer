@@ -7,12 +7,14 @@
     (m = morning, a = afternoon, e = evening)<br><br>
     Changes are applied when you click outside each field.
   </p>
-  {{#each titles.long as |title index|}}
+  {{#each showingsData.titles.full as |title index|}}
     <div>
-      <label>Show {{add index 1}}</label> <button type="button" onclick={{action actns.removeShow index}}>Remove</button>
+      <label>Show {{add index 1}}</label> <button type="button"
+        onclick={{action actns.removeShow index}}>Remove</button>
       <div class="field"><span>Full:</span> {{input value=title change=(action actns.changeLongTitle index)}}</div>
-      {{#let (object-at index titles.short) as |shortTitle|}}
-        <div class="field"><span>Short: </span>{{input value=shortTitle change=(action actns.changeShortTitle index)}}</div>
+      {{#let (object-at index showingsData.titles.short) as |shortTitle|}}
+        <div class="field"><span>Short: </span>{{input value=shortTitle change=(action actns.changeShortTitle index)}}
+        </div>
       {{/let}}
     </div>
     <div>
@@ -21,11 +23,11 @@
       {{/let}}
     </div>
   {{/each}}
-  
+
   <div style="margin-top: 2em">
     <button type="button" onclick={{action actns.addShow}}>Add Show</button>
   </div>
-  
+
   <h2>Actions with all dates</h2>
   <div>
     <button type="button" onclick={{action actns.shiftDays -1}}>Shift Back 1 day</button>
