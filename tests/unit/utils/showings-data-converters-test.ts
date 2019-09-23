@@ -32,7 +32,7 @@ const SHORTHAND = () => ({
   showData: [{ a: [1] }, { e: [1, 2] }, { e: [1] }, {}, {}, { m: [2], a: [2] }, {}, { e: [3] }],
 });
 
-function numDaysWithShowings(showings: dc.IDayShowings[]): number {
+function numDaysWithShowings(showings: ReturnType<typeof dc.urlToShorthand>['showData']): number {
   return showings.reduce((count, showing) => {
     if (showing.a || showing.e || showing.m) return count + 1;
     return count;
@@ -40,13 +40,8 @@ function numDaysWithShowings(showings: dc.IDayShowings[]): number {
 }
 
 module('Unit | Utility | showings-data-converters | simple functions', function() {
-  test('getPaddingFor', function(assert) {
-    let result = dc.getPaddingFor('2018-06-01');
-    assert.equal(result, 5);
-  });
-
   test('urlToShorthandPerShow', function(assert) {
-    let result = dc.urlToShorthandPerShow(URL_DATES_CODE);
+    let result = dc._urlToShorthandPerShow(URL_DATES_CODE);
     let expected = [
       [{ a: [1] }, { e: [1] }, { e: [1] }],
       [{}, { e: [2] }, {}, {}, {}, { m: [2], a: [2] }],
@@ -70,12 +65,12 @@ module('Unit | Utility | showings-data-converters | simple functions', function(
   });
 
   test('urlCodeParts', function(assert) {
-    let result = dc.urlCodeParts(URL_DATES_CODE);
+    let result = dc._urlCodeParts(URL_DATES_CODE);
     assert.deepEqual(result, { startingDateString: '2018-06-29', showsDates: ['C2D30a3', 'D30d4', '0f3'] });
   });
 
   test('dateCodeStringToTokens', function(assert) {
-    let result = dc.dateCodeStringToTokens(dc.urlCodeParts(URL_DATES_CODE).showsDates.join(''));
+    let result = dc._dateCodeStringToTokens(dc._urlCodeParts(URL_DATES_CODE).showsDates.join(''));
     assert.deepEqual(result, ['C2', 'D3', '0', 'a3', 'D3', '0', 'd4', '0', 'f3']);
   });
 });
@@ -97,7 +92,7 @@ module('Unit | Utility | showings-data-converters | big converters', function() 
   });
 
   test('urlDataToShowingsLists', function(assert) {
-    let result = dc.urlDataToShowingsLists(LONG_TITLES, URL_DATES_CODE);
+    let result = dc._urlDataToShowingsLists(LONG_TITLES, URL_DATES_CODE);
     let expected = [
       {
         title: 'Show One',
@@ -137,46 +132,6 @@ module('Unit | Utility | showings-data-converters | big converters', function() 
       {
         dateString: 'July 6',
         performances: [{ timeString: '8pm', title: 'Show Three' }],
-      },
-    ];
-    assert.deepEqual(result, expected);
-  });
-
-  test('urlPartsToData', function(assert) {
-    let result = dc.urlPartsToData(SHORT_TITLES, LONG_TITLES, URL_DATES_CODE);
-    const createTimestamp = (str: string) => DateTime.fromFormat(`${str}, 2018`, 'LLLL d, yyyy').toMillis();
-    const createDateString = (str: string) => DateTime.fromFormat(`${str}, 2018`, 'LLLL d, yyyy').toFormat('LLLL d');
-    let expected = [
-      {
-        timestamp: createTimestamp('June 29'),
-        dateString: createDateString('June 29'),
-        performances: [{ hourOfDay: 14, timeString: '2pm', fullTitle: 'Show One', shortTitle: 'S1' }],
-      },
-      {
-        timestamp: createTimestamp('June 30'),
-        dateString: createDateString('June 30'),
-        performances: [
-          { hourOfDay: 20, timeString: '8pm', fullTitle: 'Show One', shortTitle: 'S1' },
-          { hourOfDay: 20, timeString: '8pm', fullTitle: 'Show Two', shortTitle: 'S2' },
-        ],
-      },
-      {
-        timestamp: createTimestamp('July 1'),
-        dateString: createDateString('July 1'),
-        performances: [{ hourOfDay: 20, timeString: '8pm', fullTitle: 'Show One', shortTitle: 'S1' }],
-      },
-      {
-        timestamp: createTimestamp('July 4'),
-        dateString: createDateString('July 4'),
-        performances: [
-          { hourOfDay: 10, timeString: '10am', fullTitle: 'Show Two', shortTitle: 'S2' },
-          { hourOfDay: 14, timeString: '2pm', fullTitle: 'Show Two', shortTitle: 'S2' },
-        ],
-      },
-      {
-        timestamp: createTimestamp('July 6'),
-        dateString: createDateString('July 6'),
-        performances: [{ hourOfDay: 20, timeString: '8pm', fullTitle: 'Show Three', shortTitle: 'S3' }],
       },
     ];
     assert.deepEqual(result, expected);
@@ -533,12 +488,12 @@ August 4*, 14`,
 
   test('this data actually matches MY thinking', function(assert) {
     const tokens = dc
-      .dateCodeStringToTokens(dc.urlCodeParts(REAL_URL_DATES_CODE).showsDates.join(''))
+      ._dateCodeStringToTokens(dc._urlCodeParts(REAL_URL_DATES_CODE).showsDates.join(''))
       .filter(t => t !== '0');
     const showings = REAL_READABLE_DATES()
       .join(' ')
       .match(/\d{1,2}[aem]/g);
-    const idTokens = tokens.map(t => dc.idTokenToShowingToken(t));
+    const idTokens = tokens.map(t => dc._idTokenToShowingToken(t));
 
     assert.deepEqual(showings, idTokens);
   });

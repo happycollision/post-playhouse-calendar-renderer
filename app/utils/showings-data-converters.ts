@@ -2,11 +2,11 @@ import { DateTime } from 'luxon';
 import EmberObject from '@ember/object';
 import { computed } from '@ember-decorators/object';
 
-export interface IIdLookup {
+interface IIdLookup {
   [x: number]: any;
 }
 
-export interface IDayShowings {
+interface IDayShowings {
   m?: number[];
   a?: number[];
   e?: number[];
@@ -230,11 +230,6 @@ const MONTHS = [
   'december',
 ];
 
-export function getPaddingFor(startingDate: string): number {
-  const dateTime = DateTime.fromISO(startingDate);
-  return dateTime.weekday === 7 ? 0 : dateTime.weekday;
-}
-
 function getDaysFromDateId(dateId: string) {
   return 'abcdefghijklmnopqrstuvwxyzABCDE'.indexOf(dateId) + 1;
 }
@@ -288,7 +283,7 @@ function isMonthName(str: string): boolean {
   return MONTHS.includes(str.toLowerCase());
 }
 
-export function idTokenToShowingToken(token: string): string {
+export function _idTokenToShowingToken(token: string): string {
   const [dateId, slotId] = token;
   return `${getDaysFromDateId(dateId)}${getSlotShorthandFromSlotsId(slotId)}`;
 }
@@ -313,41 +308,6 @@ function dayOfMonthAndShowingsFromToken(token: string) {
   });
 
   return { dayOfMonth, showings };
-}
-
-export function urlPartsToData(shortTitlesUrl: string, longTitlesUrl: string, datesUrl: string) {
-  const titles = {
-    short: shortTitlesUrl.split(','),
-    long: longTitlesUrl.split(','),
-  };
-  const { startingDateString, showsDates } = urlCodeParts(datesUrl);
-  const startingDate = DateTime.fromISO(startingDateString);
-
-  const agenda = showsDates
-    .map((dateCodes, i) => {
-      let runningMonth = startingDate.startOf('month');
-
-      return dateCodeStringToTokens(dateCodes).reduce(
-        (acc, token) => {
-          if (token === '0') {
-            runningMonth = runningMonth.plus({ months: 1 });
-            return acc;
-          }
-          const { dayOfMonth, showings } = dayOfMonthAndShowingsFromToken(token);
-          const theDate = runningMonth.plus({ days: dayOfMonth - 1 });
-          return acc.concat([
-            {
-              timestamp: theDate.toMillis(),
-              dateString: theDate.toFormat('LLLL d'),
-              performances: showings.map(s => ({ ...s, shortTitle: titles.short[i], fullTitle: titles.long[i] })),
-            },
-          ]);
-        },
-        [] as AgendaDayData[],
-      );
-    })
-    .reduce((a, b) => a.concat(b));
-  return mergeStrictAgendaDates(agenda);
 }
 
 export class ShowingsData extends EmberObject {
@@ -393,7 +353,7 @@ export class ShowingsData extends EmberObject {
   private get dataConversion() {
     this._calendar = new Calendar(); // SIDE EFFECT
 
-    const { startingDateString, showsDates } = urlCodeParts(this.datesUrl);
+    const { startingDateString, showsDates } = _urlCodeParts(this.datesUrl);
     const startingDate = DateTime.fromISO(startingDateString);
     const makeShowing = makeShowingsWithLookup(id => ({
       full: this.titles.full[+id - 1],
@@ -403,7 +363,7 @@ export class ShowingsData extends EmberObject {
     return showsDates.map((dateCodes, i) => {
       let runningMonth = startingDate.startOf('month');
 
-      return dateCodeStringToTokens(dateCodes).reduce<AgendaDayData[]>((acc, token) => {
+      return _dateCodeStringToTokens(dateCodes).reduce<AgendaDayData[]>((acc, token) => {
         if (token === '0') {
           runningMonth = runningMonth.plus({ months: 1 });
           return acc;
@@ -436,7 +396,7 @@ export class ShowingsData extends EmberObject {
 }
 
 export function fullCodeStringToReadable(str: string) {
-  const { startingDateString, showsDates } = urlCodeParts(str);
+  const { startingDateString, showsDates } = _urlCodeParts(str);
   const startingDate = DateTime.fromISO(startingDateString);
   let year = startingDate.toFormat('yyyy');
 
@@ -444,13 +404,13 @@ export function fullCodeStringToReadable(str: string) {
     let output = year;
     let runningMonth = startingDate.startOf('month');
 
-    dateCodeStringToTokens(dateCodes)
+    _dateCodeStringToTokens(dateCodes)
       .map(token => {
         if (token === '0') {
           runningMonth = runningMonth.plus({ months: 1 });
           return runningMonth.toFormat('LLLL');
         }
-        return idTokenToShowingToken(token);
+        return _idTokenToShowingToken(token);
       })
       .reduce((acc: string[], token, i, _init) => {
         // if (token === 'May' || token === 'June') debugger
@@ -499,7 +459,7 @@ export function fullCodeStringToPublishable(str: string) {
   });
 }
 
-export function dateCodeStringToTokens(str: string) {
+export function _dateCodeStringToTokens(str: string) {
   return str.match(/(0|.{2})/g) || [];
 }
 
@@ -531,19 +491,19 @@ function getShorthandObj(slotsId: string, showId: number): IDayShowings {
   return output;
 }
 
-export function urlCodeParts(urlCode: string) {
+export function _urlCodeParts(urlCode: string) {
   const [startingDateString, ...showsDates] = urlCode.split(/\[\d*\]/g);
   return { startingDateString, showsDates };
 }
 
-export function urlToShorthandPerShow(urlCode: string) {
-  const { startingDateString, showsDates } = urlCodeParts(urlCode);
+export function _urlToShorthandPerShow(urlCode: string) {
+  const { startingDateString, showsDates } = _urlCodeParts(urlCode);
   return showsDates.map((c, showIndex) => {
     const showId = showIndex + 1;
     const dates: IDayShowings[] = [];
     let startingDate = DateTime.fromISO(startingDateString);
     let addedMonths = 0;
-    dateCodeStringToTokens(c).forEach(input => {
+    _dateCodeStringToTokens(c).forEach(input => {
       if (input === '0') {
         addedMonths++;
         return;
@@ -567,8 +527,8 @@ export function urlToShorthandPerShow(urlCode: string) {
 }
 
 export function urlToShorthand(urlCode: string): IShorthandObject {
-  const { startingDateString: startingDate } = urlCodeParts(urlCode);
-  const showData = urlToShorthandPerShow(urlCode).reduce((a, perfsForCurrentShow) => {
+  const { startingDateString: startingDate } = _urlCodeParts(urlCode);
+  const showData = _urlToShorthandPerShow(urlCode).reduce((a, perfsForCurrentShow) => {
     const longestLength = Math.max(a.length, perfsForCurrentShow.length);
     for (let index = 0; index < longestLength; index++) {
       a[index] = a[index] || {};
@@ -679,7 +639,7 @@ export function readablesToUrl(readables: string[]) {
   return earliestStartingDate.toFormat('yyyy-MM-dd') + showsDates.join('');
 }
 
-export function urlDataToShowingsLists(
+export function _urlDataToShowingsLists(
   commaSeparatedTitles: string,
   urlDatesCode: string,
 ): { title: string; dates: string }[] {
@@ -689,7 +649,7 @@ export function urlDataToShowingsLists(
 }
 
 export function urlDataToShowingsAgenda(commaSeparatedTitles: string, urlDatesCode: string): Agenda {
-  const showingsList = urlDataToShowingsLists(commaSeparatedTitles, urlDatesCode);
+  const showingsList = _urlDataToShowingsLists(commaSeparatedTitles, urlDatesCode);
   return showingsList
     .map(sl => monthAndDayListFromDatesString(sl.dates, sl.title))
     .reduce((a, b) => a.concat(b))
