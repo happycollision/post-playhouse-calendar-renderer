@@ -1,14 +1,15 @@
 {{keyboard-press key="Escape" onDown=(toggle-action 'editing' this)}}
 
-{{#if editing}}
-  <div class="containers-wrapper is-editing">
-    <div class="cal-component-wrapper">
-      {{#maybe-squish squish=true}}
-        {{p-calendar longTitles=titles.long isEditing=true showingsData=showingsData}}
-      {{/maybe-squish}}
-    </div>
+{{#with (component 'p-calendar' longTitles=titles.long isEditing=editing showingsData=showingsData) as |theCalendar|}}
 
-    {{#if editing}}
+  {{#if editing}}
+    <div class="containers-wrapper is-editing">
+      <div class="cal-component-wrapper">
+        {{#maybe-squish squish=true}}
+          {{theCalendar}}
+        {{/maybe-squish}}
+      </div>
+
       <div class="form-component-wrapper">
         <div>Url to share:</div>
         <textarea disabled rows="8"
@@ -27,10 +28,10 @@
 
         {{showing-list titles=titles.long datesCode=dates}}
       </div>
-    {{/if}}
-  </div>
+    </div>
 
-{{else}}
+  {{else}}
 
-  {{p-calendar longTitles=titles.long isEditing=false showingsData=showingsData}}
-{{/if}}
+    {{theCalendar}}
+  {{/if}}
+{{/with}}
