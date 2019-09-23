@@ -35,18 +35,18 @@ export default class ShowingList extends Component.extend({
   get datedShowings() {
     const { titles, datesUrl } = this.showingsData;
     const agenda = urlDataToShowingsAgenda(titles.full.join(','), datesUrl);
-    agenda.forEach(day => day.performances.forEach(perf => (perf.timeString = rightPad(perf.timeString, 4))));
+    agenda.forEach(day => day.performances.forEach(perf => (perf.timeString = leftPad(perf.timeString, 4))));
     return agenda;
   }
 }
 
-function rightPad(str: string, padding: number): string {
+function leftPad(str: string, padding: number): string {
   return padString(str, padding, append);
 }
 
-function leftPad(str: string, padding: number): string {
-  return padString(str, padding, prepend);
-}
+// function rightPad(str: string, padding: number): string {
+//   return padString(str, padding, prepend);
+// }
 
 function padString(str: string, padding: number, method: (newPart: string, oldPart: string) => string): string {
   const diff = padding - str.length;
