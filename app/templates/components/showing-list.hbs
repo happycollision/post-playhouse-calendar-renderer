@@ -22,4 +22,37 @@ By Dates:
     {{performance.timeString}}  {{performance.title}}
   {{/each}}
 {{/each}}
+
+
+
+
+Grouped for weekends and weekdays:
+==================================
+{{#each showings as |production|}}
+
+{{production.title}}
+{{#each production.months as |month|}}
+  {{month.month}} Weekdays
+{{''}}
+  {{~#each month.weekdayShowings as |showing i|}}
+    {{~if (eq i 0) '    '~}}
+    {{~showing.day~}}
+    {{~if (eq showing.hour 10) '‡'~}}
+    {{~if (eq showing.hour 14) '*'~}}
+    {{~if (lt i (sub month.weekdayShowings.length 1)) ', '~}}
+  {{~/each~}}
+{{''}}
+  {{month.month}} Weekends
+{{''}}
+  {{~#each month.weekendShowings as |showing i|}}
+    {{~if (eq i 0) '    '~}}
+    {{~showing.day~}}
+    {{~if (eq showing.hour 10) '‡'~}}
+    {{~if (eq showing.hour 14) '*'~}}
+    {{~if (lt i (sub month.weekendShowings.length 1)) ', '~}}
+  {{~/each~}}
+{{''}}
+
+{{/each}}
+{{/each}}
 </div>

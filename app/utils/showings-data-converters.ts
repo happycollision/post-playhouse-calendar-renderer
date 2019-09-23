@@ -74,7 +74,7 @@ type TokenConstructor = {
   idLookup: (id: string | number) => { short: string; full: string };
 };
 // type DatedConstructor = {title: string, date: DateTime, showingCode: 'm'|'a'|'e'}
-class Showing {
+export class Showing {
   readonly dateTime: DateTime;
   readonly title: { short: string; full: string };
   readonly productionId: number;
