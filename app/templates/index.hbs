@@ -15,7 +15,7 @@
         <textarea disabled rows="8"
           style="width: calc(100% - 20px); margin: auto; display: block; font-size: .85rem">{{url}}</textarea>
 
-        {{show-counts shorthandPerShow=shorthandPerShow titles=titles.short}}
+        {{show-counts showingsData=this.showingsData}}
 
         {{edit-form titles=titles readableDates=readableDates actns=(hash
           changeLongTitle=(action 'changeLongTitle')

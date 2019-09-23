@@ -2,24 +2,24 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
+import { ShowingsData } from 'post-playhouse-calendar-renderer/utils/showings-data-converters';
 
 module('Integration | Component | show-counts', function(hooks) {
   setupRenderingTest(hooks);
 
   test('it renders', async function(assert) {
-    const shorthandPerShow = [
-      [{ a: [1] }, { e: [1] }, { e: [1] }],
-      [{}, { e: [2] }, {}, { a: [2] }],
-      [{}, {}, {}, {}, {}, {}, {}, { m: [3] }],
-    ];
+    const showingsData = new ShowingsData(
+      'First show,Second show,Third show',
+      'First show,Second show,Third show',
+      '[1]a2b3c3[2]b3d2[3]h1',
+    );
 
     this.set('titles', ['First show', 'Second show', 'Third show']);
 
-    this.set('shorthandPerShow', shorthandPerShow);
+    this.set('showingsData', showingsData);
 
     await render(hbs`{{show-counts
-      titles=titles
-      shorthandPerShow=shorthandPerShow
+      showingsData=showingsData
     }}`);
 
     assert.dom('[data-test-showing="0"]').containsText('First show');

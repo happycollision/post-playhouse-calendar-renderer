@@ -1,57 +1,49 @@
 import Component from '@ember/component';
 import { computed } from '@ember-decorators/object';
 import { tagName } from '@ember-decorators/component';
-import { IDayShowings } from 'post-playhouse-calendar-renderer/utils/showings-data-converters';
+import { ShowingsData } from 'post-playhouse-calendar-renderer/utils/showings-data-converters';
 import { assert } from '@ember/debug';
+import { isEmpty } from '@ember/utils';
 
 @tagName('')
 export default class ShowCounts extends Component {
-  shorthandPerShow!: IDayShowings[][];
+  showingsData!: ShowingsData;
 
   init() {
     super.init();
-    assert('shorthand was passed in', Array.isArray(this.shorthandPerShow));
+    assert('showingsData was passed in', !isEmpty(this.showingsData));
   }
 
-  @computed('shorthandPerShow')
+  @computed('showingsData')
+  get titles(): string[] {
+    return this.showingsData.titles.short;
+  }
+
+  @computed('showingsData')
   get allShowings() {
-    return this.shorthandPerShow.map(so => {
-      return so.reduce((a, day) => {
-        if (day.m) ++a;
-        if (day.a) ++a;
-        if (day.e) ++a;
-        return a;
-      }, 0);
-    });
+    return this.showingsData.agendasPerShow.map(showAgenda =>
+      showAgenda.reduce((a, day) => a + day.performances.length, 0),
+    );
   }
 
-  @computed('shorthandPerShow')
+  @computed('showingsData')
   get afternoonShowings() {
-    return this.shorthandPerShow.map(so => {
-      return so.reduce((a, day) => {
-        if (day.a) ++a;
-        return a;
-      }, 0);
-    });
+    return this.showingsData.agendasPerShow.map(showAgenda =>
+      showAgenda.reduce((a, day) => a + day.performances.filter(p => p.timeString === '2pm').length, 0),
+    );
   }
 
-  @computed('shorthandPerShow')
+  @computed('showingsData')
   get morningShowings() {
-    return this.shorthandPerShow.map(so => {
-      return so.reduce((a, day) => {
-        if (day.m) ++a;
-        return a;
-      }, 0);
-    });
+    return this.showingsData.agendasPerShow.map(showAgenda =>
+      showAgenda.reduce((a, day) => a + day.performances.filter(p => p.timeString === '10am').length, 0),
+    );
   }
 
-  @computed('shorthandPerShow')
+  @computed('showingsData')
   get eveningShowings() {
-    return this.shorthandPerShow.map(so => {
-      return so.reduce((a, day) => {
-        if (day.e) ++a;
-        return a;
-      }, 0);
-    });
+    return this.showingsData.agendasPerShow.map(showAgenda =>
+      showAgenda.reduce((a, day) => a + day.performances.filter(p => p.timeString === '8pm').length, 0),
+    );
   }
 }
