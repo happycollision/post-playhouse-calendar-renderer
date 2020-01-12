@@ -9,6 +9,9 @@
     </div>
     <span class="mday">{{mDay}}</span>
   </div>
+  {{#if (and (or (eq mDay '22') (eq mDay '15')) (eq monthName 'Jul'))}}
+    <div class="announcement">These ones are in Lead, South Dakota!</div>
+  {{/if}}
   <ul class="day-content show-count-{{shows.length}}">
     {{#each shows as |show i|}}
       {{#if (and (eq i 0) (eq show.time '8p'))}}
@@ -19,7 +22,7 @@
         {{if (eq show.time '2p') 'matinee'}}
         {{if (eq show.time '8p') 'evening'}}
         show-{{show.id}}">
-        <span class="show-time">{{show.time}}</span>
+        <span class="show-time">{{#if (or (eq show.id 6) (eq show.id 7))}}7p{{else}}{{show.time}}{{/if}}</span>
         <span class="show-title">{{show.title}}</span>
       </li>
     {{/each}}

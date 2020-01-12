@@ -39,8 +39,8 @@ $font-extra-condensed: proxima-nova-extra-condensed
 $font-title: azo-sans-uber, sans-serif
 
 $calendar-day-date-color: black
-$dark-day-bg: rgba(0,0,0,0.4)
-$cal-bg-color: #0087aa
+$dark-day-bg: rgba(255,255,255,0.2)
+$cal-bg-color: black
 $cal-border-color: black
 
 $cal-border-width: 1px
@@ -250,15 +250,39 @@ $cal-border-style: 0 solid $cal-border-color
 
   &.day-29 .month-name.may
     display: block
+    top: -0.5em
   &.day-2  .month-name.jun
     display: block
-    left: -2rem
+    left: -5rem
+    top: -1rem
   &.day-1  .month-name.jul
     display: block
+    top: -1rem
   &.day-1  .month-name.aug
     display: block
-    left: 2rem
+    left: 1rem
+    top: -3.5rem
 
+  &
+    position: relative
+  .announcement
+    position: absolute
+    top: 1.2em
+    line-height: 0.9
+    padding: 0.2em 3px
+    font-family: 'Handwriting - Dakota'
+    letter-spacing: 1px
+    // border: 1px solid black
+    box-shadow: 4px 4px 6px rgba(0,0,0,0.5)
+    width: calc(200% - 18px)
+    z-index: 2
+    font-size: $cal-base-font-size * 1.4
+    font-weight: 400
+    text-align: center
+    background-color: lightyellow
+    transform: rotate(3deg)
+    color: black
+    // +drop-shadow(black)
 
 .day-name
   display: none
@@ -336,7 +360,7 @@ $cal-border-style: 0 solid $cal-border-color
 
 .showing
   font-size: $cal-base-font-size * 1.2
-  font-weight: 300
+  font-weight: 400
   text-align: center
   background-color: grey
   color: white

@@ -14,7 +14,7 @@ import {
 
 type InputEvent = Event & { target: HTMLInputElement };
 
-const DEFAULT_TITLES = 'Cats,Yankees,Ladies,Annie,Catch,Lead: CBL,Lead: DY';
+const DEFAULT_TITLES = 'Cats,Yankees,Ladies,Annie,Catch,Ladies,Yankees';
 const DEFAULT_LONG_TITLES =
   'Cats,Damn Yankees,Church Basement Ladies,Annie,Catch Me If You Can,Lead: Church Basement Ladies,Lead: Damn Yankees';
 const DEFAULT_DATES =
