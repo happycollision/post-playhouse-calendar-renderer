@@ -14,8 +14,10 @@ export default Component.extend({
   displayMonthName: computed('monthName', function() {
     let monthName = this.monthName;
     switch (monthName) {
-      // case 'Jun': return 'June';
-      // case 'Jul': return 'July';
+      case 'Jun':
+        return 'June';
+      case 'Jul':
+        return 'July';
       default:
         return monthName;
     }

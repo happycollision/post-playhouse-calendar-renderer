@@ -21,10 +21,10 @@ $red-shadow: darken($red, 20)
 $yellow-shadow: darken($yellow, 35)
 $green-shadow: darken($green, 10)
 
-$show-1-color: $yellow
-$show-2-color: $green
+$show-1-color: $green
+$show-2-color: $red
 $show-3-color: $purple
-$show-4-color: $red
+$show-4-color: $yellow
 $show-5-color: $blue
 
 $show-1-color-drop-shadow: $yellow-shadow
@@ -250,14 +250,17 @@ $cal-border-style: 0 solid $cal-border-color
 
   &.day-29 .month-name.may
     display: block
-  &.day-2  .month-name.jun
+  &.day-1  .month-name.jun
     display: block
-    left: -2rem
   &.day-1  .month-name.jul
     display: block
+    color: #fff
   &.day-1  .month-name.aug
     display: block
-    left: 2rem
+    +breakpoint($cal-medium)
+      top: -1em
+    +breakpoint($cal-large)
+      top: -1em
 
 
 .day-name
@@ -291,6 +294,8 @@ $cal-border-style: 0 solid $cal-border-color
       display: inline
   .day.dark .day-name
     color: white
+  .day.tuesday .day-name
+    display: none
 
 .day-identifiers
   font-size: $cal-base-font-size * 1.3

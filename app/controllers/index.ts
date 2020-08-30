@@ -14,18 +14,15 @@ import {
 
 type InputEvent = Event & { target: HTMLInputElement };
 
-const DEFAULT_TITLES = 'Cats,Yankees,Ladies,Annie,Catch,Lead: CBL,Lead: DY';
-const DEFAULT_LONG_TITLES =
-  'Cats,Damn Yankees,Church Basement Ladies,Annie,Catch Me If You Can,Lead: Church Basement Ladies,Lead: Damn Yankees';
+const DEFAULT_TITLES = 'Yankees,Annie,Ladies,Oklahoma,Desperate';
+const DEFAULT_LONG_TITLES = 'Damn Yankees,Annie,Church Basement Ladies,Oklahoma!,Desperate Measures';
 const DEFAULT_DATES =
-  '2020-05-29' +
-  '[1]C3D3E20b3i3r3u2w30d2j3l2n3r3y1C2E20b2f2g3k3m2p2' +
-  '[2]0e3f3g2p3s3D30h3j2r2s2x3E30e3g2i2m3' +
-  '[3]0l3m3n2q3t30a3i3k2q2x2D30a2h3n2o3' +
-  '[4]0z3A3B20g3i2k1r1u3y2z2B3C30a1d3h1l2o2' +
-  '[5]00c3d3e2k3q3y30a3f3h2l3n3' +
-  '[6]00o3p3' +
-  '[7]00w3v3';
+  '2021-05-28' +
+  '[1]B3C3D20a3h3p3t2D30h3k2q3w2E20f2h2k3n3' +
+  '[2]0d3e3f2o3r3w3C30g3j1o3q1r2u2x1B2E10e3g1m2o2' +
+  '[3]0k3l3m2q3s3v30f3j2n2q2y2C3E30d2f3j3l3' +
+  '[4]0y3z3A20c2g2i2m3p3t3v3x3B3D30a2d3g3k2m3' +
+  '[5]00b3c3d2i3j3n3p2u3w3x2A3D20c3g2n2';
 
 export default class IndexController extends Controller.extend({
   queryParams: {
