@@ -1,0 +1,13 @@
+{
+  "assets": {
+    "assets/assetMap.json": "assets/assetMap.json",
+    "assets/auto-import-fastboot.js": "assets/auto-import-fastboot-d41d8cd98f00b204e9800998ecf8427e.js",
+    "assets/calendar.css": "assets/calendar-5821c5a9b659545dd0f6293e4ee08698.css",
+    "assets/post-playhouse-calendar-renderer-fastboot.js": "assets/post-playhouse-calendar-renderer-fastboot-ae3202cfe0546f4ebc52036211d14722.js",
+    "assets/post-playhouse-calendar-renderer.css": "assets/post-playhouse-calendar-renderer-5b1ee7809a6b06e51914058d7b92e2b3.css",
+    "assets/post-playhouse-calendar-renderer.js": "assets/post-playhouse-calendar-renderer-9fe12cb2d6198a92682edcefc94a9271.js",
+    "assets/vendor.css": "assets/vendor-df490840fcd2751405c6c5dbb695f157.css",
+    "assets/vendor.js": "assets/vendor-e4f561433d092dbdbce52ec75b1b3597.js"
+  },
+  "prepend": ""
+}
