@@ -24,6 +24,25 @@ const DEFAULT_DATES =
   '[4]0x3y3z20b2f2j2n3t2w3C3D10c3e3f1j2l3' +
   '[5]00a3b3c2h2l3o2p3t3v2z3B30c2f2k3n2';
 
+function addDefaultsToHash(hash: string) {
+  if (!hash.includes('dates=')) {
+    hash += '&dates=' + DEFAULT_DATES;
+  }
+  if (!hash.includes('shortTitles=')) {
+    hash += '&shortTitles=' + DEFAULT_TITLES;
+  }
+  if (!hash.includes('longTitles=')) {
+    hash += '&longTitles=' + DEFAULT_LONG_TITLES;
+  }
+  if (hash.includes('editing=true')) {
+    hash = hash.replace('editing=true', '') + '&editing=true';
+  }
+
+  hash = hash.replace('?&', '?');
+
+  return hash;
+}
+
 export default class IndexController extends Controller.extend({
   queryParams: {
     shortTitles: { replace: true },
@@ -51,6 +70,9 @@ export default class IndexController extends Controller.extend({
       return '';
     }
     let hash = document.location.search + document.location.hash;
+
+    hash = addDefaultsToHash(hash);
+
     const beforeHash = document.location.origin + document.location.pathname;
     // hash = hash.split('&').map(part => decodeURIComponent(part).replace(/ /g, '+').replace(/&/g, encodeURIComponent('&'))).join('&')
     hash = hash.replace(/%5B|%5D|%20|%2C|%27/g, match => {
