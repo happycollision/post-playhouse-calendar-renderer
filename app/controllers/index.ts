@@ -14,15 +14,15 @@ import {
 
 type InputEvent = Event & { target: HTMLInputElement };
 
-const DEFAULT_TITLES = 'Yankees,Annie,Ladies,Oklahoma,Desperate';
-const DEFAULT_LONG_TITLES = 'Damn Yankees,Annie,Church Basement Ladies,Oklahoma!,Desperate Measures';
+const DEFAULT_TITLES = 'Yankees,Gilligan,Sound,Ladies,Rotten';
+const DEFAULT_LONG_TITLES = 'Damn Yankees,Gilligan‘s Island,The Sound of Music,Church Basement Ladies,Something Rotten';
 const DEFAULT_DATES =
-  '2021-05-28' +
-  '[1]B3C3D20a3h3p3t2D30h3k2q3w2E20f2h2k3n3' +
-  '[2]0d3e3f2o3r3w3C30g3j1o3q1r2u2x1B2E10e3g1m2o2' +
-  '[3]0k3l3m2q3s3v30f3j2n2q2y2C3E30d2f3j3l3' +
-  '[4]0y3z3A20c2g2i2m3p3t3v3x3B3D30a2d3g3k2m3' +
-  '[5]00b3c3d2i3j3n3p2u3w3x2A3D20c3g2n2';
+  '2022-05-27' +
+  '[1]A3B3C2E30g3o3s2C30g3i3m3q2u3w2A2D30d3j3m3' +
+  '[2]0c3d3e2h3n3q3v3B30f3i2m2o3p1v3A3D20b3f3g2l2' +
+  '[3]0j3k3l2p3r3u30e3h3i1p2s3w1x2C2E20e2i3m2' +
+  '[4]0x3y3z20b2f2j2n3t2w3C3D10c3e3f1j2l3' +
+  '[5]00a3b3c2h2l3o2p3t3v2z3B30c2f2k3n2';
 
 export default class IndexController extends Controller.extend({
   queryParams: {
